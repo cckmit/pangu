@@ -32,8 +32,8 @@
         <beanutils-version>1.8.3</beanutils-version>
         <aspject.version>1.7.4</aspject.version>
         <lmax.version>3.3.7</lmax.version>
-        <zookeeper.version>3.4.11</zookeeper.version>
-        <curator.version>5.1.0</curator.version>
+        <zookeeper.version>3.7.0</zookeeper.version>
+        <curator.version>5.2.0</curator.version>
     </properties>
 
     <dependencies>

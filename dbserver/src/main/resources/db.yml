@@ -1,0 +1,10 @@
+server:
+  address: :8001
+zookeeper:
+  addr: localhost:2181
+  rootPath: /pangu
+jdbc:
+  addr: 127.0.0.1:3306
+  params: useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+  username: root
+  password: root

@@ -50,12 +50,12 @@ public class ProcessorInfoCollector extends AbstractCollector {
                 for (Method method : methods) {
                     if (method.getName().equals("getSystemCpuLoad")) {
                         Double systemCpuLoad;
-                        systemCpuLoad = (Double) method.invoke(osBean, null);
+                        systemCpuLoad = (Double) method.invoke(osBean);
                         map.put("cpu.system.load.percent", systemCpuLoad * 100);
                     }
                     if (method.getName().equals("getProcessCpuLoad")) {
                         Double processCpuLoad;
-                        processCpuLoad = (Double) method.invoke(osBean, null);
+                        processCpuLoad = (Double) method.invoke(osBean);
                         map.put("cpu.jvm.load.percent", processCpuLoad * 100);
                     }
                 }

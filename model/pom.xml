@@ -11,5 +11,11 @@
 
     <artifactId>model</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.pangu.framework</groupId>
+            <artifactId>protocol</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>
