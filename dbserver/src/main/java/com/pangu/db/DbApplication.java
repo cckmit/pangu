@@ -35,6 +35,7 @@ public class DbApplication {
             applicationContext = new AnnotationConfigApplicationContext(DbApplication.class) {
                 @Override
                 protected void doClose() {
+                    super.stop();
                     super.doClose();
                     LOCK.lock();
                     try {
