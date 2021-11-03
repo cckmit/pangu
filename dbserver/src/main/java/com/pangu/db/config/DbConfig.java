@@ -1,8 +1,10 @@
 package com.pangu.db.config;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class DbConfig {
 
     private ZookeeperConfig zookeeper;
@@ -10,6 +12,4 @@ public class DbConfig {
     private JdbcConfig jdbc;
 
     private ServerConfig server;
-
-    private int minStartUp;
 }

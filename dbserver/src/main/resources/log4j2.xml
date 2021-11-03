@@ -26,7 +26,7 @@
     </appenders>
     <Loggers>
         <asyncRoot level="info">
-            <AppenderRef ref="File"/>
+            <!--            <AppenderRef ref="File"/>-->
             <AppenderRef ref="Console"/>
         </asyncRoot>
         <logger name="com.pangu.db" level="DEBUG"/>

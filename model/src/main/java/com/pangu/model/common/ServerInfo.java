@@ -45,7 +45,7 @@ public class ServerInfo {
         this.id = id;
         this.port = port;
         this.address = ip + ":" + port;
-        if (!addressForClient.contains(":")) {
+        if (addressForClient != null && !addressForClient.contains(":")) {
             this.addressForClient = addressForClient + ":" + port;
         } else {
             this.addressForClient = addressForClient;

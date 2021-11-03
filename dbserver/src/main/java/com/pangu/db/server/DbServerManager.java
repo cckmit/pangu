@@ -1,31 +1,43 @@
 package com.pangu.db.server;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.pangu.db.config.DbConfig;
+import com.pangu.db.config.JdbcConfig;
+import com.pangu.db.config.TaskQueueSerializer;
 import com.pangu.db.config.ZookeeperConfig;
+import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.model.anno.ComponentDb;
 import com.pangu.model.common.Constants;
 import com.pangu.model.common.InstanceDetails;
 import com.pangu.model.common.ServerInfo;
+import com.pangu.model.common.ZookeeperTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
-import org.apache.curator.framework.recipes.leader.LeaderLatch;
+import org.apache.curator.framework.recipes.leader.LeaderSelector;
+import org.apache.curator.framework.recipes.leader.LeaderSelectorListener;
+import org.apache.curator.framework.recipes.queue.DistributedQueue;
+import org.apache.curator.framework.recipes.queue.QueueBuilder;
+import org.apache.curator.framework.recipes.queue.QueueConsumer;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.RetryForever;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.curator.x.discovery.*;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.flywaydb.core.Flyway;
 import org.springframework.context.Lifecycle;
 
-import java.io.EOFException;
-import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @ComponentDb
@@ -40,8 +52,9 @@ public class DbServerManager implements Lifecycle {
     private ServiceInstance<InstanceDetails> serviceInstance;
     private ServiceDiscovery<InstanceDetails> serviceDiscovery;
     private ServiceCache<InstanceDetails> serverCache;
-    private List<ServerInfo> dbServers;
+    private List<ServerInfo> dbServers = new ArrayList<>(1);
     private DistributedBarrier barrier;
+    private LeaderSelector leaderSelector;
 
     public DbServerManager(DbConfig dbConfig, DbDatabaseManager dbDatabaseManager) {
         this.dbConfig = dbConfig;
@@ -63,7 +76,7 @@ public class DbServerManager implements Lifecycle {
                 .build();
         framework.start();
 
-        barrier = new DistributedBarrier(framework, Constants.DB_MINIT_STARTUP);
+        barrier = new DistributedBarrier(framework, Constants.DB_MINI_STARTUP_BARRIER);
         log.debug("DB等待最少服务启动");
         try {
             barrier.setBarrier();
@@ -76,8 +89,10 @@ public class DbServerManager implements Lifecycle {
         } catch (Exception e) {
             log.warn("注册服务异常", e);
         }
+        registerTaskConsumer();
         try {
             barrier.waitOnBarrier();
+            barrier = null;
         } catch (Exception e) {
             log.warn("同时启动兼容支持异常", e);
         }
@@ -96,7 +111,7 @@ public class DbServerManager implements Lifecycle {
             InetAddress localAddress = NetUtils.getLocalAddress();
             ip = localAddress.getHostAddress();
         }
-        String id = ip + ":" + split[1];
+        String id = dbConfig.getZookeeper().getServerId();
 
         ServiceInstanceBuilder<InstanceDetails> builder = ServiceInstance.<InstanceDetails>builder()
                 .id(id)
@@ -116,6 +131,82 @@ public class DbServerManager implements Lifecycle {
                 .thisInstance(serviceInstance)
                 .build();
         serviceDiscovery.start();
+    }
+
+    private void registerTaskConsumer() {
+        ZookeeperConfig zookeeper = dbConfig.getZookeeper();
+        String queuePath = zookeeper.getRootPath() + Constants.DB_SERVER_TASK_QUEUE + "/" + zookeeper.getServerId();
+        DistributedQueue<ZookeeperTask> consumerQueue = QueueBuilder.builder(framework, new QueueConsumer<ZookeeperTask>() {
+            @Override
+            public void consumeMessage(ZookeeperTask message) {
+                switch (message.getType()) {
+                    case Constants.TASK_CREATE_CENTER_DATABASE:
+                        createCenterDatabase();
+                        break;
+                    case Constants.TASK_CREATE_GAME_DATABASE:
+                        updateGameDatabase(message.getParams());
+                        break;
+                    default:
+                        log.info("收到事件[{}],忽视处理", message);
+                }
+            }
+
+            @Override
+            public void stateChanged(CuratorFramework client, ConnectionState newState) {
+
+            }
+        }, new TaskQueueSerializer(), queuePath).buildQueue();
+        try {
+            consumerQueue.start();
+        } catch (Exception e) {
+            log.warn("开启消费");
+        }
+    }
+
+    private void createCenterDatabase() {
+        updateCenterDatabase();
+        ZookeeperConfig config = dbConfig.getZookeeper();
+        String path = config.getRootPath() + Constants.DB_MANAGE_LIST + "/" + config.getServerId();
+        Set<String> dbIds = new HashSet<>();
+        try {
+            framework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path, JsonUtils.object2Bytes(dbIds));
+        } catch (Exception ignore) {
+        }
+        try {
+            byte[] bytes = framework.getData().forPath(path);
+            if (bytes != null && bytes.length > 0) {
+                dbIds = JsonUtils.bytes2GenericObject(bytes, new TypeReference<Set<String>>() {
+                });
+            }
+        } catch (Exception e) {
+            log.info("查询节点[{}]数据异常", path, e);
+        }
+        dbIds.add(Constants.CENTER_DATABASE_NAME);
+        try {
+            framework.setData().forPath(path, JsonUtils.object2Bytes(dbIds));
+        } catch (Exception e) {
+            log.error("设置节点数据异常[{}][{}]", path, JsonUtils.object2Bytes(dbIds), e);
+        }
+    }
+
+    private void updateGameDatabase(String params) {
+        JdbcConfig jdbc = dbConfig.getJdbc();
+        Flyway flyway = Flyway.configure()
+                .schemas(jdbc.getDatabasePrefix() + params)
+                .locations("classpath:db/game")
+                .dataSource("jdbc:mysql://" + jdbc.getAddr() + jdbc.getParams(), jdbc.getUsername(), jdbc.getPassword())
+                .load();
+        flyway.migrate();
+    }
+
+    private void updateCenterDatabase() {
+        JdbcConfig jdbc = dbConfig.getJdbc();
+        Flyway flyway = Flyway.configure()
+                .schemas(jdbc.getDatabasePrefix() + Constants.CENTER_DATABASE_NAME)
+                .locations("classpath:db/center")
+                .dataSource("jdbc:mysql://" + jdbc.getAddr() + jdbc.getParams(), jdbc.getUsername(), jdbc.getPassword())
+                .load();
+        flyway.migrate();
     }
 
     private void initDiscovery() throws Exception {
@@ -151,10 +242,9 @@ public class DbServerManager implements Lifecycle {
             servers.add(serverInfo);
         }
         dbServers = servers;
-        if (servers.size() >= dbConfig.getMinStartUp()) {
+        if (servers.size() >= dbConfig.getZookeeper().getMinStartUp()) {
             try {
                 barrier.removeBarrier();
-                barrier = null;
             } catch (Exception e) {
                 log.warn("同时启动兼容支持异常", e);
             }
@@ -163,47 +253,49 @@ public class DbServerManager implements Lifecycle {
     }
 
     private void startLeaderElection() {
-        LeaderLatch latch = new LeaderLatch(framework, dbConfig.getZookeeper().getRootPath() + Constants.DB_LEADER_PATH);
-        try {
-            latch.start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Thread thread = new Thread(() -> startLeaderElection0(latch), "DB-leader-job");
-        thread.setDaemon(true);
-        thread.start();
-    }
-
-    private void startLeaderElection0(LeaderLatch latch) {
-        while (running.get()) {
-            try {
-                latch.await();
-            } catch (InterruptedException | EOFException e) {
-                log.info("DB Leader 选举被中断", e);
-            }
-            if (latch.hasLeadership()) {
+        leaderSelector = new LeaderSelector(framework, dbConfig.getZookeeper().getRootPath() + Constants.DB_LEADER_PATH, new LeaderSelectorListener() {
+            @Override
+            public void takeLeadership(CuratorFramework client) {
                 try {
                     startLeaderJob();
                 } catch (Exception e) {
                     log.error("DB Server执行主服逻辑异常", e);
                 }
             }
-        }
-        if (latch.getState() == LeaderLatch.State.CLOSED) {
-            log.info("DB Leader选关闭");
-        }
+
+            @Override
+            public void stateChanged(CuratorFramework client, ConnectionState newState) {
+                // todo
+            }
+        });
         try {
-            latch.close();
-        } catch (IOException e) {
-            log.warn("关闭DB Leader错误", e);
+            leaderSelector.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void startLeaderJob() throws Exception {
-        Stat stat = framework.checkExists().forPath(dbConfig.getZookeeper().getRootPath() + "/db_center");
-        if (stat == null) {
+        String centerPath = dbConfig.getZookeeper().getRootPath() + Constants.DB_CENTER_BE_MANAGED_SERVER_ID;
+        Stat stat = framework.checkExists().forPath(centerPath);
+        if (stat == null || stat.getDataLength() <= 0) {
+            if (dbServers.size() == 0) {
+                // 防止死循环
+                Thread.sleep(1_000);
+                return;
+            }
+            ServerInfo serverInfo = dbServers.get(0);
+            ZookeeperConfig zookeeper = dbConfig.getZookeeper();
+            String queuePath = zookeeper.getRootPath() + Constants.DB_SERVER_TASK_QUEUE + "/" + serverInfo.getId();
 
+            framework.create().withMode(CreateMode.PERSISTENT).forPath(centerPath, serverInfo.getId().getBytes(StandardCharsets.UTF_8));
+
+            DistributedQueue<ZookeeperTask> queue = QueueBuilder.builder(framework, null, new TaskQueueSerializer(), queuePath).buildQueue();
+            queue.start();
+            queue.put(new ZookeeperTask(Constants.TASK_CREATE_CENTER_DATABASE, null));
+            queue.close();
         }
+
     }
 
     @Override
@@ -221,6 +313,7 @@ public class DbServerManager implements Lifecycle {
             log.debug("取消注册服务[{}]", Constants.DB_SERVICE_NAME, e);
         }
         CloseableUtils.closeQuietly(serviceDiscovery);
+        CloseableUtils.closeQuietly(leaderSelector);
         if (framework != null) {
             CloseableUtils.closeQuietly(framework);
         }
