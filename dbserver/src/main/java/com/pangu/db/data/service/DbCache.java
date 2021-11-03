@@ -5,6 +5,8 @@ import com.pangu.db.config.JdbcConfig;
 import com.pangu.db.config.SqlConstant;
 import com.pangu.model.db.EntityRes;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +20,7 @@ import static com.pangu.db.config.SqlConstant.doQuote;
 public class DbCache {
 
     @Autowired
+    @Setter(AccessLevel.PACKAGE)
     private DbConfig dbConfig;
 
     private HikariDataSource dataSource;
@@ -38,9 +41,9 @@ public class DbCache {
         synchronized (this) {
             if (!init) {
                 HikariDataSource dataSource = new HikariDataSource();
-                dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 JdbcConfig jdbc = dbConfig.getJdbc();
-                dataSource.setJdbcUrl("jdbc:mysql://" + jdbc.getAddr() + "/" + dbName + jdbc.getParams());
+                dataSource.setDriverClassName(jdbc.getDriver());
+                dataSource.setJdbcUrl(jdbc.getUrlPrefix() + jdbc.getAddr() + "/" + dbName + jdbc.getParams());
                 dataSource.setUsername(jdbc.getUsername());
                 dataSource.setPassword(jdbc.getPassword());
                 dataSource.setConnectionTestQuery("SELECT 1");
@@ -71,19 +74,19 @@ public class DbCache {
                     statement.setString(1, (String) id);
                 } else {
                     String msg = String.format("数据库查询字段必须为String或者Number,参数[%s][%s][%s][%s]", dbName, table, idColumnName, id);
-                    throw new IllegalArgumentException(msg);
+                    log.warn(msg);
+                    return EntityRes.err(msg);
                 }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     ResultSetMetaData metaData = resultSet.getMetaData();
                     int columnCount = metaData.getColumnCount();
-                    Map<String, Object> row = new HashMap<>();
-                    boolean hasOne = false;
+                    Map<String, Object> row = null;
                     while (resultSet.next()) {
-                        if (hasOne) {
-                            log.warn("DB Server通过ID查询返回多个结果[{}][{}][{}][{}]",dbName, table, idColumnName, id);
+                        if (row != null) {
+                            log.warn("DB Server通过ID查询返回多个结果[{}][{}][{}][{}]", dbName, table, idColumnName, id);
                             break;
                         }
-                        hasOne = true;
+                        row = new HashMap<>(columnCount);
                         for (int i = 1; i <= columnCount; ++i) {
                             Object colValue = resultSet.getObject(i);
                             String columnName = metaData.getColumnName(i);
@@ -98,5 +101,57 @@ public class DbCache {
 
     public void shutdown() {
         this.dataSource.close();
+    }
+
+    public int insert(String table, Map<String, Object> columns) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(true);
+            StringBuilder columnInsert = new StringBuilder(64).append("INSERT INTO ").append(doQuote(table)).append("(");
+            StringBuilder valuesInsert = new StringBuilder(32).append(" VALUES (");
+            for (Map.Entry<String, Object> entry : columns.entrySet()) {
+                String k = entry.getKey();
+                columnInsert.append(doQuote(k)).append(",");
+                valuesInsert.append("?,");
+            }
+            columnInsert.deleteCharAt(columnInsert.length() - 1);
+            valuesInsert.deleteCharAt(valuesInsert.length() - 1);
+            columnInsert.append(")");
+            valuesInsert.append(")");
+
+            columnInsert.append(valuesInsert);
+
+            try (PreparedStatement statement = connection.prepareStatement(columnInsert.toString())) {
+                int index = 0;
+                for (Map.Entry<String, Object> entry : columns.entrySet()) {
+                    Object value = entry.getValue();
+                    statement.setObject(index, value);
+                    ++index;
+                }
+                return statement.executeUpdate();
+            }
+        }
+    }
+
+    public int update(String table, String idColumnName, Object id, Map<String, Object> columns) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(true);
+            StringBuilder columnInsert = new StringBuilder(64).append("UPDATE ").append(doQuote(table)).append(" SET ");
+            for (Map.Entry<String, Object> entry : columns.entrySet()) {
+                String k = entry.getKey();
+                columnInsert.append(doQuote(k)).append("=? ");
+            }
+            columnInsert.append("WHERE ").append(doQuote(idColumnName)).append("=?");
+
+            try (PreparedStatement statement = connection.prepareStatement(columnInsert.toString())) {
+                int index = 0;
+                for (Map.Entry<String, Object> entry : columns.entrySet()) {
+                    Object value = entry.getValue();
+                    statement.setObject(index, value);
+                    ++index;
+                }
+                statement.setObject(index, id);
+                return statement.executeUpdate();
+            }
+        }
     }
 }

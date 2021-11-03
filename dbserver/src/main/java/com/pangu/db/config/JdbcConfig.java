@@ -14,4 +14,8 @@ public class JdbcConfig {
     private String password;
 
     private String databasePrefix;
+
+    private String driver = "com.mysql.cj.jdbc.Driver";
+
+    private String urlPrefix = "jdbc:mysql://";
 }
