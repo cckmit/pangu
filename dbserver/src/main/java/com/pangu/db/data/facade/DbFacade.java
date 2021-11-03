@@ -20,5 +20,5 @@ public interface DbFacade {
      * @return 查询内容
      */
     @SocketCommand(DbModule.QUERY_BY_ID)
-    Result<EntityRes> queryById(@InBody String serverId, @InBody String table, @InBody Object id);
+    Result<EntityRes> queryById(@InBody String serverId, @InBody String table, @InBody String idColumnName, @InBody Object id);
 }

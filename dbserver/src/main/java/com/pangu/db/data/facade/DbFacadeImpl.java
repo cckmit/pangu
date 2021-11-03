@@ -15,8 +15,8 @@ public class DbFacadeImpl implements DbFacade {
     }
 
     @Override
-    public Result<EntityRes> queryById(String serverId, String table, Object id) {
-        EntityRes res = dbService.queryById(serverId, table, id);
+    public Result<EntityRes> queryById(String serverId, String table, String idColumnName, Object id) {
+        EntityRes res = dbService.queryById(serverId, table, idColumnName, id);
         return Result.SUCCESS(res);
     }
 }

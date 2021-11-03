@@ -5,6 +5,7 @@ import com.pangu.db.config.DbConfig;
 import com.pangu.db.config.JdbcConfig;
 import com.pangu.db.config.TaskQueueSerializer;
 import com.pangu.db.config.ZookeeperConfig;
+import com.pangu.db.data.service.DbService;
 import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.model.anno.ComponentDb;
@@ -28,16 +29,16 @@ import org.apache.curator.x.discovery.*;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.data.Stat;
 import org.flywaydb.core.Flyway;
 import org.springframework.context.Lifecycle;
 
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @ComponentDb
@@ -45,7 +46,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DbServerManager implements Lifecycle {
 
     private final DbConfig dbConfig;
-    private final DbDatabaseManager dbDatabaseManager;
+    private final DbService dbService;
 
     private final AtomicBoolean running = new AtomicBoolean();
     private CuratorFramework framework;
@@ -56,9 +57,9 @@ public class DbServerManager implements Lifecycle {
     private DistributedBarrier barrier;
     private LeaderSelector leaderSelector;
 
-    public DbServerManager(DbConfig dbConfig, DbDatabaseManager dbDatabaseManager) {
+    public DbServerManager(DbConfig dbConfig, DbService dbService) {
         this.dbConfig = dbConfig;
-        this.dbDatabaseManager = dbDatabaseManager;
+        this.dbService = dbService;
     }
 
     @Override
@@ -90,6 +91,7 @@ public class DbServerManager implements Lifecycle {
             log.warn("注册服务异常", e);
         }
         registerTaskConsumer();
+        registerWatchManaged();
         try {
             barrier.waitOnBarrier();
             barrier = null;
@@ -98,6 +100,41 @@ public class DbServerManager implements Lifecycle {
         }
 
         startLeaderElection();
+    }
+
+    private void registerWatchManaged() {
+        ZookeeperConfig config = dbConfig.getZookeeper();
+        String path = config.getRootPath() + Constants.DB_MANAGE_LIST + "/" + config.getServerId();
+        try {
+            framework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path, JsonUtils.object2Bytes(Collections.emptyList()));
+        } catch (Exception ignore) {
+        }
+        try {
+            byte[] bytes = framework.getData().usingWatcher(new Watcher() {
+                @Override
+                public void process(WatchedEvent event) {
+                    try {
+                        byte[] curByte = framework.getData().forPath(path);
+                        updateManagedServer(curByte);
+                    } catch (Exception e) {
+                        log.error("监听本节点变更异常", e);
+                    }
+                }
+            }).forPath(path);
+            updateManagedServer(bytes);
+        } catch (Exception e) {
+            log.error("监听本节点变更异常", e);
+        }
+    }
+
+    private void updateManagedServer(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return;
+        }
+        Set<String> managedServerIds = JsonUtils.bytes2GenericObject(bytes, new TypeReference<Set<String>>() {
+        });
+        dbService.updateManagedServerIds(managedServerIds);
+        log.info("DB Server[{}]管理服节点为{}", dbConfig.getZookeeper().getServerId(), new String(bytes));
     }
 
     private void registerServer() throws Exception {
@@ -168,10 +205,6 @@ public class DbServerManager implements Lifecycle {
         ZookeeperConfig config = dbConfig.getZookeeper();
         String path = config.getRootPath() + Constants.DB_MANAGE_LIST + "/" + config.getServerId();
         Set<String> dbIds = new HashSet<>();
-        try {
-            framework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path, JsonUtils.object2Bytes(dbIds));
-        } catch (Exception ignore) {
-        }
         try {
             byte[] bytes = framework.getData().forPath(path);
             if (bytes != null && bytes.length > 0) {
