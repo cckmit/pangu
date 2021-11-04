@@ -19,15 +19,15 @@ public class DbService {
 
     private Set<String> managedServerIds;
 
-    private final ConcurrentHashMap<String, DbCache> caches = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, DbAccessor> caches = new ConcurrentHashMap<>();
 
     public DbService(ApplicationContext context) {
         this.context = context;
     }
 
-    private DbCache load(String serverId) {
+    private DbAccessor load(String serverId) {
         return caches.computeIfAbsent(serverId, sid -> {
-            DbCache cache = new DbCache(sid);
+            DbAccessor cache = new DbAccessor(sid);
             context.getAutowireCapableBeanFactory().autowireBean(cache);
             cache.init();
             return cache;
@@ -38,9 +38,9 @@ public class DbService {
         if (!managedServerIds.contains(serverId)) {
             return EntityRes.err(serverId + "<server id not be managed");
         }
-        DbCache dbCache = load(serverId);
+        DbAccessor dbAccessor = load(serverId);
         try {
-            return dbCache.queryById(table, idColumnName, id);
+            return dbAccessor.queryById(table, idColumnName, id);
         } catch (SQLException thr) {
             log.warn("查询数据异常[{}][{}][{}][{}]", serverId, table, idColumnName, id, thr);
             return EntityRes.err(thr.getMessage());
@@ -55,9 +55,9 @@ public class DbService {
         if (!managedServerIds.contains(serverId)) {
             return DbResult.NOT_MANAGED_SERVER_ID;
         }
-        DbCache dbCache = load(serverId);
+        DbAccessor dbAccessor = load(serverId);
         try {
-            int insert = dbCache.insert(table, columns);
+            int insert = dbAccessor.insert(table, columns);
             if (insert >= 1) {
                 return 0;
             }
@@ -72,15 +72,32 @@ public class DbService {
         if (!managedServerIds.contains(serverId)) {
             return DbResult.NOT_MANAGED_SERVER_ID;
         }
-        DbCache dbCache = load(serverId);
+        DbAccessor dbAccessor = load(serverId);
         try {
-            int insert = dbCache.update(table, idColumnName, id, columns);
+            int insert = dbAccessor.update(table, idColumnName, id, columns);
             if (insert >= 1) {
                 return 0;
             }
             return DbResult.UPDATE_FAIL;
         } catch (SQLException throwables) {
-            log.warn("插入数据异常[{}][{}][{}][{}]", serverId, table, id, columns);
+            log.warn("更新数据异常[{}][{}][{}][{}]", serverId, table, id, columns);
+            return DbResult.SQL_EXCEPTION;
+        }
+    }
+
+    public int delete(String serverId, String table, String idColumnName, Object id) {
+        if (!managedServerIds.contains(serverId)) {
+            return DbResult.NOT_MANAGED_SERVER_ID;
+        }
+        DbAccessor dbAccessor = load(serverId);
+        try {
+            int insert = dbAccessor.delete(table, idColumnName, id);
+            if (insert >= 1) {
+                return 0;
+            }
+            return DbResult.UPDATE_FAIL;
+        } catch (SQLException throwables) {
+            log.warn("删除数据异常[{}][{}][{}]", serverId, table, id);
             return DbResult.SQL_EXCEPTION;
         }
     }

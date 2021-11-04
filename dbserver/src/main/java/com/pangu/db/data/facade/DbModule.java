@@ -15,4 +15,7 @@ public interface DbModule {
 
     // 通过ID保存
     int UPDATE = 3;
+
+    // 删除
+    int DELETE = 4;
 }

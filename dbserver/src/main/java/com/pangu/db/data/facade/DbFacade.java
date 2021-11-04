@@ -50,4 +50,16 @@ public interface DbFacade {
      */
     @SocketCommand(DbModule.UPDATE)
     Result<Integer> update(@InBody String serverId, @InBody String table, @InBody String idColumnName, @InBody Object id, @InBody Map<String, Object> columns);
+
+    /**
+     * 通过ID删除
+     *
+     * @param serverId     区服ID
+     * @param table        表名
+     * @param idColumnName ID字段名
+     * @param id           实体ID
+     * @return 是否删除成功
+     */
+    @SocketCommand(DbModule.DELETE)
+    Result<Integer> delete(@InBody String serverId, @InBody String table, @InBody String idColumnName, @InBody Object id);
 }

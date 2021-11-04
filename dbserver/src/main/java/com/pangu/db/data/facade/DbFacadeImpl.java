@@ -30,7 +30,13 @@ public class DbFacadeImpl implements DbFacade {
 
     @Override
     public Result<Integer> update(String serverId, String table, String idColumnName, Object id, Map<String, Object> columns) {
-        dbService.update(serverId, table, idColumnName, id, columns);
-        return Result.SUCCESS();
+        int update = dbService.update(serverId, table, idColumnName, id, columns);
+        return Result.ERROR(update);
+    }
+
+    @Override
+    public Result<Integer> delete(String serverId, String table, String idColumnName, Object id) {
+        int delete = dbService.delete(serverId, table, idColumnName, id);
+        return Result.ERROR(delete);
     }
 }

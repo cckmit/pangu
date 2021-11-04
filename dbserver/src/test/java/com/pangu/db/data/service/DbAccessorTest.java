@@ -17,9 +17,9 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class DbCacheTest {
+public class DbAccessorTest {
 
-    private DbCache dbCache;
+    private DbAccessor dbAccessor;
 
     @Before
     public void setUp() {
@@ -33,14 +33,14 @@ public class DbCacheTest {
                 .load();
         flyway.clean();
         flyway.migrate();
-        dbCache = new DbCache("test_db");
-        dbCache.setDbConfig(dbConfig);
-        dbCache.init();
+        dbAccessor = new DbAccessor("test_db");
+        dbAccessor.setDbConfig(dbConfig);
+        dbAccessor.init();
     }
 
     @Test
     public void test_queryById() throws SQLException {
-        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", 1);
+        EntityRes entityRes = dbAccessor.queryById("MultiTypeTable", "iInt", 1);
         Map<String, Object> columns = entityRes.getColumns();
         assertEquals(7, columns.size());
     }
@@ -64,9 +64,9 @@ public class DbCacheTest {
         byte[] lb = new byte[10];
         Arrays.fill(lb, (byte) 1);
         columns.put("lLongblob", lb);
-        dbCache.insert("MultiTypeTable", columns);
+        dbAccessor.insert("MultiTypeTable", columns);
 
-        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", i);
+        EntityRes entityRes = dbAccessor.queryById("MultiTypeTable", "iInt", i);
         Map<String, Object> res = entityRes.getColumns();
         assertNotNull(res);
         assertEquals(i, res.get("iInt"));
@@ -103,9 +103,9 @@ public class DbCacheTest {
         byte[] lb = new byte[10];
         Arrays.fill(lb, (byte) 1);
         columns.put("lLongblob", lb);
-        dbCache.insert("MultiTypeTable", columns);
+        dbAccessor.insert("MultiTypeTable", columns);
 
-        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", i);
+        EntityRes entityRes = dbAccessor.queryById("MultiTypeTable", "iInt", i);
         Map<String, Object> res = entityRes.getColumns();
         assertNotNull(res);
         assertEquals((int) i, res.get("iInt"));
@@ -133,9 +133,9 @@ public class DbCacheTest {
         Date d = new Date(now);
         columns.put("dDateTime", d);
 
-        dbCache.update("MultiTypeTable", "iInt", i, columns);
+        dbAccessor.update("MultiTypeTable", "iInt", i, columns);
 
-        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", i);
+        EntityRes entityRes = dbAccessor.queryById("MultiTypeTable", "iInt", i);
         Map<String, Object> res = entityRes.getColumns();
         assertNotNull(res);
         assertEquals((int) i, res.get("iInt"));
@@ -151,13 +151,13 @@ public class DbCacheTest {
     @Test
     public void test_delete() throws SQLException {
         int id = 1;
-        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", id);
+        EntityRes entityRes = dbAccessor.queryById("MultiTypeTable", "iInt", id);
         assertNotNull(entityRes.getColumns());
         assertNotEquals(0, entityRes.getColumns().size());
 
-        dbCache.delete("MultiTypeTable", "iInt", id);
+        dbAccessor.delete("MultiTypeTable", "iInt", id);
 
-        entityRes = dbCache.queryById("MultiTypeTable", "iInt", id);
+        entityRes = dbAccessor.queryById("MultiTypeTable", "iInt", id);
         assertNull(entityRes.getColumns());
 
     }

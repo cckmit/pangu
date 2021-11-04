@@ -23,7 +23,7 @@ import java.util.TimeZone;
 import static com.pangu.db.config.SqlConstant.doQuote;
 
 @Slf4j
-public class DbCache {
+public class DbAccessor {
 
     @Autowired
     @Setter(AccessLevel.PACKAGE)
@@ -36,7 +36,7 @@ public class DbCache {
     private volatile boolean init = false;
     private String dbName;
 
-    public DbCache(String serverId) {
+    public DbAccessor(String serverId) {
         this.serverId = serverId;
     }
 
