@@ -3,6 +3,7 @@ package com.pangu.db.data.service;
 import com.pangu.db.config.DbConfig;
 import com.pangu.db.config.JdbcConfig;
 import com.pangu.db.config.SqlConstant;
+import com.pangu.framework.utils.time.DateUtils;
 import com.pangu.model.db.EntityRes;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AccessLevel;
@@ -11,8 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static com.pangu.db.config.SqlConstant.doQuote;
 
@@ -40,10 +46,12 @@ public class DbCache {
         }
         synchronized (this) {
             if (!init) {
+                this.dbName = dbConfig.getJdbc().getDatabasePrefix() + serverId;
+
                 HikariDataSource dataSource = new HikariDataSource();
                 JdbcConfig jdbc = dbConfig.getJdbc();
                 dataSource.setDriverClassName(jdbc.getDriver());
-                dataSource.setJdbcUrl(jdbc.getUrlPrefix() + jdbc.getAddr() + "/" + dbName + jdbc.getParams());
+                dataSource.setJdbcUrl(jdbc.getUrlPrefix() + jdbc.getAddr() + dbName + jdbc.getParams());
                 dataSource.setUsername(jdbc.getUsername());
                 dataSource.setPassword(jdbc.getPassword());
                 dataSource.setConnectionTestQuery("SELECT 1");
@@ -57,7 +65,6 @@ public class DbCache {
                 dataSource.setRegisterMbeans(true);
 
                 this.dataSource = dataSource;
-                this.dbName = dbConfig.getJdbc().getDatabasePrefix() + serverId;
                 init = true;
             }
         }
@@ -89,6 +96,19 @@ public class DbCache {
                         row = new HashMap<>(columnCount);
                         for (int i = 1; i <= columnCount; ++i) {
                             Object colValue = resultSet.getObject(i);
+                            if (colValue != null) {
+                                if (colValue instanceof LocalDateTime) {
+                                    colValue = new Date(
+                                            ((LocalDateTime) colValue).toEpochSecond(
+                                                    ZoneOffset.ofHours((int) (TimeZone.getDefault().getRawOffset() / DateUtils.MILLIS_PER_HOUR))
+                                            ) * 1000
+                                    );
+                                } else if (colValue instanceof Date) {
+                                    colValue = new Date(((Date) colValue).getTime());
+                                } else if (colValue instanceof LocalDate) {
+                                    colValue = new Date(((LocalDate) colValue).toEpochDay() * DateUtils.MILLIS_PER_DAY);
+                                }
+                            }
                             String columnName = metaData.getColumnName(i);
                             row.put(columnName, colValue);
                         }
@@ -121,7 +141,7 @@ public class DbCache {
             columnInsert.append(valuesInsert);
 
             try (PreparedStatement statement = connection.prepareStatement(columnInsert.toString())) {
-                int index = 0;
+                int index = 1;
                 for (Map.Entry<String, Object> entry : columns.entrySet()) {
                     Object value = entry.getValue();
                     statement.setObject(index, value);
@@ -143,13 +163,32 @@ public class DbCache {
             columnInsert.append("WHERE ").append(doQuote(idColumnName)).append("=?");
 
             try (PreparedStatement statement = connection.prepareStatement(columnInsert.toString())) {
-                int index = 0;
+                int index = 1;
                 for (Map.Entry<String, Object> entry : columns.entrySet()) {
                     Object value = entry.getValue();
                     statement.setObject(index, value);
                     ++index;
                 }
                 statement.setObject(index, id);
+                return statement.executeUpdate();
+            }
+        }
+    }
+
+    public int delete(String table, String idColumnName, Object id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(true);
+            StringBuilder columnInsert = new StringBuilder(64).append("DELETE FROM ").append(doQuote(table));
+            columnInsert.append(" WHERE ").append(doQuote(idColumnName)).append("=?");
+
+            try (PreparedStatement statement = connection.prepareStatement(columnInsert.toString())) {
+                if (id instanceof Number) {
+                    statement.setLong(1, ((Number) id).longValue());
+                } else if (id instanceof String) {
+                    statement.setString(1, (String) id);
+                } else {
+                    statement.setObject(1, id);
+                }
                 return statement.executeUpdate();
             }
         }

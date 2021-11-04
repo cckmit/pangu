@@ -10,4 +10,4 @@ jdbc:
   params: ?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
   username: root
   password: root
-  databasePrefix: pangu_
+  databasePrefix: pangu_test_
