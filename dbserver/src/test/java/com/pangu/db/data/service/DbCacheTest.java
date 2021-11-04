@@ -120,4 +120,45 @@ public class DbCacheTest {
         assertEquals(lt, res.get("lLongText"));
         assertArrayEquals(lb, (byte[]) res.get("lLongblob"));
     }
+
+    @Test
+    public void test_update() throws SQLException {
+        Map<String, Object> columns = new HashMap<>();
+        short i = 1;
+        boolean t = true;
+        columns.put("bBit", t);
+        String s = "string value";
+        columns.put("vVarchar", s);
+        long now = (System.currentTimeMillis() / 1000) * 1000;
+        Date d = new Date(now);
+        columns.put("dDateTime", d);
+
+        dbCache.update("MultiTypeTable", "iInt", i, columns);
+
+        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", i);
+        Map<String, Object> res = entityRes.getColumns();
+        assertNotNull(res);
+        assertEquals((int) i, res.get("iInt"));
+        assertEquals(t, res.get("bBit"));
+        assertEquals(s, res.get("vVarchar"));
+        Object dDateTime = res.get("dDateTime");
+
+        assertSame(Date.class, dDateTime.getClass());
+        long expected = d.getTime() / 1000;
+        assertEquals(expected, ((Date) dDateTime).getTime() / 1000);
+    }
+
+    @Test
+    public void test_delete() throws SQLException {
+        int id = 1;
+        EntityRes entityRes = dbCache.queryById("MultiTypeTable", "iInt", id);
+        assertNotNull(entityRes.getColumns());
+        assertNotEquals(0, entityRes.getColumns().size());
+
+        dbCache.delete("MultiTypeTable", "iInt", id);
+
+        entityRes = dbCache.queryById("MultiTypeTable", "iInt", id);
+        assertNull(entityRes.getColumns());
+
+    }
 }

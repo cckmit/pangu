@@ -155,14 +155,15 @@ public class DbCache {
     public int update(String table, String idColumnName, Object id, Map<String, Object> columns) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
-            StringBuilder columnInsert = new StringBuilder(64).append("UPDATE ").append(doQuote(table)).append(" SET ");
+            StringBuilder columnUpdate = new StringBuilder(64).append("UPDATE ").append(doQuote(table)).append(" SET ");
             for (Map.Entry<String, Object> entry : columns.entrySet()) {
                 String k = entry.getKey();
-                columnInsert.append(doQuote(k)).append("=? ");
+                columnUpdate.append(doQuote(k)).append("=?,");
             }
-            columnInsert.append("WHERE ").append(doQuote(idColumnName)).append("=?");
+            columnUpdate.deleteCharAt(columnUpdate.length() - 1);
+            columnUpdate.append("WHERE ").append(doQuote(idColumnName)).append("=?");
 
-            try (PreparedStatement statement = connection.prepareStatement(columnInsert.toString())) {
+            try (PreparedStatement statement = connection.prepareStatement(columnUpdate.toString())) {
                 int index = 1;
                 for (Map.Entry<String, Object> entry : columns.entrySet()) {
                     Object value = entry.getValue();
