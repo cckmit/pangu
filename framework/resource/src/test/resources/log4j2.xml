@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--monitorInterval 间隔时间读取log4j2配置文件更新-->
+<!--packages用于搜索Plugin-->
+<Configuration name="async" status="ERROR" packages="com.pangu.framework.utils.logging" monitorInterval="600">
+
+    <Appenders>
+
+        <!--Console-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5level %l - %msg%xEx%n"/>
+        </Console>
+
+    </Appenders>
+
+    <Loggers>
+        <AsyncRoot level="info" includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </AsyncRoot>
+
+        <AsyncLogger name="com.pangu.framework" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </AsyncLogger>
+    </Loggers>
+</Configuration>
