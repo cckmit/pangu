@@ -2,17 +2,17 @@ package com.pangu.db.server;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.pangu.db.config.DbConfig;
-import com.pangu.db.config.JdbcConfig;
+import com.pangu.core.config.JdbcConfig;
 import com.pangu.db.config.TaskQueueSerializer;
-import com.pangu.db.config.ZookeeperConfig;
+import com.pangu.core.config.ZookeeperConfig;
 import com.pangu.db.data.service.DbService;
 import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.os.NetUtils;
-import com.pangu.model.anno.ComponentDb;
-import com.pangu.model.common.Constants;
-import com.pangu.model.common.InstanceDetails;
-import com.pangu.model.common.ServerInfo;
-import com.pangu.model.common.ZookeeperTask;
+import com.pangu.core.anno.ComponentDb;
+import com.pangu.core.common.Constants;
+import com.pangu.core.common.InstanceDetails;
+import com.pangu.core.common.ServerInfo;
+import com.pangu.core.common.ZookeeperTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -35,7 +35,6 @@ import org.apache.zookeeper.data.Stat;
 import org.flywaydb.core.Flyway;
 import org.springframework.context.Lifecycle;
 
-import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -56,6 +55,7 @@ public class DbServerManager implements Lifecycle {
     private List<ServerInfo> dbServers = new ArrayList<>(1);
     private DistributedBarrier barrier;
     private LeaderSelector leaderSelector;
+    private DistributedQueue<ZookeeperTask> consumerQueue;
 
     public DbServerManager(DbConfig dbConfig, DbService dbService) {
         this.dbConfig = dbConfig;
@@ -173,7 +173,7 @@ public class DbServerManager implements Lifecycle {
     private void registerTaskConsumer() {
         ZookeeperConfig zookeeper = dbConfig.getZookeeper();
         String queuePath = zookeeper.getRootPath() + Constants.DB_SERVER_TASK_QUEUE + "/" + zookeeper.getServerId();
-        DistributedQueue<ZookeeperTask> consumerQueue = QueueBuilder.builder(framework, new QueueConsumer<ZookeeperTask>() {
+        consumerQueue = QueueBuilder.builder(framework, new QueueConsumer<ZookeeperTask>() {
             @Override
             public void consumeMessage(ZookeeperTask message) {
                 switch (message.getType()) {
@@ -249,13 +249,13 @@ public class DbServerManager implements Lifecycle {
                 .build();
         serverCache.start();
 
-        initGameServerService(serverCache);
+        initServerService(serverCache);
 
         log.debug("首次刷新数据服务器列表[{}]", dbServers);
         serverCache.addListener(new ServiceCacheListener() {
             @Override
             public void cacheChanged() {
-                initGameServerService(serverCache);
+                initServerService(serverCache);
             }
 
             @Override
@@ -265,7 +265,7 @@ public class DbServerManager implements Lifecycle {
         });
     }
 
-    private void initGameServerService(ServiceCache<InstanceDetails> cache) {
+    private void initServerService(ServiceCache<InstanceDetails> cache) {
         List<ServiceInstance<InstanceDetails>> instances = cache.getInstances();
         List<ServerInfo> servers = new ArrayList<>();
 
@@ -347,6 +347,7 @@ public class DbServerManager implements Lifecycle {
         }
         CloseableUtils.closeQuietly(serviceDiscovery);
         CloseableUtils.closeQuietly(leaderSelector);
+        CloseableUtils.closeQuietly(consumerQueue);
         if (framework != null) {
             CloseableUtils.closeQuietly(framework);
         }

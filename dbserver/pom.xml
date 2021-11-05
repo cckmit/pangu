@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.pangu</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

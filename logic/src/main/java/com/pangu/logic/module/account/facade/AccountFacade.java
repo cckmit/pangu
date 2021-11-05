@@ -17,7 +17,6 @@ public interface AccountFacade {
     /**
      * 创建账号与角色
      *
-     * @param session    Tcp连接上下文
      * @param account    帐号名
      * @param name       角色名称
      * @param sex        角色类型
@@ -25,8 +24,7 @@ public interface AccountFacade {
      * @return
      */
     @SocketCommand(COMMAND_CREATE)
-    Result<Void> create(Session session,
-                        @InBody("account") String account,
+    Result<Void> create(@InBody("account") String account,
                         @InBody(value = "name", required = false) String name,
                         @InBody("sex") Sex sex,
                         @InBody(value = "channel", required = false) String channel);
@@ -34,7 +32,6 @@ public interface AccountFacade {
     /**
      * 账号登录
      *
-     * @param session   当前的通信会话
      * @param account   账号名(包括服标识)
      * @param timestamp 时间戳
      * @param adult     是否成年
@@ -42,8 +39,7 @@ public interface AccountFacade {
      * @return {@link Result} { code:状态码{@link AccountResult} content:用户登录信息{@link LoginInfoVo}
      */
     @SocketCommand(value = COMMAND_LOGIN)
-    Result<Void> login(Session session,
-                       @InBody("account") String account,
+    Result<Void> login(@InBody("account") String account,
                        @InBody(value = "adult", required = false) Boolean adult,
                        @InBody("timestamp") long timestamp,
                        @InBody("key") String key);
@@ -56,18 +52,6 @@ public interface AccountFacade {
      */
     @SocketCommand(value = COMMAND_LOGIN_INFO)
     Result<LoginInfoVo> getLoginInfo(@Identity long accountId);
-
-    /**
-     * 重登录(断线重连的登录方法)
-     *
-     * @param session   当前的通信会话
-     * @param account   账号名(包括服标识)
-     * @param timestamp 时间戳
-     * @param key       加密串
-     * @return 状态码{@link AccountResult}
-     */
-    @SocketCommand(COMMAND_RELOGIN)
-    Result<Void> relogin(Session session, @InBody("account") String account, @InBody("timestamp") long timestamp, @InBody("key") String key);
 
     /**
      * 检查账号和对应角色是否存在

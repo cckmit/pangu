@@ -2,8 +2,8 @@ package com.pangu.db.data.facade;
 
 import com.pangu.db.data.service.DbService;
 import com.pangu.framework.utils.model.Result;
-import com.pangu.model.anno.ServiceDB;
-import com.pangu.model.db.EntityRes;
+import com.pangu.core.anno.ServiceDB;
+import com.pangu.core.db.EntityRes;
 
 import java.util.Map;
 

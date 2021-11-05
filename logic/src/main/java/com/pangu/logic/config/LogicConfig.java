@@ -1,6 +1,5 @@
-package com.pangu.db.config;
+package com.pangu.logic.config;
 
-import com.pangu.core.config.JdbcConfig;
 import com.pangu.core.config.ServerConfig;
 import com.pangu.core.config.ZookeeperConfig;
 import lombok.Getter;
@@ -8,11 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DbConfig {
+public class LogicConfig {
 
     private ZookeeperConfig zookeeper;
-
-    private JdbcConfig jdbc;
 
     private ServerConfig server;
 }

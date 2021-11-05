@@ -1,4 +1,4 @@
-package com.pangu.db;
+package com.pangu.logic;
 
 import com.pangu.framework.utils.time.DateUtils;
 import com.pangu.core.common.Log4jCloseThread;
@@ -14,8 +14,8 @@ import java.util.TimeZone;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-@ComponentScan("com.pangu.db")
-public class DbApplication {
+@ComponentScan("com.pangu.logic")
+public class LogicApplication {
 
     public static ApplicationContext CONTEXT;
 
@@ -24,15 +24,15 @@ public class DbApplication {
 
     public static void main(String[] args) {
         System.setProperty("log4j.shutdownHookEnabled", "false");
-        System.setProperty("spring.profiles.active", "db");
-        Logger log = LoggerFactory.getLogger(DbApplication.class);
+        System.setProperty("spring.profiles.active", "logic");
+        Logger log = LoggerFactory.getLogger(LogicApplication.class);
         TimeZone timeZone = TimeZone.getDefault();
         log.info("当前系统时区:{},时区名称:{},系统时间:{}", timeZone.getID(), timeZone.getDisplayName(), LocalDateTime.now());
         AnnotationConfigApplicationContext applicationContext = null;
         Log4jCloseThread log4jCloseThread = new Log4jCloseThread();
         Runtime.getRuntime().addShutdownHook(log4jCloseThread);
         try {
-            applicationContext = new AnnotationConfigApplicationContext(DbApplication.class) {
+            applicationContext = new AnnotationConfigApplicationContext(LogicApplication.class) {
                 @Override
                 protected void doClose() {
                     super.stop();

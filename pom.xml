@@ -10,7 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>dbserver</module>
-        <module>model</module>
+        <module>core</module>
         <module>framework/socket</module>
         <module>framework/utils</module>
         <module>framework/cat</module>
@@ -19,6 +19,7 @@
         <module>framework/event</module>
         <module>framework/scheduler</module>
         <module>framework/resource</module>
+        <module>dbaccessor</module>
     </modules>
 
     <properties>

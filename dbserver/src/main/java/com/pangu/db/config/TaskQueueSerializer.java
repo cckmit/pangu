@@ -1,7 +1,7 @@
 package com.pangu.db.config;
 
 import com.pangu.framework.utils.json.JsonUtils;
-import com.pangu.model.common.ZookeeperTask;
+import com.pangu.core.common.ZookeeperTask;
 import org.apache.curator.framework.recipes.queue.QueueSerializer;
 
 public class TaskQueueSerializer implements QueueSerializer<ZookeeperTask> {

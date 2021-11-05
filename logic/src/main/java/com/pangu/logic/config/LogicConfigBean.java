@@ -1,6 +1,6 @@
-package com.pangu.db.config;
+package com.pangu.logic.config;
 
-import com.pangu.core.anno.ComponentDb;
+import com.pangu.core.anno.ComponentLogic;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.core.io.ClassPathResource;
@@ -11,31 +11,31 @@ import org.yaml.snakeyaml.reader.UnicodeReader;
 import java.io.IOException;
 import java.io.Reader;
 
-@ComponentDb
+@ComponentLogic
 @Slf4j
-public class DbConfigBean implements FactoryBean<DbConfig> {
+public class LogicConfigBean implements FactoryBean<LogicConfig> {
 
-    private DbConfig dbConfig;
+    private LogicConfig logicConfig;
 
     @Override
-    public DbConfig getObject() {
-        if (dbConfig != null) {
-            return dbConfig;
+    public LogicConfig getObject() {
+        if (logicConfig != null) {
+            return logicConfig;
         }
         LoaderOptions options = new LoaderOptions();
         options.setAllowDuplicateKeys(false);
         Yaml yaml = new Yaml(options);
         ClassPathResource resource = new ClassPathResource("db.yml");
         try (Reader reader = new UnicodeReader(resource.getInputStream())) {
-            dbConfig = yaml.loadAs(reader, DbConfig.class);
+            logicConfig = yaml.loadAs(reader, LogicConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return dbConfig;
+        return logicConfig;
     }
 
     @Override
     public Class<?> getObjectType() {
-        return DbConfig.class;
+        return LogicConfig.class;
     }
 }
