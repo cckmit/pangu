@@ -1,4 +1,4 @@
-package com.pangu.db.data.facade;
+package com.pangu.core.db.facade;
 
 import com.pangu.framework.socket.anno.SocketDefine;
 

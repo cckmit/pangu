@@ -1,4 +1,4 @@
-package com.pangu.core.db;
+package com.pangu.core.db.model;
 
 import com.pangu.framework.protocol.annotation.Transable;
 import lombok.Getter;

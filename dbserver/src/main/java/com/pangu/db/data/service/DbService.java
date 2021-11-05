@@ -1,8 +1,8 @@
 package com.pangu.db.data.service;
 
-import com.pangu.db.data.facade.DbResult;
+import com.pangu.core.db.facade.DbResult;
 import com.pangu.core.anno.ServiceDB;
-import com.pangu.core.db.EntityRes;
+import com.pangu.core.db.model.EntityRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 

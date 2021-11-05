@@ -4,7 +4,7 @@ import com.pangu.db.config.DbConfig;
 import com.pangu.core.config.JdbcConfig;
 import com.pangu.db.config.SqlConstant;
 import com.pangu.framework.utils.time.DateUtils;
-import com.pangu.core.db.EntityRes;
+import com.pangu.core.db.model.EntityRes;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AccessLevel;
 import lombok.Setter;

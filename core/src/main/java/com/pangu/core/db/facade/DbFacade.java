@@ -1,10 +1,10 @@
-package com.pangu.db.data.facade;
+package com.pangu.core.db.facade;
 
 import com.pangu.framework.socket.anno.InBody;
 import com.pangu.framework.socket.anno.SocketCommand;
 import com.pangu.framework.socket.anno.SocketModule;
 import com.pangu.framework.utils.model.Result;
-import com.pangu.core.db.EntityRes;
+import com.pangu.core.db.model.EntityRes;
 
 import java.util.Map;
 

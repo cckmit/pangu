@@ -3,7 +3,7 @@ package com.pangu.db.data.service;
 import com.pangu.db.config.DbConfig;
 import com.pangu.db.config.DbConfigBean;
 import com.pangu.core.config.JdbcConfig;
-import com.pangu.core.db.EntityRes;
+import com.pangu.core.db.model.EntityRes;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
