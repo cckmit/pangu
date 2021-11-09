@@ -5,9 +5,17 @@ zookeeper:
   rootPath: /pangu
   serverId: logic1
   minStartUp: 1
-jdbc:
-  addr: 127.0.0.1:3306/
-  params: ?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-  username: root
-  password: root
-  databasePrefix: pangu_
+xa:
+  socket:
+    address: 0.0.0.0:8889
+    server:
+      read: 16384
+      write: 16384
+    ssl:
+      server:
+        enable: false
+      client:
+        enable: false
+      password: PO1H9UmonGD6l2iF
+      storeType: JKS
+      storePath: /ssl/xaigame.jks

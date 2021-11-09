@@ -31,7 +31,7 @@
         <log4j2.version>2.8.2</log4j2.version>
         <spring.version>5.2.5.RELEASE</spring.version>
         <commons.lang3.version>3.10</commons.lang3.version>
-        <javassist.version>3.22.0-GA</javassist.version>
+        <javassist.version>3.28.0-GA</javassist.version>
         <cglib.version>3.2.6</cglib.version>
         <jakarta.version>3.1</jakarta.version>
         <beanutils-version>1.8.3</beanutils-version>
@@ -39,6 +39,7 @@
         <lmax.version>3.3.7</lmax.version>
         <zookeeper.version>3.7.0</zookeeper.version>
         <curator.version>5.2.0</curator.version>
+        <javax.persistence.version>2.2</javax.persistence.version>
     </properties>
 
     <dependencies>

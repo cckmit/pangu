@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration name="ManageLogConfig" status="INFO" monitorInterval="300">
+    <properties>
+        <property name="MESSAGE_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+        </property>
+    </properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${MESSAGE_PATTERN}"/>
+        </Console>
+    </appenders>
+    <Loggers>
+        <asyncRoot level="info">
+            <!--            <AppenderRef ref="File"/>-->
+            <AppenderRef ref="Console"/>
+        </asyncRoot>
+        <logger name="com.pangu" level="DEBUG"/>
+    </Loggers>
+</configuration>

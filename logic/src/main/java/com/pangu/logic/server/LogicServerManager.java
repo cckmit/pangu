@@ -1,5 +1,6 @@
 package com.pangu.logic.server;
 
+import com.pangu.dbaccess.service.IDbServerAccessor;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.logic.config.LogicConfig;
 import com.pangu.core.anno.ServiceLogic;
@@ -21,11 +22,12 @@ import org.springframework.context.Lifecycle;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @ServiceLogic
 @Slf4j
-public class LogicServerManager implements Lifecycle {
+public class LogicServerManager implements Lifecycle, IDbServerAccessor {
 
     private final LogicConfig logicConfig;
 
@@ -78,7 +80,7 @@ public class LogicServerManager implements Lifecycle {
 
         ServiceInstanceBuilder<InstanceDetails> builder = ServiceInstance.<InstanceDetails>builder()
                 .id(id)
-                .name(Constants.DB_SERVICE_NAME)
+                .name(Constants.LOGIC_SERVICE_NAME)
                 .address(ip)
                 .port(Integer.parseInt(split[1]))
                 .payload(new InstanceDetails());
@@ -144,17 +146,27 @@ public class LogicServerManager implements Lifecycle {
         try {
             serviceDiscovery.unregisterService(serviceInstance);
         } catch (Exception e) {
-            log.debug("取消注册服务[{}]", Constants.DB_SERVICE_NAME, e);
+            log.debug("取消注册服务[{}]", Constants.LOGIC_SERVICE_NAME, e);
         }
         CloseableUtils.closeQuietly(serviceDiscovery);
         if (framework != null) {
             CloseableUtils.closeQuietly(framework);
         }
-        log.debug("服务器[{}]取消注册进入服务器", Constants.DB_SERVICE_NAME);
+        log.debug("服务器[{}]取消注册进入服务器", Constants.LOGIC_SERVICE_NAME);
     }
 
     @Override
     public boolean isRunning() {
         return running.get();
+    }
+
+    @Override
+    public Map<String, ServerInfo> getDbs() {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getDbManagedServer() {
+        return null;
     }
 }

@@ -1,24 +1,239 @@
 package com.pangu.dbaccess.service;
 
 import com.pangu.core.common.ServerInfo;
+import com.pangu.core.db.facade.DbFacade;
+import com.pangu.core.db.model.EntityRes;
+import com.pangu.dbaccess.config.EntityConfig;
+import com.pangu.dbaccess.config.EntityConfigParser;
+import com.pangu.dbaccess.config.FieldDesc;
+import com.pangu.framework.socket.client.Client;
+import com.pangu.framework.socket.client.ClientFactory;
+import com.pangu.framework.utils.json.JsonUtils;
+import com.pangu.framework.utils.lang.NumberUtils;
+import com.pangu.framework.utils.model.Result;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityService {
 
     private final IDbServerAccessor dbServerAccessor;
+    private final ClientFactory clientFactory;
 
-    public EntityService(IDbServerAccessor dbServerAccessor) {
+    private final ConcurrentHashMap<Class<?>, EntityConfig> configs = new ConcurrentHashMap<>();
+
+    public EntityService(IDbServerAccessor dbServerAccessor, ClientFactory clientFactory) {
         this.dbServerAccessor = dbServerAccessor;
+        this.clientFactory = clientFactory;
     }
 
-    public <PK extends Comparable<PK> & Serializable, T extends IEntity<PK>> T load(String serverId, Class<T> clz, PK pk) {
+    public <PK extends Comparable<PK> & Serializable, T> T load(String userServerId, Class<T> clz, PK pk) {
+        EntityConfig entityConfig = getEntityConfig(clz);
+        DbFacade proxy = getDbFacade(userServerId);
+        Result<EntityRes> result = proxy.load(userServerId, entityConfig.getTableName(), entityConfig.getIdName(), pk);
+        if (result.getCode() < 0) {
+            String msg = String.format("服%s检索表%s通过id列%s值%s错误%d", userServerId,
+                    entityConfig.getTableName(),
+                    entityConfig.getIdName(),
+                    pk,
+                    result.getCode());
+            throw new IllegalStateException(msg);
+        }
+        EntityRes content = result.getContent();
+        if (content == null) {
+            return null;
+        }
+        if (content.isError()) {
+            throw new IllegalStateException(content.getMsg());
+        }
+        Map<String, Object> columns = content.getColumns();
+        if (columns == null || columns.isEmpty()) {
+            return null;
+        }
+        T instance;
+        try {
+            instance = clz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+        List<FieldDesc> fieldDesc = entityConfig.getFieldDesc();
+        for (FieldDesc desc : fieldDesc) {
+            Object value = columns.remove(desc.getColumnName());
+            if (value == null) {
+                continue;
+            }
+            Type fileType = desc.getFileType();
+            if (fileType instanceof Class<?>) {
+                Class<?> ct = (Class<?>) fileType;
+                if (Number.class.isAssignableFrom(ct)) {
+                    if (value instanceof Number) {
+                        Object o = NumberUtils.valueOf(fileType, (Number) value);
+                        try {
+                            desc.getField().set(instance, o);
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException(e);
+                        }
+                    } else if (value instanceof String) {
+                        Object o = NumberUtils.valueOf(fileType, (String) value);
+                        try {
+                            desc.getField().set(instance, o);
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException(e);
+                        }
+                    } else {
+                        String msg = String.format("数字类型解析异常%s,%s", value.getClass(), value);
+                        throw new IllegalStateException(msg);
+                    }
+                    continue;
+                }
+                try {
+                    desc.getField().set(instance, value);
+                } catch (IllegalAccessException e) {
+                    throw new IllegalStateException(e);
+                }
+            } else {
+                Object ret = JsonUtils.string2Object((String) value, fileType);
+                try {
+                    desc.getField().set(instance, ret);
+                } catch (IllegalAccessException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+        return instance;
+    }
+
+    private DbFacade getDbFacade(String userServerId) {
+        ServerInfo serverInfo = getServerInfo(userServerId);
+        Client client = clientFactory.getClient(serverInfo.getAddress());
+        return client.getProxy(DbFacade.class);
+    }
+
+    private <T> EntityConfig getEntityConfig(Class<T> clz) {
+        EntityConfig entityConfig = configs.get(clz);
+        if (entityConfig == null) {
+            //noinspection SynchronizationOnLocalVariableOrMethodParameter
+            synchronized (clz) {
+                entityConfig = configs.get(clz);
+                if (entityConfig == null) {
+                    entityConfig = EntityConfigParser.parse(clz);
+                    configs.put(clz, entityConfig);
+                }
+            }
+        }
+        return entityConfig;
+    }
+
+    public <PK extends Comparable<PK> & Serializable, T> T loadOrCreate(String userServerId, Class<T> clz, PK pk, EntityBuilder<PK, T> builder) {
+        T load = load(userServerId, clz, pk);
+        if (load != null) {
+            return load;
+        }
+        T t = builder.newInstance(pk);
+        DbFacade dbFacade = getDbFacade(userServerId);
+        EntityConfig entityConfig = getEntityConfig(clz);
+        List<FieldDesc> fieldDesc = entityConfig.getFieldDesc();
+        Map<String, Object> values = new HashMap<>(fieldDesc.size());
+        Object id = null;
+        for (FieldDesc desc : fieldDesc) {
+            Object o;
+            try {
+                o = desc.getField().get(t);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            }
+            if ((o instanceof Map) || (o instanceof Collection)) {
+                o = JsonUtils.object2String(o);
+            }
+            values.put(desc.getColumnName(), o);
+            if (entityConfig.getIdName().equals(desc.getFieldName())) {
+                id = o;
+            }
+        }
+        dbFacade.insert(userServerId, entityConfig.getTableName(), id, values);
+        return t;
+    }
+
+    /**
+     * 更新实体
+     *
+     * @param userServerId
+     * @param entity
+     */
+    public void writeToDB(String userServerId, Object entity) {
+        Class<?> clz = entity.getClass();
+        EntityConfig entityConfig = getEntityConfig(clz);
+        List<FieldDesc> fieldDesc = entityConfig.getFieldDesc();
+        Map<String, Object> values = new HashMap<>(fieldDesc.size());
+        Object id = null;
+        for (FieldDesc desc : fieldDesc) {
+            Object o;
+            try {
+                o = desc.getField().get(entity);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            }
+            if ((o instanceof Map) || (o instanceof Collection)) {
+                o = JsonUtils.object2String(o);
+            }
+            values.put(desc.getColumnName(), o);
+            if (entityConfig.getIdName().equals(desc.getFieldName())) {
+                id = o;
+            }
+        }
+        DbFacade proxy = getDbFacade(userServerId);
+        proxy.update(userServerId, entityConfig.getTableName(), entityConfig.getIdName(), id, values);
+    }
+
+    /**
+     * 删除实体
+     *
+     * @param userServerId
+     * @param entity
+     */
+    public void delete(String userServerId, Object entity) {
+        Class<?> clz = entity.getClass();
+        EntityConfig entityConfig = getEntityConfig(clz);
+        List<FieldDesc> fieldDesc = entityConfig.getFieldDesc();
+        Object id = null;
+        for (FieldDesc desc : fieldDesc) {
+            Object o;
+            try {
+                o = desc.getField().get(entity);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            }
+            if ((o instanceof Map) || (o instanceof Collection)) {
+                o = JsonUtils.object2String(o);
+            }
+            if (entityConfig.getIdName().equals(desc.getFieldName())) {
+                id = o;
+            }
+        }
+        DbFacade proxy = getDbFacade(userServerId);
+        proxy.delete(userServerId, entityConfig.getTableName(), entityConfig.getIdName(), id);
+    }
+
+    private ServerInfo getServerInfo(String userServerId) {
         Map<String, ServerInfo> dbs = dbServerAccessor.getDbs();
         if (dbs == null || dbs.isEmpty()) {
             throw new IllegalStateException("没有找到任意一个数据库服");
         }
-
-        return null;
+        Map<String, String> dbManagedServer = dbServerAccessor.getDbManagedServer();
+        String dbServerId = dbManagedServer.get(userServerId);
+        if (dbServerId == null) {
+            throw new IllegalStateException("数据库Id[" + userServerId + "]未找到绑定的DB Server");
+        }
+        ServerInfo serverInfo = dbs.get(dbServerId);
+        if (serverInfo == null) {
+            throw new IllegalStateException("数据库检索Db Server[" + dbServerId + "]未启动");
+        }
+        return serverInfo;
     }
+
 }
