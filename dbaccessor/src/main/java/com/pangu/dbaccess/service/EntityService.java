@@ -14,10 +14,7 @@ import com.pangu.framework.utils.model.Result;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityService {
@@ -34,13 +31,19 @@ public class EntityService {
 
     public <PK extends Comparable<PK> & Serializable, T> T load(String userServerId, Class<T> clz, PK pk) {
         EntityConfig entityConfig = getEntityConfig(clz);
+        String idColumnName = entityConfig.getIdName();
+        return loadOne(userServerId, clz, idColumnName, pk);
+    }
+
+    private <COL extends Comparable<COL> & Serializable, T> T loadOne(String userServerId, Class<T> clz, String columnName, COL colValue) {
+        EntityConfig entityConfig = getEntityConfig(clz);
         DbFacade proxy = getDbFacade(userServerId);
-        Result<EntityRes> result = proxy.load(userServerId, entityConfig.getTableName(), entityConfig.getIdName(), pk);
+        Result<EntityRes> result = proxy.load(userServerId, entityConfig.getTableName(), columnName, colValue);
         if (result.getCode() < 0) {
             String msg = String.format("服%s检索表%s通过id列%s值%s错误%d", userServerId,
                     entityConfig.getTableName(),
-                    entityConfig.getIdName(),
-                    pk,
+                    columnName,
+                    colValue,
                     result.getCode());
             throw new IllegalStateException(msg);
         }
@@ -159,13 +162,48 @@ public class EntityService {
         return t;
     }
 
+    public <PK extends Comparable<PK> & Serializable, T> T unique(String userServerId, Class<T> clz, String uniqueName, PK uniqueValue) {
+        EntityConfig entityConfig = getEntityConfig(clz);
+        Set<String> uniqueNames = entityConfig.getUniqueNames();
+        if (uniqueNames == null || !uniqueNames.contains(uniqueName)) {
+            throw new IllegalArgumentException("uniqueName参数错误,实体解析验证失败");
+        }
+
+        return loadOne(userServerId, clz, uniqueName, uniqueValue);
+    }
+
+    public void create(String userServerId, Object entity) {
+        Class<?> clz = entity.getClass();
+        EntityConfig entityConfig = getEntityConfig(clz);
+        List<FieldDesc> fieldDesc = entityConfig.getFieldDesc();
+        Map<String, Object> values = new HashMap<>(fieldDesc.size());
+        Object id = null;
+        for (FieldDesc desc : fieldDesc) {
+            Object o;
+            try {
+                o = desc.getField().get(entity);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            }
+            if ((o instanceof Map) || (o instanceof Collection)) {
+                o = JsonUtils.object2String(o);
+            }
+            values.put(desc.getColumnName(), o);
+            if (entityConfig.getIdName().equals(desc.getFieldName())) {
+                id = o;
+            }
+        }
+        DbFacade proxy = getDbFacade(userServerId);
+        proxy.insert(userServerId, entityConfig.getTableName(), id, values);
+    }
+
     /**
      * 更新实体
      *
      * @param userServerId
      * @param entity
      */
-    public void writeToDB(String userServerId, Object entity) {
+    public void updateToDB(String userServerId, Object entity) {
         Class<?> clz = entity.getClass();
         EntityConfig entityConfig = getEntityConfig(clz);
         List<FieldDesc> fieldDesc = entityConfig.getFieldDesc();

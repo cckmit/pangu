@@ -14,4 +14,5 @@ public class Constants {
     public static final String CENTER_DATABASE_NAME = "center";
 
     public static final String LOGIC_SERVICE_NAME = "logic_server";
+    public static final String IDX_MANAGE = "/logic-idx/";
 }

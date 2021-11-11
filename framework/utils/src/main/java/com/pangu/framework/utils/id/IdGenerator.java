@@ -73,6 +73,17 @@ public class IdGenerator {
         this.min = limits[0];
     }
 
+    public void update(long current) {
+        int newValue = toShortId(current);
+        long cc;
+        do {
+            cc = this.current.get();
+            if (cc > current) {
+                return;
+            }
+        } while (!this.current.compareAndSet(cc, newValue));
+    }
+
     /**
      * 获取当前的主键值
      *
@@ -110,6 +121,9 @@ public class IdGenerator {
         return limit;
     }
 
+    public int getVersion() {
+        return version;
+    }
     // Static Method's ...
 
     /**
@@ -155,6 +169,17 @@ public class IdGenerator {
         int operator = toOperator(id);
         int server = toServer(id);
         return operator + "_" + server;
+    }
+
+    public static int[] toOperatorServer(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("id参数为空");
+        }
+        String[] split = id.split("_");
+        if (split.length != 2) {
+            throw new IllegalArgumentException("id参数格式错误");
+        }
+        return new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
     }
 
     /**

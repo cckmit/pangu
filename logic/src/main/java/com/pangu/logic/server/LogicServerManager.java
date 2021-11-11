@@ -1,13 +1,14 @@
 package com.pangu.logic.server;
 
-import com.pangu.dbaccess.service.IDbServerAccessor;
-import com.pangu.framework.utils.os.NetUtils;
-import com.pangu.logic.config.LogicConfig;
 import com.pangu.core.anno.ServiceLogic;
 import com.pangu.core.common.Constants;
 import com.pangu.core.common.InstanceDetails;
 import com.pangu.core.common.ServerInfo;
 import com.pangu.core.config.ZookeeperConfig;
+import com.pangu.dbaccess.service.IDbServerAccessor;
+import com.pangu.framework.utils.lang.ByteUtils;
+import com.pangu.framework.utils.os.NetUtils;
+import com.pangu.logic.config.LogicConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -38,8 +39,13 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
     private ServiceCache<InstanceDetails> serverCache;
     private List<ServerInfo> dbServers;
 
+    private final int serverId;
+
+    private volatile long preSavedIdx;
+
     public LogicServerManager(LogicConfig logicConfig) {
         this.logicConfig = logicConfig;
+        this.serverId = Integer.parseInt(logicConfig.getZookeeper().getServerId());
     }
 
     @Override
@@ -168,5 +174,49 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
     @Override
     public Map<String, String> getDbManagedServer() {
         return null;
+    }
+
+    public int getServerId() {
+        return serverId;
+    }
+
+    public long getManagedServerIndex(String userServerId) {
+        ZookeeperConfig zookeeper = logicConfig.getZookeeper();
+        String path = zookeeper.getRootPath()
+                + Constants.IDX_MANAGE
+                + zookeeper.getServerId()
+                + "/" + userServerId;
+        try {
+            byte[] bytes = framework.getData().forPath(path);
+            return ByteUtils.longFromByte(bytes);
+        } catch (Exception exp) {
+            log.info("查询IDx错误[{}]", userServerId, exp);
+            try {
+                framework.create().creatingParentsIfNeeded().forPath(path, ByteUtils.longToByte(1));
+            } catch (Exception e) {
+                log.info("创建错误", e);
+            }
+        }
+        preSavedIdx = 1;
+        return 1;
+    }
+
+    public void saveManagedServerIndex(String userServerId, long index) {
+        if (index <= preSavedIdx) {
+            return;
+        }
+        ZookeeperConfig zookeeper = logicConfig.getZookeeper();
+        String path = zookeeper.getRootPath()
+                + Constants.IDX_MANAGE
+                + zookeeper.getServerId()
+                + "/" + userServerId;
+        preSavedIdx = index + 1000;
+        try {
+            framework.setData().inBackground().withUnhandledErrorListener((message, e) -> {
+                log.info("设置保存Idx异常[{}]", message, e);
+            }).forPath(path, ByteUtils.longToByte(preSavedIdx));
+        } catch (Exception e) {
+            log.info("保存IDx错误[{}]", userServerId, e);
+        }
     }
 }
