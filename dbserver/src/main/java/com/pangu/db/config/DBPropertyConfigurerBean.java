@@ -1,8 +1,8 @@
-package com.pangu.logic.config;
+package com.pangu.db.config;
 
+import com.pangu.core.anno.ConfigurationDb;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@Configuration
-public class PropertySourcesPlaceholderConfigurerBean {
+@ConfigurationDb
+public class DBPropertyConfigurerBean {
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer getBean(){
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
         YamlPropertiesFactoryBean bean = new YamlPropertiesFactoryBean();
-        bean.setResources(new ClassPathResource("logic.yml"));
+        bean.setResources(new ClassPathResource("db.yml"));
         Properties object = bean.getObject();
         if (object == null) {
             return configurer;

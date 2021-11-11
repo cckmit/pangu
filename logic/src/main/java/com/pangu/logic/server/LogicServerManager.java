@@ -72,7 +72,7 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
     }
 
     private void registerServer() throws Exception {
-        String address = logicConfig.getServer().getAddress();
+        String address = logicConfig.getSocket().getAddress();
         String[] split = address.trim().split(":");
         if (split.length == 0) {
             throw new IllegalStateException("服务器配置 server.address 配置为空，配置格式: 内网IP:端口，如192.168.11.88:8001");

@@ -1,5 +1,7 @@
-server:
-  address: ':8001'
+socket:
+  address: 0.0.0.0:8101
+  serverRead: 16384
+  serverWrite: 16384
 zookeeper:
   addr: localhost:2181
   rootPath: /pangu

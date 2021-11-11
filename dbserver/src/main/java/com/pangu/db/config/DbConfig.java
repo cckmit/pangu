@@ -14,5 +14,5 @@ public class DbConfig {
 
     private JdbcConfig jdbc;
 
-    private ServerConfig server;
+    private ServerConfig socket;
 }

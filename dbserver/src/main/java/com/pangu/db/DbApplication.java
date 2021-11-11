@@ -1,7 +1,8 @@
 package com.pangu.db;
 
-import com.pangu.framework.utils.time.DateUtils;
 import com.pangu.core.common.Log4jCloseThread;
+import com.pangu.framework.socket.spring.EnableSocketServer;
+import com.pangu.framework.utils.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -15,6 +16,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 @ComponentScan("com.pangu.db")
+@EnableSocketServer
 public class DbApplication {
 
     public static ApplicationContext CONTEXT;

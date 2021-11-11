@@ -23,26 +23,26 @@ import java.util.Collection;
 public class ServerFactoryBean implements FactoryBean<SocketServer>, ApplicationListener<ApplicationEvent> {
 
     // 读缓冲
-    @Value("${xa.socket.server.read:2048}")
+    @Value("${socket.serverRead:2048}")
     private Integer readBuffSize;
     // 写缓冲
-    @Value("${xa.socket.server.write:2048}")
+    @Value("${socket.serverWrite:2048}")
     private Integer writeBuffSize;
     // 等待连接最大数量
-    @Value("${xa.socket.backlog:256}")
+    @Value("${socket.backlog:256}")
     private Integer backlog;
 
-    @Value("${xa.socket.address:0.0.0.0:11111}")
+    @Value("${socket.address:0.0.0.0:11111}")
     private String address;
 
-    @Value("${xa.socket.bossThreadName:服务器BOSS线程}")
+    @Value("${socket.bossThreadName:服务器BOSS线程}")
     private String bossThreadName;
 
     @Autowired(required = false)
     @Qualifier("serverBossGroup")
     private NioEventLoopGroup bossEventGroup;
 
-    @Value("${xa.socket.workThreadName:服务器NIO线程}")
+    @Value("${socket.workThreadName:服务器NIO线程}")
     private String workThreadName;
 
     @Autowired(required = false)
@@ -53,22 +53,22 @@ public class ServerFactoryBean implements FactoryBean<SocketServer>, Application
     private int workThreadAmount;
 
     // 是否启用
-    @Value("${xa.socket.ssl.server.enable:false}")
+    @Value("${socket.sslServerEnable:false}")
     private boolean enabled;
 
     //证书密码
-    @Value("${xa.socket.ssl.password:}")
+    @Value("${socket.sslPassword:}")
     private String password;
 
     //证书类型
-    @Value("${xa.socket.ssl.storeType:}")
+    @Value("${socket.sslStoreType:}")
     private String storeType;
 
     // 证书路径
-    @Value("${xa.socket.ssl.storePath:}")
+    @Value("${socket.sslStorePath:}")
     private String storePath;
 
-    @Value("${xa.socket.bootstrap:io.netty.channel.socket.nio.NioServerSocketChannel}")
+    @Value("${socket.bootstrap:io.netty.channel.socket.nio.NioServerSocketChannel}")
     private Class<? extends ServerSocketChannel> bootstrapClass;
 
     @Autowired

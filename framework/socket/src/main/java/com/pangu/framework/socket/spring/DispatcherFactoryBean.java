@@ -16,10 +16,10 @@ public class DispatcherFactoryBean implements FactoryBean<Dispatcher>, BeanPostP
 
     private Dispatcher dispatcher;
 
-    @Value("${server.coder.default:1}")
+    @Value("${socket.coder:1}")
     private byte defaultCoder;
 
-    @Value("${server.thread.manage-thread:false}")
+    @Value("${socket.manage-thread:false}")
     private boolean manageUseThread;
 
     @Autowired(required = false)
