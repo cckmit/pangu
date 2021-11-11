@@ -1,19 +1,20 @@
 package com.pangu.db.server;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.pangu.db.config.DbConfig;
-import com.pangu.core.config.JdbcConfig;
-import com.pangu.db.config.TaskQueueSerializer;
-import com.pangu.core.config.ZookeeperConfig;
-import com.pangu.db.data.service.DbService;
-import com.pangu.framework.utils.json.JsonUtils;
-import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.core.anno.ComponentDb;
 import com.pangu.core.common.Constants;
 import com.pangu.core.common.InstanceDetails;
 import com.pangu.core.common.ServerInfo;
 import com.pangu.core.common.ZookeeperTask;
+import com.pangu.core.config.JdbcConfig;
+import com.pangu.core.config.ZookeeperConfig;
+import com.pangu.db.config.DbConfig;
+import com.pangu.db.config.TaskQueueSerializer;
+import com.pangu.db.data.service.DbService;
+import com.pangu.framework.utils.json.JsonUtils;
+import com.pangu.framework.utils.os.NetUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
@@ -143,10 +144,16 @@ public class DbServerManager implements Lifecycle {
         if (split.length == 0) {
             throw new IllegalStateException("服务器配置 server.address 配置为空，配置格式: 内网IP:端口，如192.168.11.88:8001");
         }
-        String ip = "";
+        String ip;
         if (split.length <= 1) {
             InetAddress localAddress = NetUtils.getLocalAddress();
             ip = localAddress.getHostAddress();
+        }else{
+            ip = split[0];
+            if (StringUtils.isBlank(ip) || !NetUtils.validIp(ip)) {
+                InetAddress localAddress = NetUtils.getLocalAddress();
+                ip = localAddress.getHostAddress();
+            }
         }
         String id = dbConfig.getZookeeper().getServerId();
 

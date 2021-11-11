@@ -18,10 +18,10 @@ import static java.util.Collections.emptyList;
 public class NetUtils {
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
 
-    private static final String ANYHOST_VALUE = "0.0.0.0";
-    private static final String LOCALHOST_VALUE = "127.0.0.1";
+    public static final String ANYHOST_VALUE = "0.0.0.0";
+    public static final String LOCALHOST_VALUE = "127.0.0.1";
     private static volatile InetAddress LOCAL_ADDRESS = null;
-    
+
     public static InetAddress getLocalAddress() {
         if (LOCAL_ADDRESS != null) {
             return LOCAL_ADDRESS;
@@ -51,7 +51,7 @@ public class NetUtils {
                 }
             }
         } catch (Throwable e) {
-            log.warn("获取本地ip异常",e);
+            log.warn("获取本地ip异常", e);
         }
 
         try {
@@ -61,24 +61,25 @@ public class NetUtils {
                 return addressOp.get();
             }
         } catch (Throwable e) {
-            log.warn("获取本地ip异常",e);
+            log.warn("获取本地ip异常", e);
         }
 
 
         return localAddress;
     }
+
     private static NetworkInterface findNetworkInterface() {
 
         List<NetworkInterface> validNetworkInterfaces = emptyList();
         try {
             validNetworkInterfaces = getValidNetworkInterfaces();
         } catch (Throwable e) {
-            log.warn("获取本地ip异常",e);
+            log.warn("获取本地ip异常", e);
         }
 
         return validNetworkInterfaces.get(0);
     }
-    
+
     private static List<NetworkInterface> getValidNetworkInterfaces() throws SocketException {
         List<NetworkInterface> validNetworkInterfaces = new LinkedList<>();
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -87,11 +88,31 @@ public class NetUtils {
             if (ignoreNetworkInterface(networkInterface)) { // ignore
                 continue;
             }
-            validNetworkInterfaces.add(networkInterface);
+            if (networkInterface.getName().startsWith("bridge")) {
+                continue;
+            }
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            boolean valid = false;
+            while (addresses.hasMoreElements()) {
+                Optional<InetAddress> addressOp = toValidAddress(addresses.nextElement());
+                if (addressOp.isPresent()) {
+                    try {
+                        if (addressOp.get().isReachable(100)) {
+                            valid = true;
+                            break;
+                        }
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            }
+            if (valid) {
+                validNetworkInterfaces.add(networkInterface);
+            }
         }
         return validNetworkInterfaces;
     }
-    
+
     private static boolean ignoreNetworkInterface(NetworkInterface networkInterface) throws SocketException {
         return networkInterface == null
                 || networkInterface.isLoopback()
@@ -116,6 +137,10 @@ public class NetUtils {
                 && IP_PATTERN.matcher(name).matches()
                 && !ANYHOST_VALUE.equals(name)
                 && !LOCALHOST_VALUE.equals(name));
+    }
+
+    public static boolean validIp(String ip) {
+        return !ANYHOST_VALUE.equals(ip) && !LOCALHOST_VALUE.equals(ip);
     }
 
 }
