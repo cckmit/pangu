@@ -1,4 +1,4 @@
-package com.pangu.logic.config;
+package com.pangu.gateway.config;
 
 import com.pangu.core.config.ServerConfig;
 import com.pangu.core.config.ZookeeperConfig;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LogicConfig {
+public class GatewayConfig {
 
     private ZookeeperConfig zookeeper;
 

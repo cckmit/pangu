@@ -20,6 +20,7 @@
         <module>framework/scheduler</module>
         <module>framework/resource</module>
         <module>dbaccessor</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
