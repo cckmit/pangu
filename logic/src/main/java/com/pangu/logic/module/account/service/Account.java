@@ -346,15 +346,12 @@ public class Account {
     /**
      * 构造方法
      */
-    public static Account valueOf(long id, String name, String channel, String createIp, String device, String IMEI) {
+    public static Account valueOf(long id, String name, String channel) {
         Account result = new Account();
         result.id = id;
         result.name = name;
         result.channel = channel;
-        result.device = device;
-        result.IMEI = IMEI;
         Date now = new Date();
-        result.createIp = createIp;
         result.createdOn = now;
         result.loginOn = now;
         result.logoutOn = now;

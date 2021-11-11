@@ -10,11 +10,10 @@ public class AccountService {
     private final EntityService entityService;
 
     public AccountService(EntityService entityService) {
-
         this.entityService = entityService;
     }
 
     public void create(String account, String name, Sex sex, String channel) {
-
+        Account acc = Account.valueOf(1, account, channel);
     }
 }

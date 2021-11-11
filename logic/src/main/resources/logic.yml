@@ -11,11 +11,3 @@ xa:
     server:
       read: 16384
       write: 16384
-    ssl:
-      server:
-        enable: false
-      client:
-        enable: false
-      password: PO1H9UmonGD6l2iF
-      storeType: JKS
-      storePath: /ssl/xaigame.jks

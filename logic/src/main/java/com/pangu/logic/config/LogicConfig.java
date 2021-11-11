@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class LogicConfig {
 
+    private int serverIndexId;
+
     private ZookeeperConfig zookeeper;
 
     private ServerConfig server;

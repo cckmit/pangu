@@ -6,23 +6,19 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 主键生成器<br>
- * [保留位:1][运营商:9][服务器位:14][系统到达现在有多少个半个小时:21][主键自增位:19]
- * 为确保尽可能保证生成的ID的唯一性，防止服务器清库之后，生成重复的玩家ID或者订单ID，时间单位保留21位
- * BASE_UNIT = 2 * 60 * 1000 精确度位2分钟，即两分钟之内支持id个数位 2<<19 - 1 	为52_4287个
- * 时间阶段支持为 2020-01-01到2027-01-01
- * 所以当日期超过2027年时，本系统已经不支持
+ * [保留位:1][运营商:8][服务器位:13][服务器编号:6][主键自增位:36]
+ * [保留][256][8192][64][687 1947 6736]
  */
 @Slf4j
 public class IdGenerator {
 
-    private static final int operatorBit = 9;
-    private static final int serverBit = 14;
+    static final int operatorBit = 8;
+    static final int serverBit = 13;
+    static final int versionBit = 6;
+    static final int idxBit = 36;
 
-    private static final int shortIdMax = (1 << 19) - 1;
-    private static final int dayHourMax = (1 << 21) - 1;
-    public static final int BASE_UNIT = 2 * 60 * 1000;
-    public static final long S_2020_01_01 = 1577808000000L;
-    public static final long S_2027_01_01 = 1798732800000L;
+    private static final long shortIdMax = (1L << idxBit) - 1;
+    private static final int versionMax = (1 << versionBit) - 1;
 
     /**
      * 运营商标识
@@ -32,6 +28,8 @@ public class IdGenerator {
      * 服务器标识
      */
     private final int server;
+
+    private final int version;
     /**
      * 当前自增值
      */
@@ -53,27 +51,24 @@ public class IdGenerator {
      * @param current  当前的主键值
      */
     public IdGenerator(int operator, int server, Long current) {
-        if (!vaildValue(operator, operatorBit)) {
+        this(operator, server, 0, current);
+    }
+
+    public IdGenerator(int operator, int server, int version, long current) {
+        if (notValid(operator, operatorBit)) {
             throw new IllegalArgumentException("运营商标识[" + operator + "]超过了9位二进制数的表示范围");
         }
-        if (!vaildValue(server, serverBit)) {
+        if (notValid(server, serverBit)) {
             throw new IllegalArgumentException("服务器标识[" + server + "]超过了14位二进制数的表示范围");
         }
         this.operator = operator;
         this.server = server;
+        this.version = version;
 
         final long[] limits = getLimits(operator, server);
-        if (current != null) {
-            if (current < limits[0] || current > limits[1]) {
-                throw new IllegalArgumentException("当前主键值[" + current + "],不符合运营商标识[" + operator + "]服务器标识[" + server
-                        + "]的要求");
-            }
-            int shortId = toShortId(current);
+        int shortId = toShortId(current);
 
-            this.current = new AtomicLong(shortId);
-        } else {
-            this.current = new AtomicLong(0);
-        }
+        this.current = new AtomicLong(shortId);
         this.limit = limits[1];
         this.min = limits[0];
     }
@@ -94,23 +89,11 @@ public class IdGenerator {
      * @throws IllegalStateException 到达边界值时会抛出该异常
      */
     public long getNext() {
-        long day = getHalfHourCount();
         long shortId = current.incrementAndGet();
-
-        long result = min | ((day & 0x1F_FF_FF) << 19) | (shortId & shortIdMax);
-
-        if (result > limit) {
-            throw new IllegalStateException("主键值[" + result + "]已经超出了边界[" + limit + "]");
+        if (shortId > shortIdMax) {
+            log.warn("主键值[" + shortId + "]已经超出了边界[" + limit + "]");
         }
-        return result;
-    }
-
-    private long getHalfHourCount() {
-        long cur = System.currentTimeMillis();
-        if (cur > S_2027_01_01) {
-            log.warn("唯一id支持2020-01-01到2027-01-01，当前时间已经超过区间，请修改id生成器");
-        }
-        return (cur - S_2020_01_01) / BASE_UNIT;
+        return min | (version & versionMax) | (shortId & shortIdMax);
     }
 
     // Getter and Setter ...
@@ -136,25 +119,8 @@ public class IdGenerator {
      * @return
      */
     public static int toShortId(long id) {
-        if ((0x80_00_00_00_00_00_00_00L & id) != 0) {
-            throw new IllegalArgumentException("无效的ID标识值:" + id);
-        }
         // 将高位置0(保留位+运营商位+服务器位)
         return (int) (id & shortIdMax);
-    }
-
-    /**
-     * 取主键的天数标志
-     *
-     * @param id
-     * @return
-     */
-    public static int toDay(long id) {
-        if ((0x80_00_00_00_00_00_00_00L & id) != 0) {
-            throw new IllegalArgumentException("无效的ID标识值:" + id);
-        }
-        // 将高位置0(保留位+运营商位+服务器位)
-        return (int) ((id >> 19) & dayHourMax);
     }
 
     /**
@@ -164,11 +130,8 @@ public class IdGenerator {
      * @return
      */
     public static short toServer(long id) {
-        if ((0x80_00_00_00_00_00_00_00L & id) != 0) {
-            throw new IllegalArgumentException("无效的ID标识值:" + id);
-        }
         // 将高位置0(保留位+运营商位+服务器位)
-        return (short) ((id >> 40) & 0x00_00_00_00_00_00_3F_FFL);
+        return (short) ((id >> (versionBit + idxBit)) & ((1 << serverBit) - 1));
     }
 
     /**
@@ -178,11 +141,8 @@ public class IdGenerator {
      * @return
      */
     public static short toOperator(long id) {
-        if ((0x80_00_00_00_00_00_00_00L & id) != 0) {
-            throw new IllegalArgumentException("无效的ID标识值:" + id);
-        }
         // 将高位置0(保留位+运营商位+服务器位)
-        return (short) ((id >> 54) & 0x00_00_00_00_00_00_01_FFL);
+        return (short) ((id >> (serverBit + versionBit + idxBit)) & ((1 << operatorBit) - 1));
     }
 
     /**
@@ -204,15 +164,12 @@ public class IdGenerator {
      * @param digit 2进制位数
      * @return true:合法,false:非法或超过范围
      */
-    public static boolean vaildValue(int value, int digit) {
+    public static boolean notValid(int value, int digit) {
         if (digit <= 0 || digit > 64) {
             throw new IllegalArgumentException("位数必须在1-64之间");
         }
         int max = (1 << digit) - 1;
-        if (value >= 0 && value <= max) {
-            return true;
-        }
-        return false;
+        return value < 0 || value > max;
     }
 
     /**
@@ -223,15 +180,15 @@ public class IdGenerator {
      * @return [0]:最小值,[1]:最大值
      */
     public static long[] getLimits(int operator, int server) {
-        if (!vaildValue(operator, operatorBit)) {
-            throw new IllegalArgumentException("运营商标识[" + operator + "]超过了9位二进制数的表示范围");
+        if (notValid(operator, operatorBit)) {
+            throw new IllegalArgumentException("运营商标识[" + operator + "]超过了" + operatorBit + "位二进制数的表示范围");
         }
-        if (!vaildValue(server, serverBit)) {
-            throw new IllegalArgumentException("服务器标识[" + server + "]超过了14位二进制数的表示范围");
+        if (notValid(server, serverBit)) {
+            throw new IllegalArgumentException("服务器标识[" + server + "]超过了" + serverBit + "位二进制数的表示范围");
         }
 
-        long min = (((long) operator) << 54) + (((long) server) << 40);
-        long max = min | 0x00_00_00_FF_FF_FF_FF_FFL;
+        long min = (((long) operator) << (serverBit + versionBit + idxBit)) | (((long) server) << (versionBit + idxBit));
+        long max = min | ((1L << (versionBit + idxBit)) - 1);
         return new long[]{min, max};
     }
 
@@ -242,11 +199,11 @@ public class IdGenerator {
      * @return [0]:最小值,[1]:最大值
      */
     public static long[] getLimits(int operator) {
-        if (!vaildValue(operator, 10)) {
+        if (notValid(operator, operatorBit)) {
             throw new IllegalArgumentException("运营商标识[" + operator + "]超过了12位二进制数的表示范围");
         }
-        long min = (((long) operator) << 54);
-        long max = min | 0x00_3F_FF_FF_FF_FF_FF_FFL;
+        long min = (((long) operator) << (serverBit + versionBit + idxBit));
+        long max = min | ((1L << (serverBit + versionBit + idxBit)) - 1);
         return new long[]{min, max};
     }
 
@@ -276,7 +233,7 @@ public class IdGenerator {
          * 构造方法
          */
         public IdInfo(long id) {
-            this.id = id & 0x00_00_00_FF_FF_FF_FF_FFL; // 将高位置0(保留位+运营商位+服务器位)
+            this.id = id;
             this.server = toServer(id);
             this.operator = toOperator(id);
             this.increase = toShortId(id);
@@ -309,6 +266,10 @@ public class IdGenerator {
          */
         public long getId() {
             return id;
+        }
+
+        public int getIncrease() {
+            return increase;
         }
     }
 }
