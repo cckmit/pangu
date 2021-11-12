@@ -2,6 +2,7 @@ package com.pangu.framework.socket.spring;
 
 import com.pangu.framework.socket.handler.SessionManager;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.*;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -13,11 +14,13 @@ public class ServerSpringConfiguration implements ImportBeanDefinitionRegistrar,
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         RootBeanDefinition dispatcherFactory = new RootBeanDefinition(DispatcherFactoryBean.class);
         String DISPATCHER_BEAN_NAME = "dispatcher";
+        dispatcherFactory.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
         registry.registerBeanDefinition(DISPATCHER_BEAN_NAME, dispatcherFactory);
 
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(SessionManager.class);
         builder.addConstructorArgReference(DISPATCHER_BEAN_NAME);
         AbstractBeanDefinition sessionBeanDefine = builder.getBeanDefinition();
+        sessionBeanDefine.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
         registry.registerBeanDefinition("sessionManager", sessionBeanDefine);
 
         RootBeanDefinition pushInjectProcessor = new RootBeanDefinition(PushInjectProcessor.class);

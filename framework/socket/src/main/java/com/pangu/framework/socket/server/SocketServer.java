@@ -1,6 +1,7 @@
 package com.pangu.framework.socket.server;
 
 import com.pangu.framework.socket.filter.SocketFilter;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.handler.SyncSupport;
@@ -167,7 +168,7 @@ public class SocketServer implements SocketServerMBean {
 
     @Override
     public String getManageQueueSize() {
-        ThreadPoolExecutor managedExecutorService = Dispatcher.getManagedExecutorService();
+        ThreadPoolExecutor managedExecutorService = DefaultDispatcher.getManagedExecutorService();
         if (managedExecutorService == null) {
             return "";
         }
@@ -177,7 +178,7 @@ public class SocketServer implements SocketServerMBean {
 
     @Override
     public String getMessageQueueSize() {
-        ThreadPoolExecutor[] messagePoolExecutors = Dispatcher.getMessagePoolExecutors();
+        ThreadPoolExecutor[] messagePoolExecutors = DefaultDispatcher.getMessagePoolExecutors();
         StringBuilder builder = new StringBuilder();
         if (messagePoolExecutors != null) {
             for (ThreadPoolExecutor poolExecutor : messagePoolExecutors) {
@@ -191,7 +192,7 @@ public class SocketServer implements SocketServerMBean {
 
     @Override
     public String getSyncQueue() {
-        SyncSupport syncSupport = Dispatcher.getSyncSupport();
+        SyncSupport syncSupport = DefaultDispatcher.getSyncSupport();
         if (syncSupport == null) {
             return "";
         }

@@ -3,6 +3,7 @@ package com.pangu.framework.socket.client;
 import com.pangu.framework.socket.anno.*;
 import com.pangu.framework.socket.core.Command;
 import com.pangu.framework.socket.exception.SocketException;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;

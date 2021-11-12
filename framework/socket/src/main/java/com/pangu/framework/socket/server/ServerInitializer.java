@@ -4,6 +4,7 @@ import com.pangu.framework.socket.codec.ServerMultiProtocolSwitchHandler;
 import com.pangu.framework.socket.filter.HeartBeatFilter;
 import com.pangu.framework.socket.filter.ServerHandler;
 import com.pangu.framework.socket.filter.SocketFilter;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import io.netty.buffer.ByteBuf;

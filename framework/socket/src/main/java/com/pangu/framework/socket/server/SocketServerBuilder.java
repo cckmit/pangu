@@ -1,10 +1,11 @@
 package com.pangu.framework.socket.server;
 
-import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.socket.filter.SocketFilter;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.handler.SslConfig;
+import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.utils.thread.NamedThreadFactory;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -54,11 +55,17 @@ public class SocketServerBuilder {
     private SessionManager sessionManager;
 
     public SocketServerBuilder readBuffSize(int readBuffSize) {
+        if (readBuffSize <= 0) {
+            return this;
+        }
         this.readBuffSize = readBuffSize;
         return this;
     }
 
     public SocketServerBuilder writeBuffSize(int writeBuffSize) {
+        if (writeBuffSize <= 0) {
+            return this;
+        }
         this.writeBuffSize = writeBuffSize;
         return this;
     }
@@ -156,7 +163,7 @@ public class SocketServerBuilder {
         return this;
     }
 
-    public SocketServerBuilder dispatcher(Dispatcher dispatcher) {
+    public SocketServerBuilder dispatcher(DefaultDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         return this;
     }
@@ -199,13 +206,13 @@ public class SocketServerBuilder {
             socketServer.setSslContext(sslContext);
         }
         if (dispatcher == null) {
-            dispatcher = new Dispatcher();
+            DefaultDispatcher dispatcher = new DefaultDispatcher();
             dispatcher.setManageUseThread(manageUseThread);
             dispatcher.start();
+            this.dispatcher = dispatcher;
         }
         socketServer.setDispatcher(dispatcher);
         if (sessionManager == null) {
-            Coder coder = dispatcher.getDefaultCoder();
             sessionManager = new SessionManager(dispatcher);
         }
         socketServer.setSessionManager(sessionManager);

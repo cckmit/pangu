@@ -1,14 +1,10 @@
-server:
-  address: ':8101'
 zookeeper:
   addr: localhost:2181
   rootPath: /pangu
   #serverId必须要为数值格式(0-63)
   serverId: 1
   minStartUp: 1
-xa:
-  socket:
-    address: 0.0.0.0:8889
-    server:
-      read: 16384
-      write: 16384
+socket:
+  address: 0.0.0.0:8889
+  serverRead: 16384
+  serverWrite: 16384

@@ -2,7 +2,7 @@ package com.pangu.framework.socket.monitor;
 
 import com.dianping.cat.status.StatusExtension;
 import com.dianping.cat.status.StatusExtensionRegister;
-import com.pangu.framework.socket.handler.Dispatcher;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.SyncSupport;
 
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class SocketCatCollector {
 
-    public static void register(Dispatcher dispatcher) {
+    public static void register(DefaultDispatcher dispatcher) {
         StatusExtensionRegister instance = StatusExtensionRegister.getInstance();
         instance.register(new StatusExtension() {
             @Override

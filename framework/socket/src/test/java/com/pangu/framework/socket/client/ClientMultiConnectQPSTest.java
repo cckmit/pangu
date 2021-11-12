@@ -4,6 +4,7 @@ import com.pangu.framework.socket.anno.IgnoreResponse;
 import com.pangu.framework.socket.anno.InBody;
 import com.pangu.framework.socket.anno.SocketCommand;
 import com.pangu.framework.socket.anno.SocketModule;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;

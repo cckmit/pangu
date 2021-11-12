@@ -1,5 +1,6 @@
 package com.pangu.framework.socket.client;
 
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;

@@ -68,7 +68,7 @@ public class GatewayServerManager implements Lifecycle {
     }
 
     private void initSocketServer() {
-        gateServer = new GateServer();
+        gateServer = new GateServer(logicConfig.getServer());
         gateServer.start();
     }
 

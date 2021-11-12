@@ -1,6 +1,6 @@
 package com.pangu.framework.socket.spring;
 
-import com.pangu.framework.socket.handler.Dispatcher;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.socket.handler.param.JsonCoder;
 import org.springframework.beans.BeansException;
@@ -12,9 +12,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.util.Collection;
 
-public class DispatcherFactoryBean implements FactoryBean<Dispatcher>, BeanPostProcessor, InitializingBean {
+public class DispatcherFactoryBean implements FactoryBean<DefaultDispatcher>, BeanPostProcessor, InitializingBean {
 
-    private Dispatcher dispatcher;
+    private DefaultDispatcher dispatcher;
 
     @Value("${socket.coder:1}")
     private byte defaultCoder;
@@ -26,13 +26,13 @@ public class DispatcherFactoryBean implements FactoryBean<Dispatcher>, BeanPostP
     private Collection<Coder> coders;
 
     @Override
-    public Dispatcher getObject() throws Exception {
+    public DefaultDispatcher getObject() throws Exception {
         return dispatcher;
     }
 
     @Override
     public Class<?> getObjectType() {
-        return Dispatcher.class;
+        return DefaultDispatcher.class;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DispatcherFactoryBean implements FactoryBean<Dispatcher>, BeanPostP
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        dispatcher = new Dispatcher();
+        dispatcher = new DefaultDispatcher();
         if (coders == null || coders.isEmpty()) {
             dispatcher.addCoder(new JsonCoder());
             dispatcher.start();

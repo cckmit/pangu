@@ -6,6 +6,7 @@ import com.pangu.framework.socket.anno.SocketModule;
 import com.pangu.framework.socket.client.Client;
 import com.pangu.framework.socket.client.ClientFactory;
 import com.pangu.framework.socket.client.ClientFactoryBuilder;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;

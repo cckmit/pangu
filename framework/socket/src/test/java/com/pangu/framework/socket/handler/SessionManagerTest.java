@@ -8,7 +8,6 @@ import com.pangu.framework.socket.client.ClientFactoryBuilder;
 import com.pangu.framework.socket.core.CoderType;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;
-import com.pangu.framework.socket.anno.*;
 import lombok.Data;
 import org.junit.After;
 import org.junit.Before;

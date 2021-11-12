@@ -1,7 +1,7 @@
 package com.pangu.framework.socket.spring;
 
 import com.pangu.framework.socket.filter.SocketFilter;
-import com.pangu.framework.socket.handler.Dispatcher;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.handler.SslConfig;
 import com.pangu.framework.socket.server.SocketServer;
@@ -72,7 +72,7 @@ public class ServerFactoryBean implements FactoryBean<SocketServer>, Application
     private Class<? extends ServerSocketChannel> bootstrapClass;
 
     @Autowired
-    private Dispatcher dispatcher;
+    private DefaultDispatcher dispatcher;
 
     @Autowired
     private SessionManager sessionManager;
