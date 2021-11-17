@@ -49,8 +49,11 @@ public class ServerFactoryBean implements FactoryBean<SocketServer>, Application
     @Qualifier("serverWorkGroup")
     private NioEventLoopGroup workEventGroup;
 
-    @Value("${xa.socket.workThreadAmount:0}")
+    @Value("${socket.workThreadAmount:0}")
     private int workThreadAmount;
+
+    @Value("${socket.autoStart:false}")
+    private boolean autoStart;
 
     // 是否启用
     @Value("${socket.sslServerEnable:false}")
@@ -119,8 +122,13 @@ public class ServerFactoryBean implements FactoryBean<SocketServer>, Application
         if (event instanceof ContextRefreshedEvent) {
             SocketServer socketServer = getObject();
             Assert.notNull(socketServer, "SocketServer未完成初始化");
-            socketServer.start();
+            if (autoStart) {
+                socketServer.start();
+            }
         } else if (event instanceof ContextClosedEvent) {
+            if (!socketServer.getStatus().get()) {
+                return;
+            }
             if (socketServer != null) {
                 socketServer.stop();
             }
