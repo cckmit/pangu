@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Profile("logic")
+@Profile("gateway")
 @Configuration
-public @interface ConfigurationLogic {
+public @interface ConfigurationGate {
 }

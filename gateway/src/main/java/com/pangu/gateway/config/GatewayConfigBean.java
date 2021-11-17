@@ -1,5 +1,6 @@
 package com.pangu.gateway.config;
 
+import com.pangu.core.anno.ComponentGate;
 import com.pangu.core.anno.ComponentLogic;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
@@ -13,7 +14,7 @@ import org.yaml.snakeyaml.reader.UnicodeReader;
 import java.io.IOException;
 import java.io.Reader;
 
-@ComponentLogic
+@ComponentGate
 @Slf4j
 public class GatewayConfigBean implements FactoryBean<GatewayConfig> {
 

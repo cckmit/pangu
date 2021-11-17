@@ -5,10 +5,8 @@ import com.pangu.core.common.Constants;
 import com.pangu.core.common.InstanceDetails;
 import com.pangu.core.common.ServerInfo;
 import com.pangu.core.config.ZookeeperConfig;
-import com.pangu.framework.socket.server.SocketServerBuilder;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.gateway.config.GatewayConfig;
-import com.pangu.gateway.rout.GateServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -37,7 +35,6 @@ public class GatewayServerManager implements Lifecycle {
     private ServiceDiscovery<InstanceDetails> serviceDiscovery;
     private ServiceCache<InstanceDetails> serverCache;
     private List<ServerInfo> logicServers;
-    private GateServer gateServer;
 
     public GatewayServerManager(GatewayConfig logicConfig) {
         this.logicConfig = logicConfig;
@@ -49,7 +46,6 @@ public class GatewayServerManager implements Lifecycle {
         if (!set) {
             return;
         }
-        initSocketServer();
         ZookeeperConfig zookeeper = logicConfig.getZookeeper();
         framework = CuratorFrameworkFactory.builder()
                 .connectString(zookeeper.getAddr())
@@ -67,13 +63,8 @@ public class GatewayServerManager implements Lifecycle {
         }
     }
 
-    private void initSocketServer() {
-        gateServer = new GateServer(logicConfig.getServer());
-        gateServer.start();
-    }
-
     private void registerServer() throws Exception {
-        String address = logicConfig.getServer().getAddress();
+        String address = logicConfig.getSocket().getAddress();
         String[] split = address.trim().split(":");
         if (split.length == 0) {
             throw new IllegalStateException("服务器配置 server.address 配置为空，配置格式: 内网IP:端口，如192.168.11.88:8001");
@@ -159,7 +150,6 @@ public class GatewayServerManager implements Lifecycle {
         if (framework != null) {
             CloseableUtils.closeQuietly(framework);
         }
-        gateServer.stop();
         log.debug("服务器[{}]取消注册进入服务器", Constants.LOGIC_SERVICE_NAME);
     }
 

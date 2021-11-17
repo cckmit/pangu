@@ -5,6 +5,10 @@ zookeeper:
   serverId: 1
   minStartUp: 1
 socket:
-  address: 0.0.0.0:8889
+  address: 0.0.0.0:8201
   serverRead: 16384
   serverWrite: 16384
+rout:
+  login:
+    module: 12
+    command: 2

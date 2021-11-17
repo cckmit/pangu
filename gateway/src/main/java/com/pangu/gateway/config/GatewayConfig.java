@@ -11,5 +11,7 @@ public class GatewayConfig {
 
     private ZookeeperConfig zookeeper;
 
-    private ServerConfig server;
+    private ServerConfig socket;
+
+    private RoutConfig rout;
 }
