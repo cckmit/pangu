@@ -1,12 +1,12 @@
 package com.pangu.logic.module.account.facade;
 
+import com.pangu.core.anno.ComponentLogic;
 import com.pangu.framework.utils.model.Result;
 import com.pangu.logic.module.account.model.LoginInfoVo;
 import com.pangu.logic.module.account.model.Sex;
 import com.pangu.logic.module.account.service.AccountService;
 import com.pangu.logic.utils.ServerIdUtils;
 import com.pangu.logic.utils.UTF8Utils;
-import com.pangu.core.anno.ComponentLogic;
 
 @ComponentLogic
 public class AccountFacadeImpl implements AccountFacade {
@@ -33,7 +33,11 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public Result<Void> login(String account, Boolean adult, long timestamp, String key) {
-        return null;
+        boolean login = accountService.login(account);
+        if (!login) {
+            return Result.ERROR(AccountResult.ACCOUNT_NOT_FOUND);
+        }
+        return Result.SUCCESS();
     }
 
     @Override
@@ -43,7 +47,7 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public Result<Boolean> checkAccount(String account) {
-        return null;
+        return Result.SUCCESS(false);
     }
 
     @Override

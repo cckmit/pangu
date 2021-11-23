@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.nio.ByteBuffer;
@@ -269,6 +270,14 @@ public class Definition {
                 return enums[ordinal];
             } else if (value instanceof String) {
                 return (T) Enum.valueOf(enumType, (String) value);
+            }
+        }
+        if (type instanceof ParameterizedType) {
+            Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+            for (Type t : actualTypeArguments) {
+                if (t == Object.class) {
+                    return (T) value;
+                }
             }
         }
         return (T) JsonUtils.convertObject(value, type);

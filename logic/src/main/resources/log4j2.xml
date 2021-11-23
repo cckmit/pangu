@@ -29,6 +29,6 @@
             <!--            <AppenderRef ref="File"/>-->
             <AppenderRef ref="Console"/>
         </asyncRoot>
-        <logger name="com.pangu.logic" level="DEBUG"/>
+        <logger name="com.pangu" level="DEBUG"/>
     </Loggers>
 </configuration>

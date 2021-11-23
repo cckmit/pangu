@@ -5,8 +5,13 @@ import com.pangu.core.common.Constants;
 import com.pangu.core.common.InstanceDetails;
 import com.pangu.core.common.ServerInfo;
 import com.pangu.core.config.ZookeeperConfig;
+import com.pangu.framework.socket.handler.DefaultDispatcher;
+import com.pangu.framework.socket.handler.Dispatcher;
+import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.gateway.config.GatewayConfig;
+import com.pangu.gateway.rout.RoutProcessor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -29,15 +34,24 @@ public class GatewayServerManager implements Lifecycle {
 
     private final GatewayConfig logicConfig;
 
+    private final SocketServer socketServer;
+
+    private final RoutProcessor routProcessor;
+
     private final AtomicBoolean running = new AtomicBoolean();
     private CuratorFramework framework;
     private ServiceInstance<InstanceDetails> serviceInstance;
     private ServiceDiscovery<InstanceDetails> serviceDiscovery;
     private ServiceCache<InstanceDetails> serverCache;
+    @Getter
     private List<ServerInfo> logicServers;
 
-    public GatewayServerManager(GatewayConfig logicConfig) {
+    public GatewayServerManager(GatewayConfig logicConfig,
+                                SocketServer socketServer,
+                                RoutProcessor routProcessor) {
         this.logicConfig = logicConfig;
+        this.socketServer = socketServer;
+        this.routProcessor = routProcessor;
     }
 
     @Override
@@ -55,6 +69,13 @@ public class GatewayServerManager implements Lifecycle {
                 .build();
         framework.start();
 
+        routProcessor.init(this);
+
+        Dispatcher dispatcher = socketServer.getDispatcher();
+        if (dispatcher instanceof DefaultDispatcher) {
+            ((DefaultDispatcher) dispatcher).setMessageProcessor(routProcessor);
+        }
+        socketServer.start();
         try {
             registerServer();
             initDiscovery();

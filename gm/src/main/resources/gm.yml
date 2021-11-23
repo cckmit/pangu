@@ -1,0 +1,6 @@
+zookeeper:
+  addr: localhost:2181
+  rootPath: /pangu
+  #serverId必须要为数值格式(0-63)
+  serverId: 1
+  minStartUp: 1

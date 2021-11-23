@@ -21,6 +21,9 @@
         <module>framework/resource</module>
         <module>dbaccessor</module>
         <module>gateway</module>
+        <module>cross</module>
+        <module>stress</module>
+        <module>gm</module>
     </modules>
 
     <properties>

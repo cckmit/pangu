@@ -1,5 +1,6 @@
 package com.pangu.logic.module.account.service;
 
+import com.pangu.dbaccess.anno.Unique;
 import com.pangu.framework.utils.ManagedException;
 import com.pangu.framework.utils.time.DateUtils;
 import com.pangu.logic.module.account.facade.AccountResult;
@@ -27,6 +28,7 @@ public class Account {
     private Long id;
     // 账号
     @Column(nullable = false)
+    @Unique
     private String name;
 
     // 创建时间

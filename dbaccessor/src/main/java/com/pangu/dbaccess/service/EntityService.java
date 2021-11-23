@@ -8,6 +8,7 @@ import com.pangu.dbaccess.config.EntityConfigParser;
 import com.pangu.dbaccess.config.FieldDesc;
 import com.pangu.framework.socket.client.Client;
 import com.pangu.framework.socket.client.ClientFactory;
+import com.pangu.framework.socket.handler.param.ProtocolCoder;
 import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.lang.NumberUtils;
 import com.pangu.framework.utils.model.Result;
@@ -21,12 +22,14 @@ public class EntityService {
 
     private final IDbServerAccessor dbServerAccessor;
     private final ClientFactory clientFactory;
+    private final ProtocolCoder protocolCoder;
 
     private final ConcurrentHashMap<Class<?>, EntityConfig> configs = new ConcurrentHashMap<>();
 
-    public EntityService(IDbServerAccessor dbServerAccessor, ClientFactory clientFactory) {
+    public EntityService(IDbServerAccessor dbServerAccessor, ClientFactory clientFactory, ProtocolCoder protocolCoder) {
         this.dbServerAccessor = dbServerAccessor;
         this.clientFactory = clientFactory;
+        this.protocolCoder = protocolCoder;
     }
 
     public <PK extends Comparable<PK> & Serializable, T> T load(String userServerId, Class<T> clz, PK pk) {
@@ -114,6 +117,7 @@ public class EntityService {
     private DbFacade getDbFacade(String userServerId) {
         ServerInfo serverInfo = getServerInfo(userServerId);
         Client client = clientFactory.getClient(serverInfo.getAddress());
+        client.setCoder(protocolCoder);
         return client.getProxy(DbFacade.class);
     }
 

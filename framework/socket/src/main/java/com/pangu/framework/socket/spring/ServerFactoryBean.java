@@ -52,7 +52,7 @@ public class ServerFactoryBean implements FactoryBean<SocketServer>, Application
     @Value("${socket.workThreadAmount:0}")
     private int workThreadAmount;
 
-    @Value("${socket.autoStart:false}")
+    @Value("${socket.autoStart:true}")
     private boolean autoStart;
 
     // 是否启用

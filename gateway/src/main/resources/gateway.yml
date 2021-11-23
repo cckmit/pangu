@@ -8,6 +8,7 @@ socket:
   address: 0.0.0.0:8201
   serverRead: 16384
   serverWrite: 16384
+  autoStart: false
 rout:
   login:
     module: 12

@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 @ToString
 @Slf4j
 @Getter
-public class Processor {
+public class MethodProcessor {
 
     private final MethodDefine methodDefine;
 
@@ -22,7 +22,7 @@ public class Processor {
 
     private final Wrapper proxyWrapper;
 
-    public Processor(MethodDefine methodDefine, Object target, Method method, Wrapper proxyWrapper) {
+    public MethodProcessor(MethodDefine methodDefine, Object target, Method method, Wrapper proxyWrapper) {
         this.methodDefine = methodDefine;
         this.target = target;
         this.proxyWrapper = proxyWrapper;

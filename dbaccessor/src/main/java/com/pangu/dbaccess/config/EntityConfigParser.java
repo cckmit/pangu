@@ -36,9 +36,6 @@ public class EntityConfigParser {
                 continue;
             }
             String fieldName = field.getName();
-            if (modifiers != 0 && (modifiers & (Modifier.PROTECTED)) == 0) {
-                throw new IllegalStateException("实体" + clz.getName() + "字段名" + fieldName + "修饰服必须为protect或者default");
-            }
             Column column = field.getAnnotation(Column.class);
             String colName = fieldName;
             if (column != null) {

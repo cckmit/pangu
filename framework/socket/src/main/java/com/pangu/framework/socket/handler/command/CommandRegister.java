@@ -2,12 +2,10 @@ package com.pangu.framework.socket.handler.command;
 
 import com.pangu.framework.socket.anno.*;
 import com.pangu.framework.socket.handler.param.type.*;
-import com.pangu.framework.socket.anno.*;
 import com.pangu.framework.socket.core.Command;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.handler.Session;
 import com.pangu.framework.socket.handler.param.Parameters;
-import com.pangu.framework.socket.handler.param.type.*;
 import com.pangu.framework.socket.utils.AnnotationUtils;
 import com.pangu.framework.socket.utils.bytecode.Wrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +27,9 @@ public class CommandRegister {
 
     private static final DefaultParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 
-    private final ConcurrentHashMap<Command, Processor> commands = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Command, MethodProcessor> commands = new ConcurrentHashMap<>();
 
-    public Processor getProcessor(Command command) {
+    public MethodProcessor getProcessor(Command command) {
         return commands.get(command);
     }
 
@@ -47,8 +45,8 @@ public class CommandRegister {
         }
         Wrapper proxyWrapper = Wrapper.getWrapper(clz);
         for (MethodDefine commandDefine : defines) {
-            Processor processor = new Processor(commandDefine, object, commandDefine.getMethod(), proxyWrapper);
-            Processor pre = commands.putIfAbsent(commandDefine.getCommand(), processor);
+            MethodProcessor processor = new MethodProcessor(commandDefine, object, commandDefine.getMethod(), proxyWrapper);
+            MethodProcessor pre = commands.putIfAbsent(commandDefine.getCommand(), processor);
             if (pre != null) {
                 throw new IllegalArgumentException("命令号[" + commandDefine.getCommand() + "]已经被[" + pre + "]注册");
             }

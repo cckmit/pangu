@@ -15,6 +15,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -218,7 +219,6 @@ public class ProtocolCoder implements Coder {
                     throw new SocketException(ExceptionCode.PARAM_PHASE);
                 }
             }
-
             return transfer.convert(oriValue, type);
         }
         throw new IllegalArgumentException("protocol协议解码获得对象类型为" + object.getClass());

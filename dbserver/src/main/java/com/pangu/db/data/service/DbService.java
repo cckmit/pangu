@@ -63,7 +63,7 @@ public class DbService {
             }
             return DbResult.UPDATE_FAIL;
         } catch (SQLException throwables) {
-            log.warn("插入数据异常[{}][{}][{}][{}]", serverId, table, id, columns);
+            log.warn("插入数据异常[{}][{}][{}][{}]", serverId, table, id, columns, throwables);
             return DbResult.SQL_EXCEPTION;
         }
     }

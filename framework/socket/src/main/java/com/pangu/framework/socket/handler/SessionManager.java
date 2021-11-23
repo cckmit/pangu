@@ -173,6 +173,10 @@ public class SessionManager {
         return identities.get(o);
     }
 
+    public Session getAnonymous(long o) {
+        return anonymous.get(o);
+    }
+
     public <T> T getPushProxy(Class<T> clz) {
         return pushManger.getProxy(clz);
     }

@@ -1,15 +1,11 @@
 package com.pangu.framework.protocol;
 
+import org.springframework.beans.factory.FactoryBean;
+
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
-public class TransferFactory implements FactoryBean<Transfer>, ApplicationContextAware {
+public class TransferFactory implements FactoryBean<Transfer> {
 
 	/** 资源定义列表 */
 	private List<IndexedClass> transables;
@@ -17,7 +13,7 @@ public class TransferFactory implements FactoryBean<Transfer>, ApplicationContex
 	private Transfer transfer;
 
 	// GETTER / SETTER
-
+	private boolean server;
 	public List<IndexedClass> getTransables() {
 		return transables;
 	}
@@ -26,21 +22,16 @@ public class TransferFactory implements FactoryBean<Transfer>, ApplicationContex
 		this.transables = transables;
 	}
 
-	// 实现接口的方法
-
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		transfer = beanFactory.createBean(Transfer.class);
-		List<IndexedClass> list = getTransables();
-		Collections.sort(list);
-		for (IndexedClass clz : list) {
-			transfer.register(clz.getClz(), clz.getIdx());
+	public Transfer getObject() {
+		if (transfer == null) {
+			transfer = new Transfer();
+			List<IndexedClass> list = getTransables();
+			Collections.sort(list);
+			for (IndexedClass clz : list) {
+				transfer.register(clz.getClz(), clz.getIdx());
+			}
 		}
-	}
-
-	@Override
-	public Transfer getObject() throws Exception {
 		return transfer;
 	}
 

@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Profile("gateway")
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public @interface ConfigurationGate {
 }

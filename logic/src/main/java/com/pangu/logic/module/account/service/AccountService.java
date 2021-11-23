@@ -27,4 +27,10 @@ public class AccountService {
         Account account = Account.valueOf(id, accountName, channel);
         entityService.create(userServerId, account);
     }
+
+    public boolean login(String account) {
+        String userServerId = Account.toInfo(account);
+        Account unique = entityService.unique(userServerId, Account.class, "name", account);
+        return unique != null;
+    }
 }

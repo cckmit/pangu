@@ -63,4 +63,7 @@ public interface StateConstant {
 
     // 需要管理后台IP
     int MANAGE_IP_EXCEPTION = 27;
+
+    // 没有逻辑服
+    int NO_LOGIC_EXCEPTION = 28;
 }

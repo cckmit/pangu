@@ -19,13 +19,13 @@ public class HeartBeatFilter extends ChannelInboundHandlerAdapter {
             boolean heartBeat = message.hasState(StateConstant.HEART_BEAT);
             if (heartBeat) {
                 if (message.hasState(StateConstant.STATE_RESPONSE)) {
-                    log.debug("收到心跳响应数据包:" + new Date());
+                    log.trace("收到心跳响应数据包:" + new Date());
                     return;
                 }
                 message.addState(StateConstant.STATE_RESPONSE);
                 ctx.channel().writeAndFlush(message);
                 if (log.isDebugEnabled()) {
-                    log.debug("收到心跳包:" + new Date());
+                    log.trace("收到心跳包:" + new Date());
                 }
                 return;
             }

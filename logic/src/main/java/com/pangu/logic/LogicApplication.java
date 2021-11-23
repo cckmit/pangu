@@ -1,15 +1,17 @@
 package com.pangu.logic;
 
+import com.pangu.core.common.Log4jCloseThread;
+import com.pangu.core.db.model.EntityRes;
+import com.pangu.framework.protocol.spring.EnableProtocol;
+import com.pangu.framework.protocol.spring.ProtocolClass;
 import com.pangu.framework.socket.spring.EnableClientFactory;
 import com.pangu.framework.socket.spring.EnableSocketServer;
 import com.pangu.framework.utils.time.DateUtils;
-import com.pangu.core.common.Log4jCloseThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.PropertySource;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -20,6 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @ComponentScan("com.pangu.dbaccess,com.pangu.logic")
 @EnableSocketServer
 @EnableClientFactory
+@EnableProtocol(clz = {@ProtocolClass(index = 3, clz = EntityRes.class)})
 public class LogicApplication {
 
     public static ApplicationContext CONTEXT;

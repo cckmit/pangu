@@ -1,15 +1,18 @@
 package com.pangu.logic.server;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.pangu.core.anno.ServiceLogic;
 import com.pangu.core.common.Constants;
 import com.pangu.core.common.InstanceDetails;
 import com.pangu.core.common.ServerInfo;
 import com.pangu.core.config.ZookeeperConfig;
 import com.pangu.dbaccess.service.IDbServerAccessor;
+import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.lang.ByteUtils;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.logic.config.LogicConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.state.ConnectionState;
@@ -21,9 +24,10 @@ import org.apache.curator.x.discovery.details.ServiceCacheListener;
 import org.springframework.context.Lifecycle;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @ServiceLogic
@@ -37,7 +41,8 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
     private ServiceInstance<InstanceDetails> serviceInstance;
     private ServiceDiscovery<InstanceDetails> serviceDiscovery;
     private ServiceCache<InstanceDetails> serverCache;
-    private List<ServerInfo> dbServers;
+    private Map<String, ServerInfo> dbServers = new HashMap<>(0);
+    private Map<String, String> gameServerToDb = new HashMap<>(0);
 
     private final int serverId;
 
@@ -111,13 +116,13 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
                 .build();
         serverCache.start();
 
-        initServerService(serverCache);
+        initDBServerService(serverCache);
 
         log.debug("首次刷新数据服务器列表[{}]", dbServers);
         serverCache.addListener(new ServiceCacheListener() {
             @Override
             public void cacheChanged() {
-                initServerService(serverCache);
+                initDBServerService(serverCache);
             }
 
             @Override
@@ -127,16 +132,34 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
         });
     }
 
-    private void initServerService(ServiceCache<InstanceDetails> cache) {
+    private void initDBServerService(ServiceCache<InstanceDetails> cache) {
         List<ServiceInstance<InstanceDetails>> instances = cache.getInstances();
-        List<ServerInfo> servers = new ArrayList<>();
-
+        Map<String, ServerInfo> servers = new HashMap<>();
+        Map<String, String> serverIdToDB = new HashMap<>();
         for (ServiceInstance<InstanceDetails> instance : instances) {
             InstanceDetails payload = instance.getPayload();
-            ServerInfo serverInfo = new ServerInfo(instance.getId(), instance.getAddress(), instance.getPort(), payload.getAddressForClient(), payload);
-            servers.add(serverInfo);
+            String sid = instance.getId();
+            ServerInfo serverInfo = new ServerInfo(sid, instance.getAddress(), instance.getPort(), payload.getAddressForClient(), payload);
+            servers.put(sid, serverInfo);
+            String description = payload.getDescription();
+            if (StringUtils.isBlank(description)) {
+                log.debug("DB服未发送管理节点ID，忽视[{}]", serverInfo.getId());
+                continue;
+            }
+            Set<String> managedServerIds = JsonUtils.string2GenericObject(description, new TypeReference<Set<String>>() {
+            });
+
+            if (managedServerIds != null) {
+                for (String gameServerId : managedServerIds) {
+                    String pre = serverIdToDB.put(gameServerId, sid);
+                    if (pre != null) {
+                        log.error("相同的serverId[{}]绑定，当前值[{}],存在值[{}]", gameServerId, sid, pre);
+                    }
+                }
+            }
         }
         dbServers = servers;
+        gameServerToDb = serverIdToDB;
         log.debug("当前数据服列表[{}]", servers);
     }
 
@@ -168,12 +191,12 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
 
     @Override
     public Map<String, ServerInfo> getDbs() {
-        return null;
+        return dbServers;
     }
 
     @Override
     public Map<String, String> getDbManagedServer() {
-        return null;
+        return gameServerToDb;
     }
 
     public int getServerId() {
@@ -189,7 +212,7 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
         try {
             byte[] bytes = framework.getData().forPath(path);
             return ByteUtils.longFromByte(bytes);
-        } catch (Exception exp) {
+        } catch (Throwable exp) {
             log.info("查询IDx错误[{}]", userServerId, exp);
             try {
                 framework.create().creatingParentsIfNeeded().forPath(path, ByteUtils.longToByte(1));

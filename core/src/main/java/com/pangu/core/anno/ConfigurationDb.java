@@ -1,7 +1,7 @@
 package com.pangu.core.anno;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Profile("db")
-@Component
+@Configuration
 public @interface ConfigurationDb {
 }

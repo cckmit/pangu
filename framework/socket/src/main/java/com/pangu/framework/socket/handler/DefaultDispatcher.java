@@ -10,7 +10,7 @@ import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.command.CommandRegister;
 import com.pangu.framework.socket.handler.command.MethodDefine;
-import com.pangu.framework.socket.handler.command.Processor;
+import com.pangu.framework.socket.handler.command.MethodProcessor;
 import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.socket.handler.param.JsonCoder;
 import com.pangu.framework.socket.handler.param.Parameters;
@@ -46,6 +46,9 @@ public class DefaultDispatcher implements Dispatcher {
 
     // 指令注册
     private final CommandRegister commandRegister = new CommandRegister();
+
+    @Setter
+    private MessageProcessor messageProcessor;
 
     private final Map<Byte, Coder> coders = new HashMap<>();
 
@@ -151,9 +154,13 @@ public class DefaultDispatcher implements Dispatcher {
             log.debug("推送请求收到客户端响应，直接忽视[{}][{}]", session, message);
             return;
         }
-        Processor processor = commandRegister.getProcessor(message.getHeader().getCommand());
+        MethodProcessor processor = commandRegister.getProcessor(message.getHeader().getCommand());
         if (processor == null) {
-            commandNotFound(message, session);
+            if (messageProcessor == null) {
+                commandNotFound(message, session);
+                return;
+            }
+            messageProcessor.process(session, message);
             return;
         }
         MethodDefine define = processor.getMethodDefine();
@@ -191,12 +198,15 @@ public class DefaultDispatcher implements Dispatcher {
 
     private Header responseHeader(Message message, Session session) {
         Header originHeader = message.getHeader();
+        long originHeaderSession = originHeader.getSession();
         Header header = Header.valueOf(originHeader.getFormat(),
                 0,
                 originHeader.getSn(),
-                0L,
+                originHeaderSession,
                 originHeader.getCommand());
-        header.setSession(session.getId());
+        if (originHeaderSession == 0) {
+            header.setSession(session.getId());
+        }
         header.addState(StateConstant.STATE_RESPONSE);
         if (originHeader.hasState(StateConstant.REDIRECT)) {
             header.addState(StateConstant.REDIRECT);
@@ -207,7 +217,7 @@ public class DefaultDispatcher implements Dispatcher {
         return header;
     }
 
-    private void processRequest(Processor processor, Message message, Session session) {
+    private void processRequest(MethodProcessor processor, Message message, Session session) {
         if (message.hasState(StateConstant.STATE_COMPRESS)) {
             byte[] body = message.getBody();
             if (body != null && body.length > 0) {

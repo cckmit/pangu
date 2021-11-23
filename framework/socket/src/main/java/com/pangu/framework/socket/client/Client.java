@@ -1,17 +1,17 @@
 package com.pangu.framework.socket.client;
 
-import com.pangu.framework.socket.handler.command.CommandRegister;
-import com.pangu.framework.socket.handler.command.MethodDefine;
-import com.pangu.framework.socket.handler.param.Coder;
-import com.pangu.framework.socket.handler.param.Parameter;
-import com.pangu.framework.socket.handler.param.Parameters;
-import com.pangu.framework.socket.handler.param.type.InBodyParameter;
 import com.pangu.framework.socket.core.Command;
 import com.pangu.framework.socket.core.Header;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.core.StateConstant;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
+import com.pangu.framework.socket.handler.command.CommandRegister;
+import com.pangu.framework.socket.handler.command.MethodDefine;
+import com.pangu.framework.socket.handler.param.Coder;
+import com.pangu.framework.socket.handler.param.Parameter;
+import com.pangu.framework.socket.handler.param.Parameters;
+import com.pangu.framework.socket.handler.param.type.InBodyParameter;
 import com.pangu.framework.utils.ManagedException;
 import com.pangu.framework.utils.codec.ZlibUtils;
 import com.pangu.framework.utils.lang.ByteUtils;
@@ -62,8 +62,6 @@ public class Client {
     private InetSocketAddress address;
     // 当前与服务器连接的会话(如果没有强制调用connect，那么在第一个数据包发送之前，channel未创建)
     private final Channel channel;
-    // 服务端分配的session
-    private long sessionId = 0;
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
@@ -141,7 +139,6 @@ public class Client {
             message.setBody(requestBody);
             message.addState(StateConstant.STATE_COMPRESS);
         }
-        message.updateSession(sessionId);
         long sn = Client.sn.getAndIncrement() & 0xFFFFFFFFFFFFL;
         message.updateSn(sn);
         CompletableFuture<Object> completableFuture = null;
@@ -225,7 +222,6 @@ public class Client {
             message.removeState(StateConstant.STATE_COMPRESS);
             message.setBody(body);
         }
-        this.sessionId = header.getSession();
         long sn = header.getSn();
         CompletableFuture<Object> future = futures.remove(sn);
         if (future == null) {
