@@ -58,7 +58,6 @@ public class DbServerManager implements Lifecycle {
     private List<ServerInfo> dbServers = new ArrayList<>(1);
     private DistributedBarrier barrier;
     private LeaderSelector leaderSelector;
-    private DistributedQueue<ZookeeperTask> consumerQueue;
 
     public DbServerManager(DbConfig dbConfig, DbService dbService) {
         this.dbConfig = dbConfig;
@@ -342,15 +341,19 @@ public class DbServerManager implements Lifecycle {
         }, new TaskQueueSerializer(), masterTaskQueuePath)
                 .buildQueue();
         queue.start();
-        while (leaderSelector.hasLeadership()) {
-            try {
-                //noinspection BusyWait
-                Thread.sleep(1_000);
-            } catch (InterruptedException inter) {
-                break;
+        try {
+
+            while (leaderSelector.hasLeadership() && framework.getZookeeperClient().isConnected()) {
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(500);
+                } catch (InterruptedException inter) {
+                    break;
+                }
             }
+        } finally {
+            queue.close();
         }
-        queue.close();
     }
 
     private void leaderDispatchGameDB(String dbId, String serverId) throws Exception {
@@ -389,7 +392,6 @@ public class DbServerManager implements Lifecycle {
             leaderSelector.interruptLeadership();
         }
         CloseableUtils.closeQuietly(leaderSelector);
-        CloseableUtils.closeQuietly(consumerQueue);
         if (framework != null) {
             try {
                 Thread.sleep(1000);
