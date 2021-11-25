@@ -11,7 +11,7 @@ public class ZookeeperConfig {
 
     private String rootPath;
 
-    private String serverId;
+    private int serverId;
 
     private int minStartUp;
 }

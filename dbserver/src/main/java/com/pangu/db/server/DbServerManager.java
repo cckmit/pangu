@@ -12,6 +12,8 @@ import com.pangu.db.config.DbConfig;
 import com.pangu.db.config.TaskQueueSerializer;
 import com.pangu.db.data.service.DbService;
 import com.pangu.framework.utils.json.JsonUtils;
+import com.pangu.framework.utils.lang.ByteUtils;
+import com.pangu.framework.utils.lang.NumberUtils;
 import com.pangu.framework.utils.math.RandomUtils;
 import com.pangu.framework.utils.os.NetUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +77,7 @@ public class DbServerManager implements Lifecycle {
                 .connectString(zookeeper.getAddr())
                 .sessionTimeoutMs(20_000)
                 .connectionTimeoutMs(10_000)
-                .defaultData(zookeeper.getServerId().getBytes(StandardCharsets.UTF_8))
+                .defaultData(ByteUtils.intToByte(zookeeper.getServerId()))
                 .retryPolicy(new RetryOneTime(1000))
                 .build();
         framework.start();
@@ -174,10 +176,10 @@ public class DbServerManager implements Lifecycle {
                 ip = localAddress.getHostAddress();
             }
         }
-        String id = dbConfig.getZookeeper().getServerId();
+        int id = dbConfig.getZookeeper().getServerId();
 
         ServiceInstanceBuilder<InstanceDetails> builder = ServiceInstance.<InstanceDetails>builder()
-                .id(id)
+                .id(String.valueOf(id))
                 .name(Constants.DB_SERVICE_NAME)
                 .address(ip)
                 .port(Integer.parseInt(split[1]))

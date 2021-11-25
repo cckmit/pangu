@@ -7,6 +7,7 @@ import com.pangu.core.common.ServerInfo;
 import com.pangu.core.config.ZookeeperConfig;
 import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
+import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.gateway.config.GatewayConfig;
@@ -52,6 +53,7 @@ public class GatewayServerManager implements Lifecycle {
         this.logicConfig = logicConfig;
         this.socketServer = socketServer;
         this.routProcessor = routProcessor;
+        this.socketServer.getSessionManager().getIdGenerator().setServerId(logicConfig.getZookeeper().getServerId());
     }
 
     @Override
@@ -95,10 +97,10 @@ public class GatewayServerManager implements Lifecycle {
             InetAddress localAddress = NetUtils.getLocalAddress();
             ip = localAddress.getHostAddress();
         }
-        String id = logicConfig.getZookeeper().getServerId();
+        int id = logicConfig.getZookeeper().getServerId();
 
         ServiceInstanceBuilder<InstanceDetails> builder = ServiceInstance.<InstanceDetails>builder()
-                .id(id)
+                .id(String.valueOf(id))
                 .name(Constants.GATEWAY_SERVICE_NAME)
                 .address(ip)
                 .port(Integer.parseInt(split[1]))

@@ -8,6 +8,7 @@ import com.pangu.framework.socket.handler.push.PushManger;
 import com.pangu.framework.socket.handler.session.IdentitySessionCloseListener;
 import com.pangu.framework.socket.handler.session.SessionNotFountListener;
 import com.pangu.framework.socket.utils.IpUtils;
+import com.pangu.framework.socket.utils.ServerIdGenerator;
 import com.pangu.framework.utils.lang.ByteUtils;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
@@ -36,6 +37,8 @@ public class SessionManager {
     private final AtomicLong sequence = new AtomicLong(0x00FFFF00L);
 
     private final PushManger pushManger;
+
+    private final ServerIdGenerator idGenerator = new ServerIdGenerator();
 
     public SessionManager(Dispatcher dispatcher) {
         this.pushManger = new PushManger(this, dispatcher.getDefaultCoder(), dispatcher.getCoders());
@@ -150,19 +153,7 @@ public class SessionManager {
     }
 
     long nextId() {
-        long timeMillis = System.currentTimeMillis();
-        long prefix = (timeMillis / 1000) % 0xFFFFFFFFL;
-        long random = timeMillis & 0x0F;
-        long sn = sequence.getAndIncrement() & 0x00FFFFFFL;
-        long result = (prefix << 32) | (sn << 8) | (random << 4);
-        byte[] b1 = ByteUtils.longToByte(result);
-        long suffix = 0;
-        for (byte b : b1) {
-            suffix += (b & 0xFF);
-        }
-        suffix = suffix % 0x0FL;
-        result |= suffix;
-        return result;
+        return idGenerator.getNext();
     }
 
     public Collection<Session> getAllIdentitySession() {
@@ -240,5 +231,9 @@ public class SessionManager {
 
     public boolean hasSessionNotFountListeners() {
         return sessionNotFountListeners.size() > 0;
+    }
+
+    public ServerIdGenerator getIdGenerator() {
+        return idGenerator;
     }
 }

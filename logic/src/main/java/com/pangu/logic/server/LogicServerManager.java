@@ -50,7 +50,7 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
 
     public LogicServerManager(LogicConfig logicConfig) {
         this.logicConfig = logicConfig;
-        this.serverId = Integer.parseInt(logicConfig.getZookeeper().getServerId());
+        this.serverId = logicConfig.getZookeeper().getServerId();
     }
 
     @Override
@@ -87,10 +87,10 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
             InetAddress localAddress = NetUtils.getLocalAddress();
             ip = localAddress.getHostAddress();
         }
-        String id = logicConfig.getZookeeper().getServerId();
+        int id = logicConfig.getZookeeper().getServerId();
 
         ServiceInstanceBuilder<InstanceDetails> builder = ServiceInstance.<InstanceDetails>builder()
-                .id(id)
+                .id(String.valueOf(id))
                 .name(Constants.LOGIC_SERVICE_NAME)
                 .address(ip)
                 .port(Integer.parseInt(split[1]))
