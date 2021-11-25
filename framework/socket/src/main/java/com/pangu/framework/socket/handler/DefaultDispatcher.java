@@ -68,7 +68,7 @@ public class DefaultDispatcher implements Dispatcher {
     private static ThreadPoolExecutor managedExecutorService;
 
     // 线程池引用数量
-    private static AtomicInteger threadPoolRef = new AtomicInteger();
+    private static final AtomicInteger threadPoolRef = new AtomicInteger();
 
     // 业务线程池数量
     @Setter

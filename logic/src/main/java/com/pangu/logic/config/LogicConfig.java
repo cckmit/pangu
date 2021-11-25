@@ -12,4 +12,6 @@ public class LogicConfig {
     private ZookeeperConfig zookeeper;
 
     private ServerConfig socket;
+
+    private SystemConfig system;
 }

@@ -1,7 +1,6 @@
 package com.pangu.framework.socket.handler.param;
 
 import com.pangu.framework.socket.handler.param.type.*;
-import com.pangu.framework.socket.handler.param.type.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +34,9 @@ public class Parameters {
     // 使用future作为参数
     private boolean future;
 
+    // 存在附加信息参数
+    private boolean attachment;
+
     public Parameters(Parameter[] parameters) {
         this.parameters = parameters;
         List<String> sessionKeys = new ArrayList<>(parameters.length);
@@ -63,6 +65,10 @@ public class Parameters {
             }
             if (parameter instanceof FutureParameter) {
                 future = true;
+                continue;
+            }
+            if (parameter instanceof AttachmentParameter) {
+                attachment = true;
             }
         }
         this.body = body;

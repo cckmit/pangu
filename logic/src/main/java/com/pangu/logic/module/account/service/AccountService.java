@@ -33,4 +33,9 @@ public class AccountService {
         Account unique = entityService.unique(userServerId, Account.class, "name", account);
         return unique != null;
     }
+
+    public Account loadByName(String uid) {
+        String userServerId = Account.toInfo(uid);
+        return entityService.unique(userServerId, Account.class, "name", uid);
+    }
 }
