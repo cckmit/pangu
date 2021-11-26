@@ -97,7 +97,7 @@ public class SessionManager {
         }
     }
 
-    public void bind(Session session, Object identity) {
+    public void bind(Session session, Long identity) {
         if (identity == null) {
             throw new IllegalArgumentException("session 身份不可为空");
         }

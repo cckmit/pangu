@@ -18,4 +18,10 @@ public interface DbModule {
 
     // 删除
     int DELETE = 4;
+
+    // 角色登录
+    int ONLINE = 5;
+
+    // 角色离线
+    int OFFLINE = 6;
 }

@@ -27,7 +27,7 @@ public class FacadeImpl implements Facade {
     public PlayerVo say(Session session, String hello) {
         PlayerVo playerVo = new PlayerVo();
         playerVo.setName("res:" + hello);
-        sessionManager.bind(session, hello);
+        sessionManager.bind(session, 1L);
         facadePush.say(hello);
         return playerVo;
     }

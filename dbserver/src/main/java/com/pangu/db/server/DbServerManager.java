@@ -11,9 +11,9 @@ import com.pangu.core.config.ZookeeperConfig;
 import com.pangu.db.config.DbConfig;
 import com.pangu.db.config.TaskQueueSerializer;
 import com.pangu.db.data.service.DbService;
+import com.pangu.db.data.service.OnlineService;
 import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.lang.ByteUtils;
-import com.pangu.framework.utils.lang.NumberUtils;
 import com.pangu.framework.utils.math.RandomUtils;
 import com.pangu.framework.utils.os.NetUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -51,19 +51,23 @@ public class DbServerManager implements Lifecycle {
 
     private final DbConfig dbConfig;
     private final DbService dbService;
+    private final OnlineService onlineService;
 
     private final AtomicBoolean running = new AtomicBoolean();
     private CuratorFramework framework;
     private ServiceInstance<InstanceDetails> serviceInstance;
     private ServiceDiscovery<InstanceDetails> serviceDiscovery;
-    private ServiceCache<InstanceDetails> serverCache;
+    private ServiceCache<InstanceDetails> dbServerCache;
     private List<ServerInfo> dbServers = new ArrayList<>(1);
+    private Set<ServerInfo> gateIds = new HashSet<>();
     private DistributedBarrier barrier;
     private LeaderSelector leaderSelector;
+    private ServiceCache<InstanceDetails> gateServerCache;
 
-    public DbServerManager(DbConfig dbConfig, DbService dbService) {
+    public DbServerManager(DbConfig dbConfig, DbService dbService, OnlineService onlineService) {
         this.dbConfig = dbConfig;
         this.dbService = dbService;
+        this.onlineService = onlineService;
     }
 
     @Override
@@ -91,7 +95,8 @@ public class DbServerManager implements Lifecycle {
         }
         try {
             registerServer();
-            initDiscovery();
+            initDBDiscovery();
+            initGateDiscovery();
         } catch (Exception e) {
             log.warn("注册服务异常", e);
         }
@@ -104,6 +109,29 @@ public class DbServerManager implements Lifecycle {
         }
 
         startLeaderElection();
+    }
+
+    private void initGateDiscovery() throws Exception {
+        gateServerCache = serviceDiscovery
+                .serviceCacheBuilder()
+                .name(Constants.GATEWAY_SERVICE_NAME)
+                .build();
+        gateServerCache.start();
+
+        initGateServerService(gateServerCache);
+
+        log.debug("首次刷新网关服务器列表[{}]", dbServers);
+        gateServerCache.addListener(new ServiceCacheListener() {
+            @Override
+            public void cacheChanged() {
+                initGateServerService(gateServerCache);
+            }
+
+            @Override
+            public void stateChanged(CuratorFramework curatorFramework, ConnectionState connectionState) {
+                log.debug("Zookeeper状态改变[{}]", connectionState);
+            }
+        });
     }
 
     private void registerWatchManaged() {
@@ -217,20 +245,20 @@ public class DbServerManager implements Lifecycle {
         flyway.migrate();
     }
 
-    private void initDiscovery() throws Exception {
-        serverCache = serviceDiscovery
+    private void initDBDiscovery() throws Exception {
+        dbServerCache = serviceDiscovery
                 .serviceCacheBuilder()
                 .name(Constants.DB_SERVICE_NAME)
                 .build();
-        serverCache.start();
+        dbServerCache.start();
 
-        initServerService(serverCache);
+        initDBServerService(dbServerCache);
 
         log.debug("首次刷新数据服务器列表[{}]", dbServers);
-        serverCache.addListener(new ServiceCacheListener() {
+        dbServerCache.addListener(new ServiceCacheListener() {
             @Override
             public void cacheChanged() {
-                initServerService(serverCache);
+                initDBServerService(dbServerCache);
             }
 
             @Override
@@ -240,7 +268,7 @@ public class DbServerManager implements Lifecycle {
         });
     }
 
-    private void initServerService(ServiceCache<InstanceDetails> cache) {
+    private void initDBServerService(ServiceCache<InstanceDetails> cache) {
         List<ServiceInstance<InstanceDetails>> instances = cache.getInstances();
         List<ServerInfo> servers = new ArrayList<>();
 
@@ -260,6 +288,29 @@ public class DbServerManager implements Lifecycle {
             }
         }
         log.debug("当前数据服列表[{}]", servers);
+    }
+
+    private void initGateServerService(ServiceCache<InstanceDetails> cache) {
+        List<ServiceInstance<InstanceDetails>> instances = cache.getInstances();
+        Set<ServerInfo> currents = new HashSet<>();
+
+        for (ServiceInstance<InstanceDetails> instance : instances) {
+            InstanceDetails payload = instance.getPayload();
+            ServerInfo serverInfo = new ServerInfo(instance.getId(), instance.getAddress(), instance.getPort(), payload.getAddressForClient(), payload);
+            currents.add(serverInfo);
+        }
+        HashSet<ServerInfo> removed = new HashSet<>(this.gateIds);
+        HashSet<ServerInfo> add = new HashSet<>(currents);
+
+        removed.removeAll(add);
+
+        add.removeAll(this.gateIds);
+
+        this.gateIds = currents;
+
+        onlineService.gateUpdate(add, removed);
+
+        log.debug("当前网关数据服列表[{}]", currents);
     }
 
     private void startLeaderElection() {
@@ -381,9 +432,10 @@ public class DbServerManager implements Lifecycle {
         if (!set) {
             return;
         }
-        if (serverCache != null) {
-            CloseableUtils.closeQuietly(serverCache);
+        if (dbServerCache != null) {
+            CloseableUtils.closeQuietly(dbServerCache);
         }
+        CloseableUtils.closeQuietly(gateServerCache);
         try {
             serviceDiscovery.unregisterService(serviceInstance);
         } catch (Exception e) {

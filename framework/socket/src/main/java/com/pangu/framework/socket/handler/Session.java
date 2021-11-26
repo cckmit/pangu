@@ -28,7 +28,7 @@ public class Session {
     private long id;
 
     // 授权ID
-    private Object identity;
+    private Long identity;
 
     // netty连接
     private Channel channel;
@@ -49,7 +49,7 @@ public class Session {
         return id;
     }
 
-    public Object getIdentity() {
+    public Long getIdentity() {
         return identity;
     }
 
@@ -96,7 +96,7 @@ public class Session {
         }
     }
 
-    public void updateIdentity(Object identity) {
+    public void updateIdentity(Long identity) {
         this.identity = identity;
         ctx.put(IDENTITY, identity);
     }

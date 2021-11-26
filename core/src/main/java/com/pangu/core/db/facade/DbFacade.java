@@ -1,5 +1,6 @@
 package com.pangu.core.db.facade;
 
+import com.pangu.framework.socket.anno.IgnoreResponse;
 import com.pangu.framework.socket.anno.InBody;
 import com.pangu.framework.socket.anno.SocketCommand;
 import com.pangu.framework.socket.anno.SocketModule;
@@ -62,4 +63,27 @@ public interface DbFacade {
      */
     @SocketCommand(DbModule.DELETE)
     Result<Integer> delete(@InBody String serverId, @InBody String table, @InBody String idColumnName, @InBody Object id);
+
+    /**
+     * 角色登录
+     *
+     * @param sessionId
+     * @param roleId
+     * @return
+     */
+    @SocketCommand(DbModule.ONLINE)
+    @IgnoreResponse
+    Result<Integer> online(@InBody long sessionId, @InBody long roleId);
+
+    /**
+     * 离线
+     *
+     * @param sessionId
+     * @param roleId
+     * @return
+     */
+    @SocketCommand(DbModule.OFFLINE)
+    @IgnoreResponse
+    Result<Integer> offline(@InBody long sessionId, @InBody long roleId);
+
 }

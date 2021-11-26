@@ -9,12 +9,12 @@ public class ServerIdGenerator {
 
     private final static long SEC_LEN = 32;
     private final static long SEC_MASK = (1L << SEC_LEN) - 1;
-    private final static int SERVER_LEN = 6;
-    private final static int SERVER_MASK = (1 << SERVER_LEN) - 1;
-    private final static int GENERATOR_LEN = 25;
-    private final static int GENERATOR_MASK = (1 << GENERATOR_LEN) - 1;
+    private final static long SERVER_LEN = 6;
+    private final static long SERVER_MASK = (1 << SERVER_LEN) - 1;
+    private final static long GENERATOR_LEN = 25;
+    private final static long GENERATOR_MASK = (1 << GENERATOR_LEN) - 1;
 
-    private int serverId;
+    private long serverId;
 
     private final AtomicInteger generator = new AtomicInteger(1);
 
@@ -27,10 +27,14 @@ public class ServerIdGenerator {
 
     public long getNext() {
         long curSec = System.currentTimeMillis() / 1000;
-        return ((curSec & SEC_MASK) << (SERVER_LEN + GENERATOR_LEN)) | ((serverId & SERVER_MASK) << SERVER_LEN) | (generator.incrementAndGet() & GENERATOR_MASK);
+        return ((curSec & SEC_MASK) << (SERVER_LEN + GENERATOR_LEN)) | ((serverId & SERVER_MASK) << GENERATOR_LEN) | (generator.incrementAndGet() & GENERATOR_MASK);
     }
 
-    public void setServerId(int serverId) {
+    public void setServerId(long serverId) {
         this.serverId = serverId & SERVER_MASK;
+    }
+
+    public static int toServerId(long id) {
+        return (int) ((id >> GENERATOR_LEN) & SERVER_MASK);
     }
 }
