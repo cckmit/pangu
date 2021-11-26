@@ -11,12 +11,14 @@ import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.command.CommandRegister;
 import com.pangu.framework.socket.handler.command.MethodDefine;
 import com.pangu.framework.socket.handler.command.MethodProcessor;
+import com.pangu.framework.socket.handler.param.Attachment;
 import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.socket.handler.param.JsonCoder;
 import com.pangu.framework.socket.handler.param.Parameters;
 import com.pangu.framework.socket.monitor.SocketCatCollector;
 import com.pangu.framework.utils.ManagedException;
 import com.pangu.framework.utils.codec.ZlibUtils;
+import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.lang.ByteUtils;
 import com.pangu.framework.utils.model.Result;
 import com.pangu.framework.utils.thread.AbortPolicyWithReport;
@@ -166,17 +168,25 @@ public class DefaultDispatcher implements Dispatcher {
         MethodDefine define = processor.getMethodDefine();
         Parameters params = define.getParams();
 
-        if (checkRequestNotValid(message, session, params)) return;
+        Attachment attachment;
+        byte[] attachBytes = message.getAttachment();
+        if (attachBytes != null && attachBytes.length > 0) {
+            attachment = JsonUtils.bytes2Object(attachBytes, Attachment.class);
+        } else {
+            attachment = new Attachment();
+        }
+
+        if (checkRequestNotValid(message, session, params, attachment)) return;
 
         String syncQueueName = define.getSyncQueueName();
         // 同步线程
         if (StringUtils.isNotBlank(syncQueueName)) {
-            syncSupport.run(syncQueueName, () -> processRequest(processor, message, session));
+            syncSupport.run(syncQueueName, () -> processRequest(processor, message, session, attachment));
             return;
         }
         // 管理后台线程
         if (define.isManager()) {
-            managedExecutorService.submit(() -> processRequest(processor, message, session));
+            managedExecutorService.submit(() -> processRequest(processor, message, session, attachment));
             return;
         }
 
@@ -186,7 +196,7 @@ public class DefaultDispatcher implements Dispatcher {
             sessionId = session.getIdentity().hashCode();
         }
         ThreadPoolExecutor executor = messagePoolExecutors[(int) (sessionId & thread)];
-        executor.submit(() -> processRequest(processor, message, session));
+        executor.submit(() -> processRequest(processor, message, session, attachment));
     }
 
     private void commandNotFound(Message message, Session session) {
@@ -217,7 +227,7 @@ public class DefaultDispatcher implements Dispatcher {
         return header;
     }
 
-    private void processRequest(MethodProcessor processor, Message message, Session session) {
+    private void processRequest(MethodProcessor processor, Message message, Session session, Attachment attachment) {
         if (message.hasState(StateConstant.STATE_COMPRESS)) {
             byte[] body = message.getBody();
             if (body != null && body.length > 0) {
@@ -257,7 +267,6 @@ public class DefaultDispatcher implements Dispatcher {
             CompletableFuture<?> completableFuture = null;
             if (params.isFuture()) {
                 completableFuture = new CompletableFuture<>();
-                Message finalMessage = message;
                 completableFuture.whenComplete((result, thr) -> {
                     if (thr != null) {
                         processException(thr, header, coder, define, session, null);
@@ -273,19 +282,16 @@ public class DefaultDispatcher implements Dispatcher {
                     } else {
                         body = new byte[0];
                     }
-                    byte[] attachment = finalMessage.getAttachment();
-                    byte[] resAttach = null;
-                    if (attachment != null && attachment.length >= 8) {
-                        resAttach = new byte[16];
-                        byte[] responseTimestamp = ByteUtils.longToByte(System.currentTimeMillis());
-                        System.arraycopy(attachment, 0, resAttach, 0, 8);
-                        System.arraycopy(responseTimestamp, 0, resAttach, 8, 8);
+                    byte[] resAttach = new byte[0];
+                    if (attachment.notEmpty()) {
+                        resAttach = JsonUtils.object2Bytes(attachment);
                     }
                     Message resMsg = Message.valueOf(header, body, resAttach);
                     session.write(resMsg);
                 });
             }
-            Object[] methodParameters = coder.decodeRequest(message, session, params, completableFuture);
+
+            Object[] methodParameters = coder.decodeRequest(message, session, params, completableFuture, attachment);
             Object result = processor.process(methodParameters);
 
             if (completableFuture != null || define.isIgnoreResponse()) {
@@ -302,17 +308,15 @@ public class DefaultDispatcher implements Dispatcher {
                 body = new byte[0];
             }
             transaction.addData("output", body.length);
-            byte[] attachment = message.getAttachment();
-            byte[] resAttach = null;
-            if (attachment != null && attachment.length >= 8) {
-                resAttach = new byte[16];
-                byte[] responseTimestamp = ByteUtils.longToByte(System.currentTimeMillis());
-                System.arraycopy(attachment, 0, resAttach, 0, 8);
-                System.arraycopy(responseTimestamp, 0, resAttach, 8, 8);
-            }
+
             if (!header.hasState(StateConstant.STATE_COMPRESS) && body.length > StateConstant.COMPRESS_LIMIT) {
                 body = ZlibUtils.zip(body);
                 header.addState(StateConstant.STATE_COMPRESS);
+            }
+            byte[] resAttach = new byte[0];
+
+            if (attachment.notEmpty()) {
+                resAttach = JsonUtils.object2Bytes(attachment);
             }
             Message resMsg = Message.valueOf(header, body, resAttach);
             session.write(resMsg);
@@ -382,7 +386,15 @@ public class DefaultDispatcher implements Dispatcher {
         return errorBody;
     }
 
-    public boolean checkRequestNotValid(Message message, Session session, Parameters params) {
+    public boolean checkRequestNotValid(Message message, Session session, Parameters params, Attachment attachment) {
+        if (params.isAttachId()) {
+            if (attachment.getIdentity() == 0) {
+                Header header = responseHeader(message, session);
+                header.addError(StateConstant.IDENTITY_EXCEPTION);
+                session.write(Message.valueOf(header));
+                return true;
+            }
+        }
         if (params.isIdentity()) {
             if (session.getIdentity() == null) {
                 Header header = responseHeader(message, session);

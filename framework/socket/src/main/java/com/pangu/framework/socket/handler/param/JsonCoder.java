@@ -14,7 +14,6 @@ import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.Session;
-import com.pangu.framework.socket.handler.param.type.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -73,7 +72,7 @@ public class JsonCoder implements Coder {
     }
 
     @Override
-    public Object[] decodeRequest(Message message, Session session, Parameters params, CompletableFuture<?> completableFuture) {
+    public Object[] decodeRequest(Message message, Session session, Parameters params, CompletableFuture<?> completableFuture, Attachment attachment) {
         Parameter[] parameters = params.getParameters();
         if (parameters == null || parameters.length == 0) {
             return new Object[0];
@@ -95,6 +94,10 @@ public class JsonCoder implements Coder {
                 InBodyParameter real = (InBodyParameter) parameter;
                 Object value = parseInBodyParam(real, jsonNode, message);
                 objects.add(value);
+                continue;
+            }
+            if (parameter instanceof AttachmentIdParameter) {
+                objects.add(attachment.getIdentity());
                 continue;
             }
             if (parameter instanceof IdentityParameter) {

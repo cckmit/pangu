@@ -34,8 +34,8 @@ public class Parameters {
     // 使用future作为参数
     private boolean future;
 
-    // 存在附加信息参数
-    private boolean attachment;
+    // 附加信息ID
+    private boolean attachId;
 
     public Parameters(Parameter[] parameters) {
         this.parameters = parameters;
@@ -67,8 +67,8 @@ public class Parameters {
                 future = true;
                 continue;
             }
-            if (parameter instanceof AttachmentParameter) {
-                attachment = true;
+            if (parameter instanceof AttachmentIdParameter) {
+                attachId = true;
             }
         }
         this.body = body;

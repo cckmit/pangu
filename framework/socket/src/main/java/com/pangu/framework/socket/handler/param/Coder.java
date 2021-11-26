@@ -21,7 +21,7 @@ public interface Coder {
      */
     byte getFormat();
 
-    Object[] decodeRequest(Message message, Session session, Parameters params, CompletableFuture<?> completableFuture);
+    Object[] decodeRequest(Message message, Session session, Parameters params, CompletableFuture<?> completableFuture, Attachment attachment);
 
     byte[] encodeParameters(Object[] args, Parameters params);
 

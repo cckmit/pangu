@@ -1,11 +1,12 @@
 package com.pangu.framework.socket.handler.command;
 
 import com.pangu.framework.socket.anno.*;
-import com.pangu.framework.socket.handler.param.type.*;
 import com.pangu.framework.socket.core.Command;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.handler.Session;
+import com.pangu.framework.socket.handler.param.Attachment;
 import com.pangu.framework.socket.handler.param.Parameters;
+import com.pangu.framework.socket.handler.param.type.*;
 import com.pangu.framework.socket.utils.AnnotationUtils;
 import com.pangu.framework.socket.utils.bytecode.Wrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -95,15 +96,19 @@ public class CommandRegister {
             Parameter parameter = parameters[i];
             Class<?> type = parameter.getType();
             if (type == Session.class) {
-                list.add(new SessionParameter());
+                list.add(SessionParameter.INSTANCE);
                 continue;
             }
             if (type == Message.class) {
-                list.add(new MessageParameter());
+                list.add(MessageParameter.INSTANCE);
                 continue;
             }
             if (type == CompletableFuture.class) {
-                list.add(new FutureParameter());
+                list.add(FutureParameter.INSTANCE);
+                continue;
+            }
+            if (type == Attachment.class) {
+                list.add(AttachmentParameter.INSTANCE);
                 continue;
             }
             Annotation[] annotations = parameter.getAnnotations();
@@ -127,8 +132,11 @@ public class CommandRegister {
                     list.add(new InSessionParameter(StringUtils.defaultIfEmpty(anno.value(), parameterName), anno.required()));
                     continue OUTER;
                 }
+                if (annotationType == AttachId.class) {
+                    list.add(AttachmentIdParameter.INSTANCE);
+                }
             }
-            list.add(new BodyParameter(parameter.getParameterizedType(), raw != null && raw.request()));
+            list.add(new BodyParameter(parameter.getParameterizedType(), raw.request()));
             body = true;
         }
         if (body && inBody) {

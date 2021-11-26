@@ -6,4 +6,5 @@ import com.pangu.framework.socket.handler.param.Parameter;
  * 异步处理请求
  */
 public class FutureParameter implements Parameter {
+    public static final FutureParameter INSTANCE = new FutureParameter();
 }

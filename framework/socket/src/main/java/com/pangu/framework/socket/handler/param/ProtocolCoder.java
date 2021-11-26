@@ -8,14 +8,12 @@ import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.Session;
-import com.pangu.framework.socket.handler.param.type.*;
 import com.pangu.framework.utils.reflect.Assert;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +42,7 @@ public class ProtocolCoder implements Coder {
     }
 
     @Override
-    public Object[] decodeRequest(Message message, Session session, Parameters params, CompletableFuture<?> completableFuture) {
+    public Object[] decodeRequest(Message message, Session session, Parameters params, CompletableFuture<?> completableFuture, Attachment attachment) {
         Assert.notNull(transfer, "protocol协议未实现");
         Parameter[] parameters = params.getParameters();
         if (parameters == null || parameters.length == 0) {
@@ -61,6 +59,10 @@ public class ProtocolCoder implements Coder {
                 InBodyParameter real = (InBodyParameter) parameter;
                 Object value = parseInBodyParam(message, real, decode);
                 objects.add(value);
+                continue;
+            }
+            if (parameter instanceof AttachmentIdParameter) {
+                objects.add(attachment.getIdentity());
                 continue;
             }
             if (parameter instanceof IdentityParameter) {
