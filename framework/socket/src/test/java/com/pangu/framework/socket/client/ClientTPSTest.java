@@ -3,7 +3,6 @@ package com.pangu.framework.socket.client;
 import com.pangu.framework.socket.anno.InBody;
 import com.pangu.framework.socket.anno.SocketCommand;
 import com.pangu.framework.socket.anno.SocketModule;
-import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;
@@ -12,6 +11,10 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientTPSTest {
+
+    static AtomicInteger count = new AtomicInteger();
+    private static ClientFactory clientFactory;
+    private static SocketServer socketServer;
 
     public static void main(String[] args) {
         init();
@@ -39,10 +42,6 @@ public class ClientTPSTest {
         }
         tearDown();
     }
-
-    private static ClientFactory clientFactory;
-    private static SocketServer socketServer;
-    static AtomicInteger count = new AtomicInteger();
 
     public static void init() {
         SocketServerBuilder builder = new SocketServerBuilder();

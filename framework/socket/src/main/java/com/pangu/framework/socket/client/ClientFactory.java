@@ -1,13 +1,13 @@
 package com.pangu.framework.socket.client;
 
-import com.pangu.framework.socket.filter.HeartBeatFilter;
-import com.pangu.framework.socket.handler.param.Coder;
-import com.pangu.framework.socket.handler.param.JsonCoder;
 import com.pangu.framework.socket.codec.MessageDecoder;
 import com.pangu.framework.socket.codec.MessageEncoder;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
+import com.pangu.framework.socket.filter.HeartBeatFilter;
+import com.pangu.framework.socket.handler.param.Coder;
+import com.pangu.framework.socket.handler.param.JsonCoder;
 import com.pangu.framework.socket.utils.IpUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBufAllocator;
@@ -33,46 +33,34 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class ClientFactory {
 
-    @Setter
-    private Map<ChannelOption<?>, Object> connectOption;
-
-    @Setter
-    private EventLoopGroup workerGroup;
-
-    @Setter
-    private InetSocketAddress defaultAddress;
-
-    @Setter
-    private SslContext sslContext;
-
-    @Setter
-    private Map<String, ChannelHandler> filters;
-
-    @Setter
-    private Coder coder = new JsonCoder();
-
-    @Setter
-    private boolean heartBeat;
-
-    @Setter
-    private int heartBeatIntervalMs = 5000;
-
-    @Setter
-    private int keepAliveMs = 300000;
-
-    @Setter
-    private int readTimeout = 3000;
-
-    // 单个地址，同时建立连接的数量
-    @Setter
-    private int domainConnectLimit = 4;
-
-    // 是否正在运行
-    private Bootstrap connector;
-
     // 保持连接的client集合
     private final ConcurrentHashMap<InetSocketAddress, CopyOnWriteArrayList<Client>> keepAliveClient = new ConcurrentHashMap<>();
     private final AtomicBoolean keepAliveThreadRunning = new AtomicBoolean(false);
+    @Setter
+    private Map<ChannelOption<?>, Object> connectOption;
+    @Setter
+    private EventLoopGroup workerGroup;
+    @Setter
+    private InetSocketAddress defaultAddress;
+    @Setter
+    private SslContext sslContext;
+    @Setter
+    private Map<String, ChannelHandler> filters;
+    @Setter
+    private Coder coder = new JsonCoder();
+    @Setter
+    private boolean heartBeat;
+    @Setter
+    private int heartBeatIntervalMs = 5000;
+    @Setter
+    private int keepAliveMs = 300000;
+    @Setter
+    private int readTimeout = 3000;
+    // 单个地址，同时建立连接的数量
+    @Setter
+    private int domainConnectLimit = 4;
+    // 是否正在运行
+    private Bootstrap connector;
     private Thread keepAliveThread;
 
     public synchronized void start() {
@@ -304,6 +292,7 @@ public class ClientFactory {
                 }
             }
         }
+
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) throws Exception {
             if (throwable == null) {

@@ -1,9 +1,9 @@
 package com.pangu.framework.socket.handler.push;
 
+import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.handler.command.CommandRegister;
 import com.pangu.framework.socket.handler.command.MethodDefine;
 import com.pangu.framework.socket.handler.param.Coder;
-import com.pangu.framework.socket.handler.SessionManager;
 
 import java.lang.reflect.Proxy;
 import java.util.List;

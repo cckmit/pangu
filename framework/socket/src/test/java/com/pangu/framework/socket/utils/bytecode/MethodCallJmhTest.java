@@ -19,6 +19,52 @@ import java.lang.reflect.Proxy;
 
 public class MethodCallJmhTest {
 
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                // 导入要测试的类
+                .include(MethodCallJmhTest.class.getSimpleName())
+                // 预热5轮
+                .warmupIterations(5)
+                // 度量10轮
+                .measurementIterations(10)
+                .mode(Mode.Throughput)
+                .forks(1)
+                .build();
+
+        new Runner(opt).run();
+    }
+
+    @Benchmark
+    public Object test_javassist(ChannelState state) throws InvocationTargetException {
+        return state.wrapper.invokeMethod(state.obj, state.name, state.parameterTypes, new Object[]{1});
+    }
+
+    @Benchmark
+    public Object test_reflect_invoke(ChannelState state) throws InvocationTargetException, IllegalAccessException {
+        return state.method.invoke(state.obj, 1);
+    }
+
+    @Benchmark
+    public Object test_direct(ChannelState state) throws InvocationTargetException, IllegalAccessException {
+        return state.obj.hello(1);
+    }
+
+    @Benchmark
+    public Object test_java_proxy(ChannelState state) throws InvocationTargetException, IllegalAccessException {
+        return state.facade.hello(1);
+    }
+
+    @Benchmark
+    public Object test_javassist_proxy(ChannelState state) throws InvocationTargetException, IllegalAccessException {
+        return state.javassistFacade.hello(1);
+    }
+
+    @SocketModule(1)
+    private interface Facade {
+        @SocketCommand(2)
+        String hello(@InBody int value);
+    }
+
     @State(Scope.Benchmark)
     public static class ChannelState {
         final Class<?>[] parameterTypes;
@@ -52,52 +98,6 @@ public class MethodCallJmhTest {
                 return "hello" + args[0];
             }
         }
-    }
-
-    @Benchmark
-    public Object test_javassist(ChannelState state) throws InvocationTargetException {
-        return state.wrapper.invokeMethod(state.obj, state.name, state.parameterTypes, new Object[]{1});
-    }
-
-    @Benchmark
-    public Object test_reflect_invoke(ChannelState state) throws InvocationTargetException, IllegalAccessException {
-        return state.method.invoke(state.obj, 1);
-    }
-
-    @Benchmark
-    public Object test_direct(ChannelState state) throws InvocationTargetException, IllegalAccessException {
-        return state.obj.hello(1);
-    }
-
-    @Benchmark
-    public Object test_java_proxy(ChannelState state) throws InvocationTargetException, IllegalAccessException {
-        return state.facade.hello(1);
-    }
-
-    @Benchmark
-    public Object test_javassist_proxy(ChannelState state) throws InvocationTargetException, IllegalAccessException {
-        return state.javassistFacade.hello(1);
-    }
-
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                // 导入要测试的类
-                .include(MethodCallJmhTest.class.getSimpleName())
-                // 预热5轮
-                .warmupIterations(5)
-                // 度量10轮
-                .measurementIterations(10)
-                .mode(Mode.Throughput)
-                .forks(1)
-                .build();
-
-        new Runner(opt).run();
-    }
-
-    @SocketModule(1)
-    private interface Facade {
-        @SocketCommand(2)
-        String hello(@InBody int value);
     }
 
     static class FacadeImpl implements Facade {

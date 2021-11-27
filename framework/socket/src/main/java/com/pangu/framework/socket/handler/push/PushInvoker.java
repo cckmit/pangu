@@ -1,13 +1,13 @@
 package com.pangu.framework.socket.handler.push;
 
-import com.pangu.framework.socket.handler.command.MethodDefine;
-import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.socket.core.Header;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.Session;
 import com.pangu.framework.socket.handler.SessionManager;
+import com.pangu.framework.socket.handler.command.MethodDefine;
+import com.pangu.framework.socket.handler.param.Coder;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +38,11 @@ public class PushInvoker implements InvocationHandler {
         for (MethodDefine methodDefine : methodDefines) {
             this.methodDefines.put(methodDefine.getMethod(), new PushDefine(methodDefine));
         }
+    }
+
+    public static long next() {
+        long result = sequence.incrementAndGet();
+        return result & 0x007fffffffffffffL;
     }
 
     @Override
@@ -135,18 +140,24 @@ public class PushInvoker implements InvocationHandler {
             }
             return sessions.toArray(new Session[0]);
         }
-        Session session = sessionManager.getIdentity(identity);
-        if (session == null) {
-            return new Session[0];
+        if (identity instanceof Number) {
+            Session session = sessionManager.getIdentity(((Number) identity).longValue());
+            if (session == null) {
+                return new Session[0];
+            }
+            return new Session[]{session};
         }
-        return new Session[]{session};
+        return new Session[0];
     }
 
     private void foundIdentity(List<Object> notFoundSessionIdentities, List<Session> sessions, Object o) {
         if (o instanceof Session) {
             sessions.add((Session) o);
         } else {
-            Session session = sessionManager.getIdentity(o);
+            if (!(o instanceof Number)) {
+                return;
+            }
+            Session session = sessionManager.getIdentity(((Number) o).longValue());
             if (session == null) {
                 if (notFoundSessionIdentities != null) {
                     notFoundSessionIdentities.add(o);
@@ -155,10 +166,5 @@ public class PushInvoker implements InvocationHandler {
             }
             sessions.add(session);
         }
-    }
-
-    public static long next() {
-        long result = sequence.incrementAndGet();
-        return result & 0x007fffffffffffffL;
     }
 }

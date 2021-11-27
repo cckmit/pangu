@@ -1,8 +1,8 @@
 package com.pangu.framework.socket.filter.firewall;
 
 import com.pangu.framework.socket.filter.SocketFilter;
-import com.pangu.framework.socket.utils.IpUtils;
 import com.pangu.framework.socket.handler.Session;
+import com.pangu.framework.socket.utils.IpUtils;
 import com.pangu.framework.utils.concurrent.DelayedElement;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -39,16 +39,14 @@ public class FirewallFilter extends ChannelInboundHandlerAdapter implements Fire
     private final ConcurrentHashMap<String, Pattern> allows = new ConcurrentHashMap<>();
     // 黑名单IP集合
     private final ConcurrentHashMap<String, Pattern> blocks = new ConcurrentHashMap<>();
-    // 黑名单阻止时间(默认:10分钟)
-    private int blockTimes = 10 * 60;
     // 黑名单移除队列
     private final DelayQueue<DelayedElement<String>> blockRemoveQueue = new DelayQueue<>();
-
-    // 最大客户端连接数
-    private int maxClients = 5000;
     // 当前客户端连接数
     private final AtomicInteger currentClients = new AtomicInteger();
-
+    // 黑名单阻止时间(默认:10分钟)
+    private int blockTimes = 10 * 60;
+    // 最大客户端连接数
+    private int maxClients = 5000;
     // 阻止全部连接状态(不包括白名单)
     private boolean blockAll = false;
 

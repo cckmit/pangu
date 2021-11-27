@@ -70,6 +70,12 @@ public class AnnotationUtilsTest {
     }
 
     @SocketModule(1)
+    public interface AnnotationInterface {
+        @SocketCommand(1)
+        String get();
+    }
+
+    @SocketModule(1)
     public class Annotation {
 
         @SocketCommand(1)
@@ -85,12 +91,6 @@ public class AnnotationUtilsTest {
         public String get() {
             return null;
         }
-    }
-
-    @SocketModule(1)
-    public interface AnnotationInterface {
-        @SocketCommand(1)
-        String get();
     }
 
     public class ClassWithInterface implements AnnotationInterface {

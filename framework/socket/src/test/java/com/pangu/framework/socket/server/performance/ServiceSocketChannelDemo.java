@@ -2,11 +2,8 @@ package com.pangu.framework.socket.server.performance;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketOption;
-import java.net.SocketOptions;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -16,98 +13,103 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
- 
- 
+
+
 /*服务器端，:接收客户端发送过来的数据并显示，
  *服务器把上接收到的数据加上"echo from service:"再发送回去*/
 public class ServiceSocketChannelDemo {
-     
-    public static class TCPEchoServer implements Runnable{
-         
+
+    public static void main(String[] args) throws InterruptedException, IOException {
+        TCPEchoServer server = new TCPEchoServer(18888);
+        server.run();
+    }
+
+    public static class TCPEchoServer implements Runnable {
+
         /*服务器地址*/
         private InetSocketAddress localAddress;
-         
-        public TCPEchoServer(int port) throws IOException{
+
+        public TCPEchoServer(int port) throws IOException {
             this.localAddress = new InetSocketAddress(port);
         }
-         
-         
+
+
         @Override
-        public void run(){
-             
+        public void run() {
+
             Charset utf8 = StandardCharsets.UTF_8;
-             
+
             ServerSocketChannel ssc = null;
             Selector selector = null;
-             
+
             Random rnd = new Random();
-             
+
             try {
                 /*创建选择器*/
                 selector = Selector.open();
-                 
+
                 /*创建服务器通道*/
                 ssc = ServerSocketChannel.open();
                 ssc.setOption(StandardSocketOptions.SO_RCVBUF, 128);
                 ssc.configureBlocking(false);
-                 
+
                 /*设置监听服务器的端口，设置最大连接缓冲数为100*/
                 ssc.bind(localAddress, 100);
-                 
+
                 /*服务器通道只能对tcp链接事件感兴趣*/
                 ssc.register(selector, SelectionKey.OP_ACCEPT);
-                 
+
             } catch (IOException e1) {
                 System.out.println("server start failed");
                 return;
-            } 
-             
+            }
+
             System.out.println("server start with address : " + localAddress);
-             
+
             /*服务器线程被中断后会退出*/
-            try{
-                 
-                while(!Thread.currentThread().isInterrupted()){
-                     
+            try {
+
+                while (!Thread.currentThread().isInterrupted()) {
+
                     int n = selector.select();
-                    if(n == 0){
+                    if (n == 0) {
                         continue;
                     }
- 
+
                     Set<SelectionKey> keySet = selector.selectedKeys();
                     Iterator<SelectionKey> it = keySet.iterator();
                     SelectionKey key = null;
-                     
-                    while(it.hasNext()){
-                             
+
+                    while (it.hasNext()) {
+
                         key = it.next();
                         /*防止下次select方法返回已处理过的通道*/
                         it.remove();
-                         
+
                         /*若发现异常，说明客户端连接出现问题,但服务器要保持正常*/
-                        try{
+                        try {
                             /*ssc通道只能对链接事件感兴趣*/
-                            if(key.isAcceptable()){
-                                 
+                            if (key.isAcceptable()) {
+
                                 /*accept方法会返回一个普通通道，
                                      每个通道在内核中都对应一个socket缓冲区*/
                                 SocketChannel sc = ssc.accept();
                                 sc.setOption(StandardSocketOptions.SO_RCVBUF, 128);
                                 sc.configureBlocking(false);
-                                 
+
                                 /*向选择器注册这个通道和普通通道感兴趣的事件，同时提供这个新通道相关的缓冲区*/
-                                int interestSet = SelectionKey.OP_READ;                             
+                                int interestSet = SelectionKey.OP_READ;
                                 sc.register(selector, interestSet);
-                                 
+
                                 System.out.println("accept from " + sc.getRemoteAddress());
                             }
-                             
-                             
+
+
                             /*（普通）通道感兴趣读事件且有数据可读*/
-                            if(key.isReadable()){
-                                 
+                            if (key.isReadable()) {
+
                                 /*通过SelectionKey获取通道对应的缓冲区*/
-                                 
+
                                 /*通过SelectionKey获取对应的通道*/
                                 SocketChannel sc = (SocketChannel) key.channel();
                                 ByteBuffer readBuffer = ByteBuffer.allocate(128);
@@ -117,44 +119,39 @@ public class ServiceSocketChannelDemo {
                                 readBuffer.flip();
 
                                 System.out.println(readBuffer.remaining());
-                     
+
                                 readBuffer.rewind();
-                                 
+
                                 readBuffer.clear();
-                                                                 
+
                             }
-                        }catch(IOException e){
+                        } catch (IOException e) {
                             System.out.println("service encounter client error");
                             /*若客户端连接出现异常，从Seletcor中移除这个key*/
                             key.cancel();
                             key.channel().close();
                         }
- 
+
                     }
-                         
+
                     Thread.sleep(rnd.nextInt(500));
                 }
-                 
-            }catch(InterruptedException e){
+
+            } catch (InterruptedException e) {
                 System.out.println("serverThread is interrupted");
             } catch (IOException e1) {
                 System.out.println("serverThread selecotr error");
-            }finally{
-                try{
+            } finally {
+                try {
                     selector.close();
-                }catch(IOException e){
+                } catch (IOException e) {
                     System.out.println("selector close failed");
-                }finally{
+                } finally {
                     System.out.println("server close");
                 }
             }
- 
+
         }
     }
-     
-    public static void main(String[] args) throws InterruptedException, IOException{
-        TCPEchoServer server = new TCPEchoServer(18888);
-        server.run();
-    }
-     
+
 }

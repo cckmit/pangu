@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.assertEquals;
 
 public class SessionManagerTest {
+    static AtomicInteger count = new AtomicInteger();
     private static ClientFactory clientFactory;
     private static SocketServer socketServer;
-    static AtomicInteger count = new AtomicInteger();
     private SessionManager sessionManager;
 
     @Before
@@ -67,8 +67,8 @@ public class SessionManagerTest {
         Client connect = clientFactory.connect();
         connect.getProxy(Facade.class).login(null, 123);
         sessionManager.getPushProxy(FacadePush.class).close(123, new PlayerVo());
-        sessionManager.getPushProxy(FacadePush.class).close(new int[]{123}, new PlayerVo());
-        sessionManager.getPushProxy(FacadePush.class).close(Collections.singleton(123), new PlayerVo());
+        sessionManager.getPushProxy(FacadePush.class).close(new long[]{123}, new PlayerVo());
+        sessionManager.getPushProxy(FacadePush.class).close(Collections.singleton(123L), new PlayerVo());
         sessionManager.getPushProxy(FacadePush.class).close(new PlayerVo());
         try {
             Thread.sleep(500);
@@ -83,7 +83,7 @@ public class SessionManagerTest {
         Thread.sleep(400);
         assertEquals(1, sessionManager.connectAmount());
         assertEquals(1, sessionManager.anonymousAmount());
-        int id = 123;
+        long id = 123;
         connect.getProxy(Facade.class).login(null, id);
         assertEquals(1, sessionManager.connectAmount());
         assertEquals(1, sessionManager.identityAmount());
@@ -117,20 +117,20 @@ public class SessionManagerTest {
     @SocketModule(1)
     private interface Facade {
         @SocketCommand(2)
-        PlayerVo login(Session session, @InBody("hello") int value);
+        PlayerVo login(Session session, @InBody("hello") long value);
     }
 
     @SocketModule(1)
     private interface FacadePush {
 
         @SocketCommand((-1))
-        void close(@Identity int identity, @InBody("playerVo") PlayerVo playerVo);
+        void close(@Identity long identity, @InBody("playerVo") PlayerVo playerVo);
 
         @SocketCommand((-2))
-        void close(@Identity int[] identity, @InBody("playerVo") PlayerVo playerVo);
+        void close(@Identity long[] identity, @InBody("playerVo") PlayerVo playerVo);
 
         @SocketCommand((-3))
-        void close(@Identity Collection<Integer> identity, @InBody("playerVo") PlayerVo playerVo);
+        void close(@Identity Collection<Long> identity, @InBody("playerVo") PlayerVo playerVo);
 
         @SocketCommand((-3))
         @PushAllIdentityClient
@@ -146,7 +146,7 @@ public class SessionManagerTest {
         }
 
         @Override
-        public PlayerVo login(Session session, int value) {
+        public PlayerVo login(Session session, long value) {
             PlayerVo playerVo = new PlayerVo();
             playerVo.name = "hello:" + value;
             Session preSession = sessionManager.getIdentity(value);

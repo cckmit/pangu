@@ -41,6 +41,14 @@ public class SslConfig {
         this(enabled, null, null, null);
     }
 
+    public static SslConfig server(boolean enabled, String password, String storeType, String storePath) {
+        return new SslConfig(enabled, password, storeType, storePath);
+    }
+
+    public static SslConfig client(boolean enabled) {
+        return new SslConfig(enabled);
+    }
+
     public SslContext createForServer() {
         if (!enabled) {
             return null;
@@ -73,14 +81,6 @@ public class SslConfig {
         } catch (Exception e) {
             throw new Error("Failed to initialize the SSLContext", e);
         }
-    }
-
-    public static SslConfig server(boolean enabled, String password, String storeType, String storePath) {
-        return new SslConfig(enabled, password, storeType, storePath);
-    }
-
-    public static SslConfig client(boolean enabled) {
-        return new SslConfig(enabled);
     }
 
     public static class TrustManagers {

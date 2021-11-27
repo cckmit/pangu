@@ -9,109 +9,120 @@ import org.slf4j.LoggerFactory;
  * @author frank
  */
 public class FirewallRecord {
-	private Logger logger = LoggerFactory.getLogger(FirewallRecord.class);
+    /**
+     * 最大违规次数
+     */
+    private static int MAX_VIOLATE_TIMES = 5;
+    /**
+     * 每秒收到的字节数限制
+     */
+    private static int BYTES_IN_SECOND_LIMIT = 128 * 1024;
+    /**
+     * 每秒收到的数据包次数限制
+     */
+    private static int TIMES_IN_SECOND_LIMIT = 128;
+    private Logger logger = LoggerFactory.getLogger(FirewallRecord.class);
+    /**
+     * 最后记录时间
+     */
+    private long lastSecond = 0;
+    /**
+     * 当前秒收到的字节数
+     */
+    private int bytesInSecond = 0;
+    /**
+     * 当前秒收到的数据包次数
+     */
+    private int timesInSecond = 0;
+    /**
+     * 违规次数
+     */
+    private int violateTime = 0;
 
-	/** 最大违规次数 */
-	private static int MAX_VIOLATE_TIMES = 5;
-	/** 每秒收到的字节数限制 */
-	private static int BYTES_IN_SECOND_LIMIT = 128 * 1024;
-	/** 每秒收到的数据包次数限制 */
-	private static int TIMES_IN_SECOND_LIMIT = 128;
+    /**
+     * 设置最大违规次数
+     *
+     * @param times
+     */
+    public static void setMaxViolateTimes(int times) {
+        MAX_VIOLATE_TIMES = times;
+    }
 
-	/**
-	 * 设置最大违规次数
-	 *
-	 * @param times
-	 */
-	public static void setMaxViolateTimes(int times) {
-		MAX_VIOLATE_TIMES = times;
-	}
+    /**
+     * 设置每秒收到的字节数限制
+     *
+     * @param size
+     */
+    public static void setBytesInSecondLimit(int size) {
+        BYTES_IN_SECOND_LIMIT = size;
+    }
 
-	/**
-	 * 设置每秒收到的字节数限制
-	 *
-	 * @param size
-	 */
-	public static void setBytesInSecondLimit(int size) {
-		BYTES_IN_SECOND_LIMIT = size;
-	}
+    /**
+     * 设置每秒收到的数据包次数限制
+     *
+     * @param size
+     */
+    public static void setTimesInSecondLimit(int size) {
+        TIMES_IN_SECOND_LIMIT = size;
+    }
 
-	/**
-	 * 设置每秒收到的数据包次数限制
-	 *
-	 * @param size
-	 */
-	public static void setTimesInSecondLimit(int size) {
-		TIMES_IN_SECOND_LIMIT = size;
-	}
+    /**
+     * 检查是否违规
+     *
+     * @param bytes 当次收到的数据包大小
+     * @return true:本次违规；false:没有违规
+     */
+    public boolean check(int bytes) {
+        long ms = System.currentTimeMillis(); // 当前毫秒
+        long currentSecond = ms / 1000; // 当前秒数
 
-	/** 最后记录时间 */
-	private long lastSecond = 0;
-	/** 当前秒收到的字节数 */
-	private int bytesInSecond = 0;
-	/** 当前秒收到的数据包次数 */
-	private int timesInSecond = 0;
+        if (currentSecond != lastSecond) {
+            // 重置状态
+            lastSecond = currentSecond;
+            bytesInSecond = 0;
+            timesInSecond = 0;
+        }
 
-	/** 违规次数 */
-	private int violateTime = 0;
+        // 累计数据
+        bytesInSecond += bytes;
+        timesInSecond++;
 
-	/**
-	 * 检查是否违规
-	 *
-	 * @param bytes 当次收到的数据包大小
-	 * @return true:本次违规；false:没有违规
-	 */
-	public boolean check(int bytes) {
-		long ms = System.currentTimeMillis(); // 当前毫秒
-		long currentSecond = ms / 1000; // 当前秒数
+        // 边界判断
+        if (bytesInSecond >= BYTES_IN_SECOND_LIMIT || timesInSecond >= TIMES_IN_SECOND_LIMIT) {
+            violateTime++;
+            logger.error("请求违规:[{}]次字节数量[{}]包数量[{}]", new Object[]{violateTime, bytesInSecond, timesInSecond});
+            bytesInSecond = 0;
+            timesInSecond = 0;
+            return true;
+        }
+        return false;
+    }
 
-		if (currentSecond != lastSecond) {
-			// 重置状态
-			lastSecond = currentSecond;
-			bytesInSecond = 0;
-			timesInSecond = 0;
-		}
+    /**
+     * 检查是否需要被阻止
+     *
+     * @return true:要阻止；false:不需要阻止
+     */
+    public boolean isBlock() {
+        return violateTime >= MAX_VIOLATE_TIMES;
+    }
 
-		// 累计数据
-		bytesInSecond += bytes;
-		timesInSecond++;
+    // Getter and Setter ...
 
-		// 边界判断
-		if (bytesInSecond >= BYTES_IN_SECOND_LIMIT || timesInSecond >= TIMES_IN_SECOND_LIMIT) {
-			violateTime++;
-			logger.error("请求违规:[{}]次字节数量[{}]包数量[{}]", new Object[] {violateTime, bytesInSecond, timesInSecond});
-			bytesInSecond = 0;
-			timesInSecond = 0;
-			return true;
-		}
-		return false;
-	}
+    public long getLastSecond() {
+        return lastSecond;
+    }
 
-	/**
-	 * 检查是否需要被阻止
-	 *
-	 * @return true:要阻止；false:不需要阻止
-	 */
-	public boolean isBlock() {
-		return violateTime >= MAX_VIOLATE_TIMES;
-	}
+    public int getBytesInSecond() {
+        return bytesInSecond;
+    }
 
-	// Getter and Setter ...
+    public int getTimesInSecond() {
+        return timesInSecond;
+    }
 
-	public long getLastSecond() {
-		return lastSecond;
-	}
-
-	public int getBytesInSecond() {
-		return bytesInSecond;
-	}
-
-	public int getTimesInSecond() {
-		return timesInSecond;
-	}
-
-	public int getViolateTime() {
-		return violateTime;
-	}
+    public int getViolateTime() {
+        return violateTime;
+    }
 
 }

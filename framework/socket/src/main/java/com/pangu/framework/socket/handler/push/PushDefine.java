@@ -1,11 +1,11 @@
 package com.pangu.framework.socket.handler.push;
 
+import com.pangu.framework.socket.anno.PushAllIdentityClient;
 import com.pangu.framework.socket.handler.command.MethodDefine;
 import com.pangu.framework.socket.handler.param.Parameter;
 import com.pangu.framework.socket.handler.param.Parameters;
 import com.pangu.framework.socket.handler.param.type.IdentityParameter;
 import com.pangu.framework.socket.handler.param.type.SessionParameter;
-import com.pangu.framework.socket.anno.PushAllIdentityClient;
 import lombok.Getter;
 
 import java.lang.reflect.Method;

@@ -35,7 +35,7 @@ public class SocketServerBuilderTest {
 
         builder.address("localhost,192.168.11.1:123");
         assertThat(builder.getPort(), is(123));
-        assertArrayEquals(builder.getIps(), new String[]{"localhost","192.168.11.1"});
+        assertArrayEquals(builder.getIps(), new String[]{"localhost", "192.168.11.1"});
     }
 
     @Test

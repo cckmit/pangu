@@ -13,16 +13,18 @@ public class ServerIdGenerator {
     private final static long SERVER_MASK = (1 << SERVER_LEN) - 1;
     private final static long GENERATOR_LEN = 25;
     private final static long GENERATOR_MASK = (1 << GENERATOR_LEN) - 1;
-
-    private long serverId;
-
     private final AtomicInteger generator = new AtomicInteger(1);
+    private long serverId;
 
     public ServerIdGenerator() {
     }
 
     public ServerIdGenerator(int serverId) {
         this.serverId = serverId;
+    }
+
+    public static int toServerId(long id) {
+        return (int) ((id >> GENERATOR_LEN) & SERVER_MASK);
     }
 
     public long getNext() {
@@ -32,9 +34,5 @@ public class ServerIdGenerator {
 
     public void setServerId(long serverId) {
         this.serverId = serverId & SERVER_MASK;
-    }
-
-    public static int toServerId(long id) {
-        return (int) ((id >> GENERATOR_LEN) & SERVER_MASK);
     }
 }

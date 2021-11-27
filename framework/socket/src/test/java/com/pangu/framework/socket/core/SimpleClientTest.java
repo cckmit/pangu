@@ -6,7 +6,6 @@ import com.pangu.framework.socket.anno.SocketModule;
 import com.pangu.framework.socket.client.Client;
 import com.pangu.framework.socket.client.ClientFactory;
 import com.pangu.framework.socket.client.ClientFactoryBuilder;
-import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.socket.server.SocketServerBuilder;
@@ -20,9 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.assertArrayEquals;
 
 public class SimpleClientTest {
+    static AtomicInteger count = new AtomicInteger();
     private static ClientFactory clientFactory;
     private static SocketServer socketServer;
-    static AtomicInteger count = new AtomicInteger();
 
     @Before
     public void init() {

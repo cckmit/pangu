@@ -11,19 +11,21 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InSession {
 
-	/**
-	 * {@link AttributeKey}的字符串表示格式
-	 * <pre>
-	 * [类名]@[键]
-	 * </pre>
-	 * @return
-	 */
-	String value();
+    /**
+     * {@link AttributeKey}的字符串表示格式
+     * <pre>
+     * [类名]@[键]
+     * </pre>
+     *
+     * @return
+     */
+    String value();
 
-	/**
-	 * 是否要求参数必须非空
-	 * @return
-	 */
-	boolean required() default true;
+    /**
+     * 是否要求参数必须非空
+     *
+     * @return
+     */
+    boolean required() default true;
 
 }

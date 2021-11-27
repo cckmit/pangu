@@ -1,11 +1,11 @@
 package com.pangu.framework.socket.codec;
 
 import com.dianping.cat.Cat;
-import com.pangu.framework.socket.utils.CheckSumUtils;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.core.StateConstant;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
+import com.pangu.framework.socket.utils.CheckSumUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.DecoderException;

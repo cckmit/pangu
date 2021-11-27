@@ -16,17 +16,19 @@ import java.util.HashMap;
 
 public class AttributeKeyVSMap {
 
-    @State(Scope.Thread)
-    public static class ChannelState {
-        public NioSocketChannel channel = new NioSocketChannel();
-        public final AttributeKey<String> keyAtt = AttributeKey.newInstance("key");
-        public final String keyStr = "key";
-    }
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                // 导入要测试的类
+                .include(AttributeKeyVSMap.class.getSimpleName())
+                // 预热5轮
+                .warmupIterations(5)
+                // 度量10轮
+                .measurementIterations(10)
+                .mode(Mode.Throughput)
+                .forks(1)
+                .build();
 
-    @State(Scope.Thread)
-    public static class MapState {
-        public HashMap<String, String> map = new HashMap<>();
-        public final String keyStr = "key";
+        new Runner(opt).run();
     }
 
     @Benchmark
@@ -41,18 +43,16 @@ public class AttributeKeyVSMap {
         return state.map.computeIfAbsent(state.keyStr, k -> "test");
     }
 
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                // 导入要测试的类
-                .include(AttributeKeyVSMap.class.getSimpleName())
-                // 预热5轮
-                .warmupIterations(5)
-                // 度量10轮
-                .measurementIterations(10)
-                .mode(Mode.Throughput)
-                .forks(1)
-                .build();
+    @State(Scope.Thread)
+    public static class ChannelState {
+        public final AttributeKey<String> keyAtt = AttributeKey.newInstance("key");
+        public final String keyStr = "key";
+        public NioSocketChannel channel = new NioSocketChannel();
+    }
 
-        new Runner(opt).run();
+    @State(Scope.Thread)
+    public static class MapState {
+        public final String keyStr = "key";
+        public HashMap<String, String> map = new HashMap<>();
     }
 }

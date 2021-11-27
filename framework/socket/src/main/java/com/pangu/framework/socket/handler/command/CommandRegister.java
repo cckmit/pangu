@@ -30,30 +30,6 @@ public class CommandRegister {
 
     private final ConcurrentHashMap<Command, MethodProcessor> commands = new ConcurrentHashMap<>();
 
-    public MethodProcessor getProcessor(Command command) {
-        return commands.get(command);
-    }
-
-    public void register(Object object) {
-        Class<?> clz = AopUtils.getTargetClass(object);
-        if (clz.isInterface()) {
-            log.warn("指令处理器不可注册接口[" + clz.getName() + "]");
-            return;
-        }
-        List<MethodDefine> defines = toMethodDefine(clz);
-        if (defines.isEmpty()) {
-            return;
-        }
-        Wrapper proxyWrapper = Wrapper.getWrapper(clz);
-        for (MethodDefine commandDefine : defines) {
-            MethodProcessor processor = new MethodProcessor(commandDefine, object, commandDefine.getMethod(), proxyWrapper);
-            MethodProcessor pre = commands.putIfAbsent(commandDefine.getCommand(), processor);
-            if (pre != null) {
-                throw new IllegalArgumentException("命令号[" + commandDefine.getCommand() + "]已经被[" + pre + "]注册");
-            }
-        }
-    }
-
     public static List<MethodDefine> toMethodDefine(Class<?> clz) {
         SocketModule socketModule = AnnotationUtils.findAnnotation(clz, SocketModule.class);
         Method[] methods = clz.getMethods();
@@ -145,5 +121,29 @@ public class CommandRegister {
         }
         Parameters cusParameters = new Parameters(list.toArray(new com.pangu.framework.socket.handler.param.Parameter[0]));
         return new MethodDefine(new Command((short) module, (short) command), cusParameters, method.getGenericReturnType(), method, relMethod, raw);
+    }
+
+    public MethodProcessor getProcessor(Command command) {
+        return commands.get(command);
+    }
+
+    public void register(Object object) {
+        Class<?> clz = AopUtils.getTargetClass(object);
+        if (clz.isInterface()) {
+            log.warn("指令处理器不可注册接口[" + clz.getName() + "]");
+            return;
+        }
+        List<MethodDefine> defines = toMethodDefine(clz);
+        if (defines.isEmpty()) {
+            return;
+        }
+        Wrapper proxyWrapper = Wrapper.getWrapper(clz);
+        for (MethodDefine commandDefine : defines) {
+            MethodProcessor processor = new MethodProcessor(commandDefine, object, commandDefine.getMethod(), proxyWrapper);
+            MethodProcessor pre = commands.putIfAbsent(commandDefine.getCommand(), processor);
+            if (pre != null) {
+                throw new IllegalArgumentException("命令号[" + commandDefine.getCommand() + "]已经被[" + pre + "]注册");
+            }
+        }
     }
 }

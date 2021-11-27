@@ -34,7 +34,7 @@ public class ServerSpringConfiguration implements ImportBeanDefinitionRegistrar,
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        registerBeanDefinitions(null ,registry);
+        registerBeanDefinitions(null, registry);
     }
 
     @Override

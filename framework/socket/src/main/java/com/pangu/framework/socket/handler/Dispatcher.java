@@ -12,9 +12,9 @@ public interface Dispatcher {
 
     Coder getDefaultCoder();
 
+    void setDefaultCoder(byte json);
+
     Map<Byte, Coder> getCoders();
 
     void shutdown();
-
-    void setDefaultCoder(byte json);
 }

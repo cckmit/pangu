@@ -10,16 +10,19 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 public class CaseVsIfElse {
-    @State(Scope.Thread)
-    public static class FCase {
-        public IType[] types = new IType[]{new A(), new B(), new C(), new D(), new E(), new F(), new G()};
-        public Type t = Type.G;
-    }
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                // 导入要测试的类
+                .include(CaseVsIfElse.class.getSimpleName())
+                // 预热5轮
+                .warmupIterations(5)
+                // 度量10轮
+                .measurementIterations(10)
+                .mode(Mode.Throughput)
+                .forks(1)
+                .build();
 
-    @State(Scope.Thread)
-    public static class FIfElse {
-        public IType[] types = new IType[]{new A(), new B(), new C(), new D(), new E(), new F(), new G()};
-        public IType t = new G();
+        new Runner(opt).run();
     }
 
     @Benchmark
@@ -88,21 +91,6 @@ public class CaseVsIfElse {
         return count;
     }
 
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                // 导入要测试的类
-                .include(CaseVsIfElse.class.getSimpleName())
-                // 预热5轮
-                .warmupIterations(5)
-                // 度量10轮
-                .measurementIterations(10)
-                .mode(Mode.Throughput)
-                .forks(1)
-                .build();
-
-        new Runner(opt).run();
-    }
-
     enum Type {
         A,
         B,
@@ -116,6 +104,18 @@ public class CaseVsIfElse {
 
     interface IType {
         Type get();
+    }
+
+    @State(Scope.Thread)
+    public static class FCase {
+        public IType[] types = new IType[]{new A(), new B(), new C(), new D(), new E(), new F(), new G()};
+        public Type t = Type.G;
+    }
+
+    @State(Scope.Thread)
+    public static class FIfElse {
+        public IType[] types = new IType[]{new A(), new B(), new C(), new D(), new E(), new F(), new G()};
+        public IType t = new G();
     }
 
     static class A implements IType {

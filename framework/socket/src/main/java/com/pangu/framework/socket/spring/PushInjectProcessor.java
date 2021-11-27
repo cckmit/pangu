@@ -1,7 +1,7 @@
 package com.pangu.framework.socket.spring;
 
-import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.anno.PushInject;
+import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.utils.reflect.ReflectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,10 +8,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Identity {
-	/**
-	 * 是否要求参数必须非空
-	 * @return
-	 */
-	boolean required() default true;
+    /**
+     * 是否要求参数必须非空
+     *
+     * @return
+     */
+    boolean required() default true;
 
 }

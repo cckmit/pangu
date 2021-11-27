@@ -3,7 +3,6 @@ package com.pangu.framework.socket.codec;
 import com.pangu.framework.socket.core.Command;
 import com.pangu.framework.socket.core.Header;
 import com.pangu.framework.socket.core.Message;
-import com.pangu.framework.socket.exception.SocketException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;

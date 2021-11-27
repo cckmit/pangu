@@ -23,21 +23,16 @@ public class Session {
 
     public static final String MANAGEMENT = "management";
     public static final AttributeKey<Boolean> MANAGER = AttributeKey.newInstance(MANAGEMENT);
-
-    // session id
-    private long id;
-
-    // 授权ID
-    private Long identity;
-
-    // netty连接
-    private Channel channel;
-
-    // 最近访问时间
-    private long lastTime;
-
     // 上下文
     private final Map<String, String> ctx = new CopyOnWriteHashMap<>();
+    // session id
+    private long id;
+    // 授权ID
+    private Long identity;
+    // netty连接
+    private Channel channel;
+    // 最近访问时间
+    private long lastTime;
 
     public Session(long id, Channel channel) {
         this.id = id;

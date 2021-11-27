@@ -26,7 +26,7 @@ public class SessionManager {
     private final ConcurrentHashMap<Long, Session> anonymous = new ConcurrentHashMap<>(200);
 
     // 已授权session
-    private final ConcurrentHashMap<Object, Session> identities = new ConcurrentHashMap<>(200);
+    private final ConcurrentHashMap<Long, Session> identities = new ConcurrentHashMap<>(200);
 
     // 连接关闭监听器
     private final CopyOnWriteArrayList<IdentitySessionCloseListener> closeListeners = new CopyOnWriteArrayList<>();
@@ -126,9 +126,9 @@ public class SessionManager {
         return session;
     }
 
-    public Set<Session> kick(Object... identities) {
+    public Set<Session> kick(Long... identities) {
         Set<Session> sessions = new HashSet<>(identities.length);
-        for (Object identity : identities) {
+        for (Long identity : identities) {
             Session session = getIdentity(identity);
             if (session == null) {
                 continue;
@@ -148,7 +148,7 @@ public class SessionManager {
             Session v = entry.getValue();
             v.close();
         }
-        for (Map.Entry<Object, Session> entry : identities.entrySet()) {
+        for (Map.Entry<Long, Session> entry : identities.entrySet()) {
             Session v = entry.getValue();
             v.close();
         }
@@ -162,7 +162,7 @@ public class SessionManager {
         return identities.values();
     }
 
-    public Session getIdentity(Object o) {
+    public Session getIdentity(Long o) {
         return identities.get(o);
     }
 
@@ -232,7 +232,7 @@ public class SessionManager {
         }
     }
 
-    public Set<Object> getAllIdentity() {
+    public Set<Long> getAllIdentity() {
         return identities.keySet();
     }
 

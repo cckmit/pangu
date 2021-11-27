@@ -19,33 +19,6 @@ public class SimpleNormalServer {
     private EventLoopGroup workerGroup;
     private Channel serverChannel;
 
-    class Solution {
-        public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-            int min = 0;
-            if (nums1.length == 0 || nums2.length == 0) {
-                if (nums1.length == 0) {
-                    min = nums2[0];
-                } else {
-                    min = nums1[0];
-                }
-            } else {
-                min = Math.min(nums1[0], nums2[0]);
-            }
-            int max = 0;
-            if (nums1.length == 0 || nums2.length == 0) {
-                if (nums1.length == 0) {
-                    max = nums2[nums2.length - 1];
-                } else {
-                    max = nums1[nums1.length - 1];
-                }
-            } else {
-                max = Math.max(nums1[nums1.length - 1], nums2[nums2.length - 1]);
-            }
-
-            return (min + max) * 1.0 / 2;
-        }
-    }
-
     SimpleNormalServer(int port) {
         this.port = port;
     }
@@ -105,5 +78,32 @@ public class SimpleNormalServer {
         serverChannel.close();
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
+    }
+
+    class Solution {
+        public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+            int min = 0;
+            if (nums1.length == 0 || nums2.length == 0) {
+                if (nums1.length == 0) {
+                    min = nums2[0];
+                } else {
+                    min = nums1[0];
+                }
+            } else {
+                min = Math.min(nums1[0], nums2[0]);
+            }
+            int max = 0;
+            if (nums1.length == 0 || nums2.length == 0) {
+                if (nums1.length == 0) {
+                    max = nums2[nums2.length - 1];
+                } else {
+                    max = nums1[nums1.length - 1];
+                }
+            } else {
+                max = Math.max(nums1[nums1.length - 1], nums2[nums2.length - 1]);
+            }
+
+            return (min + max) * 1.0 / 2;
+        }
     }
 }

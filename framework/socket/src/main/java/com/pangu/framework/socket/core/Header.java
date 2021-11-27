@@ -34,6 +34,16 @@ public class Header {
 
     // 状态处理方法
 
+    public static Header valueOf(byte format, int state, long sn, long session, Command command) {
+        Header result = new Header();
+        result.format = format;
+        result.state = state;
+        result.sn = sn;
+        result.session = session;
+        result.command = command;
+        return result;
+    }
+
     /**
      * 是否存在错误状态
      *
@@ -125,15 +135,5 @@ public class Header {
             this.command = new Command();
         }
         this.command.read(byteBuf);
-    }
-
-    public static Header valueOf(byte format, int state, long sn, long session, Command command) {
-        Header result = new Header();
-        result.format = format;
-        result.state = state;
-        result.sn = sn;
-        result.session = session;
-        result.command = command;
-        return result;
     }
 }

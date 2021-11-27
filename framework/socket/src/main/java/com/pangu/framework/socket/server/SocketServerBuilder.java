@@ -5,7 +5,6 @@ import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.handler.SslConfig;
-import com.pangu.framework.socket.handler.param.Coder;
 import com.pangu.framework.utils.thread.NamedThreadFactory;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -23,33 +22,24 @@ import java.util.*;
 @Getter
 @Slf4j
 public class SocketServerBuilder {
+    private final List<SocketFilter> filters = new ArrayList<>();
     // 读缓冲
     private Integer readBuffSize = 2048;
     // 写缓冲
     private Integer writeBuffSize = 2048;
     // 最大连接数
     private Integer backlog = 256;
-
     // 绑定地址 [地址1],[地址2]
     private String[] ips;
-
     private int port = 11111;
-
     private String bossThreadName;
     private EventLoopGroup bossEventLoop;
-
     private String workThreadName;
     private int workThreadAmount;
     private EventLoopGroup workEventLoop;
-
     private boolean manageUseThread;
-
     private SslConfig sslConfig;
-
     private Class<? extends ServerSocketChannel> bootstrapClass = NioServerSocketChannel.class;
-
-    private final List<SocketFilter> filters = new ArrayList<>();
-
     private Dispatcher dispatcher;
 
     private SessionManager sessionManager;

@@ -10,7 +10,7 @@ public interface SocketFilter extends ChannelHandler {
     int POLICY = 20;
     String POLICY_NAME = "as-policy";
 
-    int TGW =30;
+    int TGW = 30;
     String TGW_NAME = "TGW-FILTER";
 
     int MANAGE = 40;

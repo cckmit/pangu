@@ -4,7 +4,6 @@ import com.pangu.framework.socket.codec.ServerMultiProtocolSwitchHandler;
 import com.pangu.framework.socket.filter.HeartBeatFilter;
 import com.pangu.framework.socket.filter.ServerHandler;
 import com.pangu.framework.socket.filter.SocketFilter;
-import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import io.netty.buffer.ByteBuf;
@@ -25,17 +24,12 @@ import java.util.List;
 @Slf4j
 public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private Dispatcher dispatcher;
-
-    private SessionManager sessionManager;
-
-    private SslContext sslContext;
-
-    private List<SocketFilter> filters;
-
     private final ServerHandler serverHandler;
-
     private final HeartBeatFilter heartBeatFilter = new HeartBeatFilter();
+    private Dispatcher dispatcher;
+    private SessionManager sessionManager;
+    private SslContext sslContext;
+    private List<SocketFilter> filters;
 
     ServerInitializer(Dispatcher dispatcher, SessionManager sessionManager, SslContext sslContext, List<SocketFilter> filters) {
         this.dispatcher = dispatcher;

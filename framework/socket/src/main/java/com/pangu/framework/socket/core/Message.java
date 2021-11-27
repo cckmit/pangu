@@ -34,62 +34,6 @@ public class Message {
     // 通信附加信息体
     private byte[] attachment = ArrayUtils.EMPTY_BYTE_ARRAY;
 
-    /**
-     * 检查是否有指定状态
-     *
-     * @param checked 状态标识
-     * @return
-     */
-    public boolean hasState(int checked) {
-        return header.hasState(checked);
-    }
-
-    /**
-     * 添加状态
-     *
-     * @param added 被添加的状态
-     */
-    public void addState(int added) {
-        header.addState(added);
-    }
-
-    public void updateSn(long sn) {
-        header.setSn(sn);
-    }
-
-    public void updateSession(long sessionId) {
-        header.setSession(sessionId);
-    }
-
-    /**
-     * 移除状态
-     *
-     * @param removed 被移除的状态
-     */
-    public void removeState(int removed) {
-        header.removeState(removed);
-    }
-
-    @Override
-    public String toString() {
-        return "H:=" + header + " B:" + (body == null ? 0 : body.length) + " A:"
-                + (attachment == null ? 0 : attachment.length);
-    }
-
-    public void write(ByteBuf out) {
-        header.write(out);
-        if (body != null && body.length > 0) {
-            out.writeInt(body.length);
-            out.writeBytes(body);
-        } else if (attachment != null && attachment.length > 0) {
-            out.writeInt(0);
-        }
-        if (attachment != null && attachment.length > 0) {
-            out.writeInt(attachment.length);
-            out.writeBytes(attachment);
-        }
-    }
-
     public static Message valueOf(Header header) {
         return valueOf(header, null, null);
     }
@@ -154,5 +98,61 @@ public class Message {
             }
         }
         return valueOf(header, body, attachment);
+    }
+
+    /**
+     * 检查是否有指定状态
+     *
+     * @param checked 状态标识
+     * @return
+     */
+    public boolean hasState(int checked) {
+        return header.hasState(checked);
+    }
+
+    /**
+     * 添加状态
+     *
+     * @param added 被添加的状态
+     */
+    public void addState(int added) {
+        header.addState(added);
+    }
+
+    public void updateSn(long sn) {
+        header.setSn(sn);
+    }
+
+    public void updateSession(long sessionId) {
+        header.setSession(sessionId);
+    }
+
+    /**
+     * 移除状态
+     *
+     * @param removed 被移除的状态
+     */
+    public void removeState(int removed) {
+        header.removeState(removed);
+    }
+
+    @Override
+    public String toString() {
+        return "H:=" + header + " B:" + (body == null ? 0 : body.length) + " A:"
+                + (attachment == null ? 0 : attachment.length);
+    }
+
+    public void write(ByteBuf out) {
+        header.write(out);
+        if (body != null && body.length > 0) {
+            out.writeInt(body.length);
+            out.writeBytes(body);
+        } else if (attachment != null && attachment.length > 0) {
+            out.writeInt(0);
+        }
+        if (attachment != null && attachment.length > 0) {
+            out.writeInt(attachment.length);
+            out.writeBytes(attachment);
+        }
     }
 }

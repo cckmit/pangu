@@ -6,7 +6,9 @@ import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.SessionManager;
 import com.pangu.framework.socket.handler.SyncSupport;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import lombok.Getter;
@@ -31,42 +33,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Getter
 public class SocketServer implements SocketServerMBean {
 
-    @Setter
-    private Class<? extends ServerSocketChannel> acceptor;
-
-    @Setter
-    private List<SocketFilter> filters;
-
-    @Setter
-    private EventLoopGroup bossGroup;
-
-    @Setter
-    private EventLoopGroup workerGroup;
-
-    @Setter
-    private Map<ChannelOption<?>, ?> acceptOption;
-
-    @Setter
-    private Map<ChannelOption<?>, ?> connectOption;
-
-    @Setter
-    private InetSocketAddress[] bindAddresses;
-
-    @Setter
-    private SslContext sslContext;
-
-    @Setter
-    private Dispatcher dispatcher;
-
-    @Setter
-    private boolean closeThreadGroupWhenShutdown = true;
-
-    @Setter
-    private SessionManager sessionManager;
-
     // 运行状态
     private final AtomicBoolean status = new AtomicBoolean(false);
-
+    @Setter
+    private Class<? extends ServerSocketChannel> acceptor;
+    @Setter
+    private List<SocketFilter> filters;
+    @Setter
+    private EventLoopGroup bossGroup;
+    @Setter
+    private EventLoopGroup workerGroup;
+    @Setter
+    private Map<ChannelOption<?>, ?> acceptOption;
+    @Setter
+    private Map<ChannelOption<?>, ?> connectOption;
+    @Setter
+    private InetSocketAddress[] bindAddresses;
+    @Setter
+    private SslContext sslContext;
+    @Setter
+    private Dispatcher dispatcher;
+    @Setter
+    private boolean closeThreadGroupWhenShutdown = true;
+    @Setter
+    private SessionManager sessionManager;
     // 绑定channel
     private Channel[] channels;
     private ObjectName jmxName;

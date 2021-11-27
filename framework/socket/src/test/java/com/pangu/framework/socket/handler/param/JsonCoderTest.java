@@ -97,7 +97,7 @@ public class JsonCoderTest {
     }
 
     @Data
-    private static class Wrap{
+    private static class Wrap {
         byte[] bytes;
 
         public Wrap() {

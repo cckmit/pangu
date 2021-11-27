@@ -26,6 +26,12 @@ public class SimpleWebsocketServer {
         this.port = port;
     }
 
+    public static void main(String[] args) throws Exception {
+        SimpleWebsocketServer server = new SimpleWebsocketServer(11111);
+        server.start();
+        System.in.read();
+    }
+
     void start() throws Exception {
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
@@ -90,11 +96,5 @@ public class SimpleWebsocketServer {
         serverChannel.close();
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
-    }
-
-    public static void main(String[] args) throws Exception {
-        SimpleWebsocketServer server = new SimpleWebsocketServer(11111);
-        server.start();
-        System.in.read();
     }
 }

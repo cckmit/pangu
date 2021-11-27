@@ -3,7 +3,6 @@ package com.pangu.framework.socket.filter;
 import com.dianping.cat.Cat;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.SocketException;
-import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
 import com.pangu.framework.socket.handler.Session;
 import com.pangu.framework.socket.handler.SessionManager;

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * 管理后台过滤器，用于为特定IP的访问设置管理后台标记
  */
 @Sharable
-public class ManagementFilter extends ChannelInboundHandlerAdapter implements SocketFilter{
+public class ManagementFilter extends ChannelInboundHandlerAdapter implements SocketFilter {
 
     private LinkedHashMap<Pattern, String> patterns = new LinkedHashMap<>();
 

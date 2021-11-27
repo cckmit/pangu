@@ -1,13 +1,13 @@
 package com.pangu.framework.socket.handler.param;
 
 import com.pangu.framework.protocol.Transfer;
-import com.pangu.framework.socket.handler.command.MethodDefine;
-import com.pangu.framework.socket.handler.param.type.*;
 import com.pangu.framework.socket.core.CoderType;
 import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.Session;
+import com.pangu.framework.socket.handler.command.MethodDefine;
+import com.pangu.framework.socket.handler.param.type.*;
 import com.pangu.framework.utils.reflect.Assert;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -30,12 +30,11 @@ import java.util.concurrent.CompletableFuture;
 public class ProtocolCoder implements Coder {
 
     private final Transfer transfer;
+    private final ByteBufAllocator alloc = new PooledByteBufAllocator();
 
     public ProtocolCoder(Transfer transfer) {
         this.transfer = transfer;
     }
-
-    private final ByteBufAllocator alloc = new PooledByteBufAllocator();
 
     @Override
     public byte getFormat() {

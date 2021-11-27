@@ -46,12 +46,6 @@ public enum ExceptionCode {
 
     TIME_OUT(13, "请求超时");
 
-    // 错误码
-    private final int code;
-
-    // 错误描述
-    private final String msg;
-
     private static ExceptionCode[] CODES;
 
     static {
@@ -68,17 +62,14 @@ public enum ExceptionCode {
         }
     }
 
+    // 错误码
+    private final int code;
+    // 错误描述
+    private final String msg;
+
     ExceptionCode(int code, String msg) {
         this.code = code;
         this.msg = "[" + code + "]" + msg;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
     }
 
     public static ExceptionCode of(int code) {
@@ -90,5 +81,13 @@ public enum ExceptionCode {
             return ExceptionCode.UNKNOWN;
         }
         return valid;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 }

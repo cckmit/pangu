@@ -14,6 +14,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientMultiConnectTPSTest {
 
+    static AtomicInteger count = new AtomicInteger();
+    private static ClientFactory clientFactory;
+    private static SocketServer socketServer;
+
     public static void main(String[] args) {
         init();
 
@@ -50,10 +54,6 @@ public class ClientMultiConnectTPSTest {
             e.printStackTrace();
         }
     }
-
-    private static ClientFactory clientFactory;
-    private static SocketServer socketServer;
-    static AtomicInteger count = new AtomicInteger();
 
     public static void init() {
         SocketServerBuilder builder = new SocketServerBuilder();

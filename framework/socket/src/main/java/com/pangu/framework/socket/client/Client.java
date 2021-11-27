@@ -58,26 +58,39 @@ public class Client {
 
     private final ConcurrentHashMap<Long, CompletableFuture<Object>> futures = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<?>, Object> proxy = new ConcurrentHashMap<>();
-
-    // 连接地址
-    private InetSocketAddress address;
     // 当前与服务器连接的会话(如果没有强制调用connect，那么在第一个数据包发送之前，channel未创建)
     private final Channel channel;
-
     private final AtomicBoolean closed = new AtomicBoolean(false);
-
+    // 正在通信
+    private final LongAdder concurrent = new LongAdder();
+    // 连接地址
+    private InetSocketAddress address;
     @Setter
     private Coder coder;
-
     @Getter
     @Setter
     private int readTimeout = 3000;
 
-    // 正在通信
-    private final LongAdder concurrent = new LongAdder();
-
     public Client(Channel channel) {
         this.channel = channel;
+    }
+
+    public static <T> Map<Method, MethodDefine> registerAndGetMethodDefine(Class<T> clz) {
+        Map<Method, MethodDefine> methodMethodDefineMap = classDefines.get(clz);
+        if (methodMethodDefineMap != null) {
+            return methodMethodDefineMap;
+        }
+        List<MethodDefine> defines = CommandRegister.toMethodDefine(clz);
+        if (defines.isEmpty()) {
+            throw new IllegalArgumentException(clz.getName() + "没有配置@SocketModule或者@SocketCommand");
+        }
+        methodMethodDefineMap = new HashMap<>(defines.size());
+        for (MethodDefine define : defines) {
+            methodMethodDefineMap.put(define.getMethod(), define);
+            commandDefines.put(define.getCommand(), define);
+        }
+        classDefines.put(clz, methodMethodDefineMap);
+        return methodMethodDefineMap;
     }
 
     public Coder getDefaultCoder() {
@@ -186,24 +199,6 @@ public class Client {
         proxy.put(clz, o1);
         //noinspection unchecked
         return (T) o1;
-    }
-
-    public static <T> Map<Method, MethodDefine> registerAndGetMethodDefine(Class<T> clz) {
-        Map<Method, MethodDefine> methodMethodDefineMap = classDefines.get(clz);
-        if (methodMethodDefineMap != null) {
-            return methodMethodDefineMap;
-        }
-        List<MethodDefine> defines = CommandRegister.toMethodDefine(clz);
-        if (defines.isEmpty()) {
-            throw new IllegalArgumentException(clz.getName() + "没有配置@SocketModule或者@SocketCommand");
-        }
-        methodMethodDefineMap = new HashMap<>(defines.size());
-        for (MethodDefine define : defines) {
-            methodMethodDefineMap.put(define.getMethod(), define);
-            commandDefines.put(define.getCommand(), define);
-        }
-        classDefines.put(clz, methodMethodDefineMap);
-        return methodMethodDefineMap;
     }
 
     void receive(Message message) {

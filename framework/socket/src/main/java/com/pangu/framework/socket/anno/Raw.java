@@ -11,17 +11,19 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface Raw {
-	
-	/**
-	 * 请求信息体是否使用原生类型
-	 * @return
-	 */
-	boolean request() default false;
 
-	/**
-	 * 回应信息体是否使用原生类型
-	 * @return
-	 */
-	boolean response() default false;
+    /**
+     * 请求信息体是否使用原生类型
+     *
+     * @return
+     */
+    boolean request() default false;
+
+    /**
+     * 回应信息体是否使用原生类型
+     *
+     * @return
+     */
+    boolean response() default false;
 
 }

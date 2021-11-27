@@ -19,7 +19,6 @@ import com.pangu.framework.socket.monitor.SocketCatCollector;
 import com.pangu.framework.utils.ManagedException;
 import com.pangu.framework.utils.codec.ZlibUtils;
 import com.pangu.framework.utils.json.JsonUtils;
-import com.pangu.framework.utils.lang.ByteUtils;
 import com.pangu.framework.utils.model.Result;
 import com.pangu.framework.utils.thread.AbortPolicyWithReport;
 import com.pangu.framework.utils.thread.NamedThreadFactory;
@@ -47,41 +46,53 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class DefaultDispatcher implements Dispatcher {
 
-    // 指令注册
-    private final CommandRegister commandRegister = new CommandRegister();
-
-    @Setter
-    private MessageProcessor messageProcessor;
-
-    private final Map<Byte, Coder> coders = new HashMap<>();
-
-    // 默认编解码器
-    private Coder defaultCoder;
-
+    // 线程池引用数量
+    private static final AtomicInteger threadPoolRef = new AtomicInteger();
     // 同步线程池
     @Getter
     private static SyncSupport syncSupport;
-
     // 业务线程池
     @Getter
     private static ThreadPoolExecutor[] messagePoolExecutors;
-
     // 管理后台线程池
     @Getter
     private static ThreadPoolExecutor managedExecutorService;
-
-    // 线程池引用数量
-    private static final AtomicInteger threadPoolRef = new AtomicInteger();
-
+    // 指令注册
+    private final CommandRegister commandRegister = new CommandRegister();
+    private final Map<Byte, Coder> coders = new HashMap<>();
+    private final AtomicBoolean running = new AtomicBoolean(false);
+    @Setter
+    private MessageProcessor messageProcessor;
+    // 默认编解码器
+    private Coder defaultCoder;
     // 业务线程池数量
     @Setter
     private int thread;
-
     // 管理后台ip地址接口使用独立线程池
     @Setter
     private boolean manageUseThread;
 
-    private final AtomicBoolean running = new AtomicBoolean(false);
+    static int calDefaultThreadCount(int processors) {
+        int pow2 = pow2(processors) - 1;
+        if (pow2 > processors) {
+            pow2 = pow2 >>> 1;
+        }
+        return Math.max(1, pow2);
+    }
+
+    /**
+     * Returns a power of two table size for the given desired capacity.
+     * See Hackers Delight, sec 3.2
+     */
+    private static int pow2(int c) {
+        int n = c - 1;
+        n |= n >>> 1;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return (n < 0) ? 1 : (n >= 1 << 30) ? 1 << 30 : n + 1;
+    }
 
     public void start() {
         boolean change = running.compareAndSet(false, true);
@@ -127,28 +138,6 @@ public class DefaultDispatcher implements Dispatcher {
                 }
             }
         }
-    }
-
-    static int calDefaultThreadCount(int processors) {
-        int pow2 = pow2(processors) - 1;
-        if (pow2 > processors) {
-            pow2 = pow2 >>> 1;
-        }
-        return Math.max(1, pow2);
-    }
-
-    /**
-     * Returns a power of two table size for the given desired capacity.
-     * See Hackers Delight, sec 3.2
-     */
-    private static int pow2(int c) {
-        int n = c - 1;
-        n |= n >>> 1;
-        n |= n >>> 2;
-        n |= n >>> 4;
-        n |= n >>> 8;
-        n |= n >>> 16;
-        return (n < 0) ? 1 : (n >= 1 << 30) ? 1 << 30 : n + 1;
     }
 
     @Override
@@ -440,17 +429,17 @@ public class DefaultDispatcher implements Dispatcher {
         }
     }
 
+    @Override
+    public Coder getDefaultCoder() {
+        return defaultCoder;
+    }
+
     public void setDefaultCoder(byte defaultCoder) {
         Coder coder = coders.get(defaultCoder);
         if (coder == null) {
             return;
         }
         this.defaultCoder = coder;
-    }
-
-    @Override
-    public Coder getDefaultCoder() {
-        return defaultCoder;
     }
 
     @Override
