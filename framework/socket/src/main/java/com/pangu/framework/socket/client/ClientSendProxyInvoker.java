@@ -7,6 +7,7 @@ import com.pangu.framework.socket.core.Message;
 import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.utils.lang.ByteUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -60,8 +61,7 @@ public class ClientSendProxyInvoker implements InvocationHandler {
             header.setFormat(coder.getFormat());
             header.setCommand(methodDefine.getCommand());
 
-            byte[] timestamp = ByteUtils.longToByte(System.currentTimeMillis());
-            Message message = Message.valueOf(header, requestBody, timestamp);
+            Message message = Message.valueOf(header, requestBody, ArrayUtils.EMPTY_BYTE_ARRAY);
             send = client.send(message, methodDefine.isIgnoreResponse());
             if (methodDefine.isIgnoreResponse()) {
                 return null;

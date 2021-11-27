@@ -6,10 +6,10 @@ import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.command.MethodDefine;
 import com.pangu.framework.socket.handler.push.PushManger;
 import com.pangu.framework.socket.handler.session.IdentitySessionCloseListener;
+import com.pangu.framework.socket.handler.session.IdentitySessionListener;
 import com.pangu.framework.socket.handler.session.SessionNotFountListener;
 import com.pangu.framework.socket.utils.IpUtils;
 import com.pangu.framework.socket.utils.ServerIdGenerator;
-import com.pangu.framework.utils.lang.ByteUtils;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,7 @@ public class SessionManager {
 
     // 连接关闭监听器
     private final CopyOnWriteArrayList<IdentitySessionCloseListener> closeListeners = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<IdentitySessionListener> identityListeners = new CopyOnWriteArrayList<>();
 
     // 推送时找不到Identity session时回调
     private final CopyOnWriteArrayList<SessionNotFountListener> sessionNotFountListeners = new CopyOnWriteArrayList<>();
@@ -85,14 +86,14 @@ public class SessionManager {
         }
         sessionKey.set(null);
         session.clearChannel();
-        Object identity = session.getIdentity();
+        Long identity = session.getIdentity();
         if (identity == null) {
             anonymous.remove(session.getId());
         } else {
             boolean remove = identities.remove(identity, session);
             // 只有成功删除，才代表是普通关闭，否则是session替换
             if (remove) {
-                notifyIdentityClose(identity, channel);
+                notifyIdentityClose(identity, session, channel);
             }
         }
     }
@@ -109,6 +110,7 @@ public class SessionManager {
             }
             preSession.close();
         }
+        notifyIdentity(identity, session);
         anonymous.remove(session.getId(), session);
     }
 
@@ -192,13 +194,26 @@ public class SessionManager {
         return session.isConnected();
     }
 
-    private void notifyIdentityClose(Object identity, Channel channel) {
+    private void notifyIdentityClose(long identity, Session session, Channel channel) {
         if (closeListeners.isEmpty()) {
             return;
         }
         for (IdentitySessionCloseListener listener : closeListeners) {
             try {
-                listener.close(identity, channel);
+                listener.close(identity, session, channel);
+            } catch (Exception e) {
+                log.error("server回调session关闭listener异常");
+            }
+        }
+    }
+
+    private void notifyIdentity(long identity, Session session) {
+        if (identityListeners.isEmpty()) {
+            return;
+        }
+        for (IdentitySessionListener listener : identityListeners) {
+            try {
+                listener.identity(identity, session);
             } catch (Exception e) {
                 log.error("server回调session关闭listener异常");
             }
@@ -223,6 +238,10 @@ public class SessionManager {
 
     public void addListener(IdentitySessionCloseListener identitySessionCloseListener) {
         closeListeners.add(identitySessionCloseListener);
+    }
+
+    public void addListener(IdentitySessionListener identitySessionListener) {
+        identityListeners.add(identitySessionListener);
     }
 
     public void addListener(SessionNotFountListener identitySessionCloseListener) {

@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -132,7 +133,7 @@ public class ProtocolCoder implements Coder {
             throw new IllegalArgumentException("请求参数数量[" + size + "不一致[" + parameters.length + "]");
         }
         if (size == 0) {
-            return new byte[0];
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         Object param = null;
         if (params.isInBody()) {
@@ -159,7 +160,7 @@ public class ProtocolCoder implements Coder {
             }
         }
         if (param == null) {
-            return new byte[0];
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         ByteBuf encode = transfer.encode(alloc, param);
         byte[] bytes = new byte[encode.readableBytes()];

@@ -1,11 +1,15 @@
 package com.pangu.framework.socket.handler.param;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Attachment {
     private long identity;
 

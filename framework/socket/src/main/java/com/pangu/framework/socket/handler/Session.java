@@ -37,7 +37,7 @@ public class Session {
     private long lastTime;
 
     // 上下文
-    private final Map<String, Object> ctx = new CopyOnWriteHashMap<>();
+    private final Map<String, String> ctx = new CopyOnWriteHashMap<>();
 
     public Session(long id, Channel channel) {
         this.id = id;
@@ -79,7 +79,7 @@ public class Session {
         return preChannel;
     }
 
-    public Object getCtx(String key) {
+    public String getCtx(String key) {
         return ctx.get(key);
     }
 
@@ -98,7 +98,7 @@ public class Session {
 
     public void updateIdentity(Long identity) {
         this.identity = identity;
-        ctx.put(IDENTITY, identity);
+        ctx.put(IDENTITY, identity.toString());
     }
 
     public void putCtx(String key, String value) {

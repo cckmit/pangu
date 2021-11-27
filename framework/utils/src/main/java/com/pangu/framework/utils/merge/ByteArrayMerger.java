@@ -24,7 +24,7 @@ public class ByteArrayMerger implements Merger<byte[]> {
     @Override
     public byte[] merge(byte[]... items) {
         if (ArrayUtils.isEmpty(items)) {
-            return new byte[0];
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         int total = 0;
         for (byte[] array : items) {

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.pangu.framework.utils.codec.CryptUtils;
 import com.pangu.framework.utils.lang.NumberUtils;
 import com.pangu.framework.utils.time.DateUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.slf4j.helpers.FormattingTuple;
@@ -218,7 +219,7 @@ public final class JsonUtils {
 
     public static byte[] object2Bytes(Object obj) {
         if (obj == null) {
-            return new byte[0];
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         try {
             return MAPPER.writeValueAsBytes(obj);

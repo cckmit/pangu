@@ -26,6 +26,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -96,8 +97,7 @@ public class Client {
         Header header = new Header();
         header.setFormat(coder.getFormat());
         header.setCommand(methodDefine.getCommand());
-        byte[] timestamp = ByteUtils.longToByte(System.currentTimeMillis());
-        Message message = Message.valueOf(header, requestBody, timestamp);
+        Message message = Message.valueOf(header, requestBody, ArrayUtils.EMPTY_BYTE_ARRAY);
         return send(message, false);
     }
 
@@ -323,7 +323,7 @@ public class Client {
         header.setFormat(coder.getFormat());
         header.setCommand(new Command());
         header.addState(StateConstant.HEART_BEAT);
-        Message message = Message.valueOf(header, new byte[0], new byte[0]);
+        Message message = Message.valueOf(header, ArrayUtils.EMPTY_BYTE_ARRAY, ArrayUtils.EMPTY_BYTE_ARRAY);
         send(message, true);
     }
 

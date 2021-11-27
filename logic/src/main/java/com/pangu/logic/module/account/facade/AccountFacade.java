@@ -5,6 +5,7 @@ import com.pangu.framework.socket.anno.InBody;
 import com.pangu.framework.socket.anno.SocketCommand;
 import com.pangu.framework.socket.anno.SocketModule;
 import com.pangu.framework.socket.handler.Session;
+import com.pangu.framework.socket.handler.param.Attachment;
 import com.pangu.framework.utils.model.Result;
 import com.pangu.logic.module.account.model.LoginInfoVo;
 import com.pangu.logic.module.account.model.Sex;
@@ -42,7 +43,8 @@ public interface AccountFacade {
     Result<Void> login(@InBody("account") String account,
                        @InBody(value = "adult", required = false) Boolean adult,
                        @InBody("timestamp") long timestamp,
-                       @InBody("key") String key);
+                       @InBody("key") String key,
+                       Attachment attachment);
 
     /**
      * 获取账号信息

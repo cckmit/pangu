@@ -1,5 +1,6 @@
 package com.pangu.framework.socket.handler.session;
 
+import com.pangu.framework.socket.handler.Session;
 import io.netty.channel.Channel;
 
 /**
@@ -10,6 +11,8 @@ public interface IdentitySessionCloseListener {
      * 通知
      *
      * @param identity
+     * @param session
+     * @param channel
      */
-    void close(Object identity, Channel channel);
+    void close(long identity, Session session, Channel channel);
 }

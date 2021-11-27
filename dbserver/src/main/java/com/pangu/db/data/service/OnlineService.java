@@ -88,6 +88,9 @@ public class OnlineService {
 
     public void gateOffLine(int gateId) {
         ConcurrentHashSet<Long> roleIds = gateRoleIds.remove(gateId);
+        if (roleIds == null) {
+            return;
+        }
         for (Long roleId : roleIds) {
             Long sessionId = roleSession.remove(roleId);
             IdGenerator.IdInfo idInfo = new IdGenerator.IdInfo(roleId);

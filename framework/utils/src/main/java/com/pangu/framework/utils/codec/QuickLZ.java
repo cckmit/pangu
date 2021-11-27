@@ -1,5 +1,7 @@
 package com.pangu.framework.utils.codec;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 // QuickLZ data compression library
 // Copyright (C) 2006-2011 Lasse Mikkel Reinhold
 // lar@quicklz.com
@@ -87,7 +89,7 @@ public final class QuickLZ {
 			hashtable = new int[HASH_VALUES][QLZ_POINTERS_3];
 
 		if (source.length == 0)
-			return new byte[0];
+			return ArrayUtils.EMPTY_BYTE_ARRAY;
 
 		if (src <= last_matchstart)
 			fetch = (int) fast_read(source, src, 3);

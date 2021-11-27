@@ -8,3 +8,5 @@ socket:
   address: 0.0.0.0:8301
   serverRead: 16384
   serverWrite: 16384
+system:
+  loginKey: test

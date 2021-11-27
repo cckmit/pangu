@@ -5,13 +5,20 @@ import com.pangu.core.common.Constants;
 import com.pangu.core.common.InstanceDetails;
 import com.pangu.core.common.ServerInfo;
 import com.pangu.core.config.ZookeeperConfig;
+import com.pangu.core.db.facade.DbFacade;
+import com.pangu.framework.socket.client.Client;
+import com.pangu.framework.socket.client.ClientFactory;
 import com.pangu.framework.socket.handler.DefaultDispatcher;
 import com.pangu.framework.socket.handler.Dispatcher;
+import com.pangu.framework.socket.handler.Session;
 import com.pangu.framework.socket.handler.SessionManager;
+import com.pangu.framework.socket.handler.session.IdentitySessionCloseListener;
+import com.pangu.framework.socket.handler.session.IdentitySessionListener;
 import com.pangu.framework.socket.server.SocketServer;
 import com.pangu.framework.utils.os.NetUtils;
 import com.pangu.gateway.config.GatewayConfig;
 import com.pangu.gateway.rout.RoutProcessor;
+import io.netty.channel.Channel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -36,6 +43,7 @@ public class GatewayServerManager implements Lifecycle {
     private final GatewayConfig logicConfig;
 
     private final SocketServer socketServer;
+    private final ClientFactory clientFactory;
 
     private final RoutProcessor routProcessor;
 
@@ -43,17 +51,26 @@ public class GatewayServerManager implements Lifecycle {
     private CuratorFramework framework;
     private ServiceInstance<InstanceDetails> serviceInstance;
     private ServiceDiscovery<InstanceDetails> serviceDiscovery;
-    private ServiceCache<InstanceDetails> serverCache;
+    private ServiceCache<InstanceDetails> logicServerCache;
+    private ServiceCache<InstanceDetails> dbServerCache;
     @Getter
     private List<ServerInfo> logicServers;
+    @Getter
+    private List<ServerInfo> dbServers;
 
     public GatewayServerManager(GatewayConfig logicConfig,
                                 SocketServer socketServer,
+                                ClientFactory clientFactory,
                                 RoutProcessor routProcessor) {
         this.logicConfig = logicConfig;
         this.socketServer = socketServer;
+        this.clientFactory = clientFactory;
         this.routProcessor = routProcessor;
-        this.socketServer.getSessionManager().getIdGenerator().setServerId(logicConfig.getZookeeper().getServerId());
+        SessionManager sessionManager = this.socketServer.getSessionManager();
+        sessionManager.getIdGenerator().setServerId(logicConfig.getZookeeper().getServerId());
+        GateSessionChangeListener listener = new GateSessionChangeListener();
+        sessionManager.addListener((IdentitySessionListener) listener);
+        sessionManager.addListener((IdentitySessionCloseListener) listener);
     }
 
     @Override
@@ -80,7 +97,8 @@ public class GatewayServerManager implements Lifecycle {
         socketServer.start();
         try {
             registerServer();
-            initDiscovery();
+            initLogicDiscovery();
+            initDBDiscovery();
         } catch (Exception e) {
             log.warn("注册Logic服务异常", e);
         }
@@ -119,20 +137,20 @@ public class GatewayServerManager implements Lifecycle {
         serviceDiscovery.start();
     }
 
-    private void initDiscovery() throws Exception {
-        serverCache = serviceDiscovery
+    private void initLogicDiscovery() throws Exception {
+        logicServerCache = serviceDiscovery
                 .serviceCacheBuilder()
                 .name(Constants.LOGIC_SERVICE_NAME)
                 .build();
-        serverCache.start();
+        logicServerCache.start();
 
-        initServerService(serverCache);
+        initLogicServerService(logicServerCache);
 
         log.debug("刷新逻辑服务器列表[{}]", logicServers);
-        serverCache.addListener(new ServiceCacheListener() {
+        logicServerCache.addListener(new ServiceCacheListener() {
             @Override
             public void cacheChanged() {
-                initServerService(serverCache);
+                initLogicServerService(logicServerCache);
             }
 
             @Override
@@ -142,7 +160,30 @@ public class GatewayServerManager implements Lifecycle {
         });
     }
 
-    private void initServerService(ServiceCache<InstanceDetails> cache) {
+    private void initDBDiscovery() throws Exception {
+        dbServerCache = serviceDiscovery
+                .serviceCacheBuilder()
+                .name(Constants.DB_SERVICE_NAME)
+                .build();
+        dbServerCache.start();
+
+        initDBServerService(dbServerCache);
+
+        log.debug("刷新数据服务器列表[{}]", dbServers);
+        dbServerCache.addListener(new ServiceCacheListener() {
+            @Override
+            public void cacheChanged() {
+                initDBServerService(dbServerCache);
+            }
+
+            @Override
+            public void stateChanged(CuratorFramework curatorFramework, ConnectionState connectionState) {
+                log.debug("Zookeeper状态改变[{}]", connectionState);
+            }
+        });
+    }
+
+    private void initLogicServerService(ServiceCache<InstanceDetails> cache) {
         List<ServiceInstance<InstanceDetails>> instances = cache.getInstances();
         List<ServerInfo> servers = new ArrayList<>();
 
@@ -155,14 +196,30 @@ public class GatewayServerManager implements Lifecycle {
         log.debug("当前逻辑服列表[{}]", servers);
     }
 
+    private void initDBServerService(ServiceCache<InstanceDetails> cache) {
+        List<ServiceInstance<InstanceDetails>> instances = cache.getInstances();
+        List<ServerInfo> servers = new ArrayList<>();
+
+        for (ServiceInstance<InstanceDetails> instance : instances) {
+            InstanceDetails payload = instance.getPayload();
+            ServerInfo serverInfo = new ServerInfo(instance.getId(), instance.getAddress(), instance.getPort(), payload.getAddressForClient(), payload);
+            servers.add(serverInfo);
+        }
+        dbServers = servers;
+        log.debug("当前DB服列表[{}]", servers);
+    }
+
     @Override
     public void stop() {
         boolean set = running.compareAndSet(true, false);
         if (!set) {
             return;
         }
-        if (serverCache != null) {
-            CloseableUtils.closeQuietly(serverCache);
+        if (logicServerCache != null) {
+            CloseableUtils.closeQuietly(logicServerCache);
+        }
+        if (dbServerCache != null) {
+            CloseableUtils.closeQuietly(dbServerCache);
         }
         try {
             serviceDiscovery.unregisterService(serviceInstance);
@@ -179,5 +236,41 @@ public class GatewayServerManager implements Lifecycle {
     @Override
     public boolean isRunning() {
         return running.get();
+    }
+
+    public class GateSessionChangeListener implements IdentitySessionCloseListener, IdentitySessionListener {
+
+        @Override
+        public void close(long identity, Session session, Channel channel) {
+            if (dbServers == null) {
+                return;
+            }
+            for (ServerInfo serverInfo : dbServers) {
+                try {
+                    Client client = clientFactory.getClient(serverInfo.getAddress());
+                    DbFacade dbFacade = client.getProxy(DbFacade.class);
+                    dbFacade.offline(session.getId(), identity);
+                } catch (Throwable throwable) {
+                    log.warn("[{}][{}]同步离线数据失败[{}]", session.getId(), identity, serverInfo.getAddress(), throwable);
+                }
+            }
+        }
+
+        @Override
+        public void identity(long identity, Session session) {
+            if (dbServers == null) {
+                return;
+            }
+
+            for (ServerInfo serverInfo : dbServers) {
+                try {
+                    Client client = clientFactory.getClient(serverInfo.getAddress());
+                    DbFacade dbFacade = client.getProxy(DbFacade.class);
+                    dbFacade.online(session.getId(), identity);
+                } catch (Throwable throwable) {
+                    log.warn("[{}][{}]同步离线数据失败[{}]", session.getId(), identity, serverInfo.getAddress(), throwable);
+                }
+            }
+        }
     }
 }

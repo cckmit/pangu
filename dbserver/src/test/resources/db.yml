@@ -3,7 +3,7 @@ server:
 zookeeper:
   addr: localhost:2181
   rootPath: /pangu
-  serverId: db1
+  serverId: 1
   minStartUp: 1
 jdbc:
   addr: 127.0.0.1:3306/

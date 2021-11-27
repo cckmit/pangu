@@ -15,6 +15,7 @@ import com.pangu.framework.socket.exception.ExceptionCode;
 import com.pangu.framework.socket.exception.SocketException;
 import com.pangu.framework.socket.handler.Session;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -100,6 +101,10 @@ public class JsonCoder implements Coder {
                 objects.add(attachment.getIdentity());
                 continue;
             }
+            if (parameter instanceof AttachmentParameter) {
+                objects.add(attachment);
+                continue;
+            }
             if (parameter instanceof IdentityParameter) {
                 objects.add(session.getIdentity());
                 continue;
@@ -143,7 +148,9 @@ public class JsonCoder implements Coder {
                     }
                 }
                 objects.add(sessionCtx);
+                continue;
             }
+            throw new IllegalStateException("存在未处理的参数类型" + parameter.getClass());
         }
         return objects.toArray(new Object[0]);
     }
@@ -156,7 +163,7 @@ public class JsonCoder implements Coder {
             throw new IllegalArgumentException("请求参数数量[" + size + "不一致[" + parameters.length + "]");
         }
         if (size == 0) {
-            return new byte[0];
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         // inBody和body只会同时出现一种
         if (params.isInBody()) {
@@ -190,13 +197,13 @@ public class JsonCoder implements Coder {
                 }
             }
         }
-        return new byte[0];
+        return ArrayUtils.EMPTY_BYTE_ARRAY;
     }
 
     @Override
     public byte[] encodeResponse(Object result) {
         if (result == null) {
-            return new byte[0];
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         try {
             return MAPPER.writeValueAsBytes(result);

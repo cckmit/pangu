@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.nio.ByteBuffer;
 
@@ -28,10 +29,10 @@ public class Message {
     private Header header;
 
     //  信息体
-    private byte[] body = new byte[0];
+    private byte[] body = ArrayUtils.EMPTY_BYTE_ARRAY;
 
     // 通信附加信息体
-    private byte[] attachment = new byte[0];
+    private byte[] attachment = ArrayUtils.EMPTY_BYTE_ARRAY;
 
     /**
      * 检查是否有指定状态
@@ -108,7 +109,7 @@ public class Message {
     public static Message valueOf(ByteBuf byteBuf) {
         Header header = new Header();
         header.read(byteBuf);
-        byte[] body = new byte[0];
+        byte[] body = ArrayUtils.EMPTY_BYTE_ARRAY;
         int readableBytes = byteBuf.readableBytes();
         if (readableBytes >= 4) {
             int bodyLength = byteBuf.readInt();
@@ -118,7 +119,7 @@ public class Message {
             }
         }
 
-        byte[] attachment = new byte[0];
+        byte[] attachment = ArrayUtils.EMPTY_BYTE_ARRAY;
         readableBytes = byteBuf.readableBytes();
         if (readableBytes >= 4) {
             int attachLength = byteBuf.readInt();
@@ -133,7 +134,7 @@ public class Message {
     public static Message valueOf(ByteBuffer byteBuf) {
         Header header = new Header();
         header.read(byteBuf);
-        byte[] body = new byte[0];
+        byte[] body = ArrayUtils.EMPTY_BYTE_ARRAY;
         int readableBytes = byteBuf.remaining();
         if (readableBytes >= 4) {
             int bodyLength = byteBuf.getInt();
@@ -143,7 +144,7 @@ public class Message {
             }
         }
 
-        byte[] attachment = new byte[0];
+        byte[] attachment = ArrayUtils.EMPTY_BYTE_ARRAY;
         readableBytes = byteBuf.remaining();
         if (readableBytes >= 4) {
             int attachLength = byteBuf.getInt();

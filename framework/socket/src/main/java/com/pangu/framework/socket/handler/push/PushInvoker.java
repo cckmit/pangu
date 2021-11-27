@@ -11,6 +11,7 @@ import com.pangu.framework.socket.handler.SessionManager;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
@@ -98,7 +99,7 @@ public class PushInvoker implements InvocationHandler {
 
             Header header = Header.valueOf(coder.getFormat(), 0, next(), 0, methodDefine.getCommand());
             byte[] bytes = coder.encodeParameters(args, methodDefine.getParams());
-            Message message = Message.valueOf(header, bytes, new byte[0]);
+            Message message = Message.valueOf(header, bytes, ArrayUtils.EMPTY_BYTE_ARRAY);
 
             for (Session session : list) {
                 session.write(message);

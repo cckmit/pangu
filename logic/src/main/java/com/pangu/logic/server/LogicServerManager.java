@@ -21,6 +21,7 @@ import org.apache.curator.utils.CloseableUtils;
 import org.apache.curator.x.discovery.*;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
+import org.apache.zookeeper.KeeperException;
 import org.springframework.context.Lifecycle;
 
 import java.net.InetAddress;
@@ -213,11 +214,15 @@ public class LogicServerManager implements Lifecycle, IDbServerAccessor {
             byte[] bytes = framework.getData().forPath(path);
             return ByteUtils.longFromByte(bytes);
         } catch (Throwable exp) {
-            log.info("查询IDx错误[{}]", userServerId, exp);
-            try {
-                framework.create().creatingParentsIfNeeded().forPath(path, ByteUtils.longToByte(1));
-            } catch (Exception e) {
-                log.info("创建错误", e);
+            if (exp instanceof KeeperException) {
+                try {
+                    framework.create().creatingParentsIfNeeded().forPath(path, ByteUtils.longToByte(1));
+                } catch (Exception e) {
+                    log.info("创建错误", e);
+                }
+            } else {
+                log.info("查询IDx错误[{}]", userServerId);
+                throw new RuntimeException(exp);
             }
         }
         preSavedIdx = 1;

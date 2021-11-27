@@ -28,6 +28,7 @@ import io.netty.util.Attribute;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -280,9 +281,9 @@ public class DefaultDispatcher implements Dispatcher {
                             body = coder.encodeResponse(result);
                         }
                     } else {
-                        body = new byte[0];
+                        body = ArrayUtils.EMPTY_BYTE_ARRAY;
                     }
-                    byte[] resAttach = new byte[0];
+                    byte[] resAttach = ArrayUtils.EMPTY_BYTE_ARRAY;
                     if (attachment.notEmpty()) {
                         resAttach = JsonUtils.object2Bytes(attachment);
                     }
@@ -305,7 +306,7 @@ public class DefaultDispatcher implements Dispatcher {
                     body = coder.encodeResponse(result);
                 }
             } else {
-                body = new byte[0];
+                body = ArrayUtils.EMPTY_BYTE_ARRAY;
             }
             transaction.addData("output", body.length);
 
@@ -313,7 +314,7 @@ public class DefaultDispatcher implements Dispatcher {
                 body = ZlibUtils.zip(body);
                 header.addState(StateConstant.STATE_COMPRESS);
             }
-            byte[] resAttach = new byte[0];
+            byte[] resAttach = ArrayUtils.EMPTY_BYTE_ARRAY;
 
             if (attachment.notEmpty()) {
                 resAttach = JsonUtils.object2Bytes(attachment);
@@ -381,7 +382,7 @@ public class DefaultDispatcher implements Dispatcher {
         } else if (responseType == Integer.class || responseType == int.class) {
             errorBody = coder.encodeResponse(code);
         } else {
-            errorBody = new byte[0];
+            errorBody = ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         return errorBody;
     }

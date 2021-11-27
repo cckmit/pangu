@@ -10,11 +10,15 @@ import com.pangu.framework.socket.core.StateConstant;
 import com.pangu.framework.socket.handler.MessageProcessor;
 import com.pangu.framework.socket.handler.Session;
 import com.pangu.framework.socket.handler.SessionManager;
+import com.pangu.framework.socket.handler.param.Attachment;
+import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.math.RandomUtils;
 import com.pangu.gateway.server.GatewayServerManager;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @ComponentGate
@@ -45,6 +49,12 @@ public class RoutProcessor implements MessageProcessor {
         Client client = clientFactory.getClient(serverInfo.getAddress());
         message.addState(StateConstant.REDIRECT);
         message.getHeader().setSession(session.getId());
+
+        Long curIdentity = session.getIdentity();
+        long longIdentity = curIdentity == null ? 0 : curIdentity;
+        Attachment sessionAttach = new Attachment(longIdentity, session.getCtx(), Collections.emptyMap());
+        byte[] bytes = JsonUtils.object2Bytes(sessionAttach);
+        message.setAttachment(bytes);
         long originSn = message.getHeader().getSn();
         CompletableFuture<Message> send = client.send(message, false);
         send.whenComplete((Message resMsg, Throwable v) -> {
@@ -52,15 +62,28 @@ public class RoutProcessor implements MessageProcessor {
                 log.info("转发消息出现异常", v);
                 return;
             }
-            Header header = resMsg.getHeader();
-            long sessionId = header.getSession();
-            Session anonymous = sessionManager.getAnonymous(sessionId);
-            if (anonymous == null) {
-                return;
+            byte[] resAttach = resMsg.getAttachment();
+            if (resAttach != null && resAttach.length != 0) {
+                Attachment attachment = JsonUtils.bytes2Object(resAttach, Attachment.class);
+                if (attachment != null) {
+                    long identity = attachment.getIdentity();
+                    if (identity > 0 && session.getIdentity() == null) {
+                        sessionManager.bind(session, identity);
+                    }
+                    Map<String, String> attach = attachment.getAttach();
+                    if (attach != null && attach.size() > 0) {
+                        for (Map.Entry<String, String> entry : attach.entrySet()) {
+                            String key = entry.getKey();
+                            String value = entry.getValue();
+                            session.putCtx(key, value);
+                        }
+                    }
+                }
             }
+            Header header = resMsg.getHeader();
             header.setSn(originSn);
             header.removeState(StateConstant.REDIRECT);
-            anonymous.write(resMsg);
+            session.write(resMsg);
         });
     }
 

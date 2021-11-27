@@ -1,6 +1,7 @@
 package com.pangu.logic.module.account.facade;
 
 import com.pangu.core.anno.ComponentLogic;
+import com.pangu.framework.socket.handler.param.Attachment;
 import com.pangu.framework.utils.codec.CryptUtils;
 import com.pangu.framework.utils.model.Result;
 import com.pangu.framework.utils.time.DateUtils;
@@ -38,7 +39,7 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public Result<Void> login(String uid, Boolean adult, long timestamp, String key) {
+    public Result<Void> login(String uid, Boolean adult, long timestamp, String key, Attachment attachment) {
         if (loginKeyNotValid(uid, timestamp, key)) {
             return Result.ERROR(AccountResult.LOGIN_KEY_ILLEGAL);
         }
@@ -51,6 +52,7 @@ public class AccountFacadeImpl implements AccountFacade {
         if (!login) {
             return Result.ERROR(AccountResult.ACCOUNT_NOT_FOUND);
         }
+        attachment.identity(account.getId());
         return Result.SUCCESS();
     }
 
@@ -71,7 +73,7 @@ public class AccountFacadeImpl implements AccountFacade {
         String baseString = origin + timestamp + system.getLoginKey();
         try {
             String md5 = CryptUtils.md5(baseString).toLowerCase();
-            if (md5.equals(key)) {
+            if (md5.equalsIgnoreCase(key)) {
                 return false;
             } else {
                 log.error("signError:account:{},timestamp:{},key:{}", origin, timestamp, key);

@@ -4,6 +4,7 @@ import com.pangu.core.common.Log4jCloseThread;
 import com.pangu.core.db.model.EntityRes;
 import com.pangu.framework.protocol.spring.EnableProtocol;
 import com.pangu.framework.protocol.spring.ProtocolClass;
+import com.pangu.framework.socket.spring.EnableClientFactory;
 import com.pangu.framework.socket.spring.EnableSocketServer;
 import com.pangu.framework.utils.time.DateUtils;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @ComponentScan("com.pangu.db")
 @EnableSocketServer
+@EnableClientFactory
 @EnableProtocol(clz = {@ProtocolClass(index = 3, clz = EntityRes.class)})
 public class DbApplication {
 
