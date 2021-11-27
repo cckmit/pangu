@@ -15,7 +15,8 @@ import java.util.TimeZone;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-@ComponentScan("com.pangu.stress")
+@ComponentScan({"com.pangu.gm", "org.springframework.shell.commands", "org.springframework.shell.converters",
+        "org.springframework.shell.plugin.support"})
 @EnableClientFactory
 public class StressApplication {
 

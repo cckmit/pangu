@@ -24,6 +24,7 @@
         <module>cross</module>
         <module>stress</module>
         <module>gm</module>
+        <module>framework/console</module>
     </modules>
 
     <properties>
