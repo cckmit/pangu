@@ -11,10 +11,7 @@ public class StringToNumberConverter implements ConditionalGenericConverter {
 
     @Override
     public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
-        if (sourceType.getType() != String.class) {
-            return false;
-        }
-        return true;
+        return sourceType.getType() == String.class;
     }
 
     @Override

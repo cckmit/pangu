@@ -33,7 +33,7 @@ public class RankList {
         this.rank = rank;
     }
 
-    private transient ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final transient ReadWriteLock lock = new ReentrantReadWriteLock();
 
     //清空并返回当前排行榜信息
     public List<RankItem> clear() {
@@ -271,7 +271,7 @@ public class RankList {
     /**
      * 排行榜对象
      *
-     * @author Ramon
+     * @author author
      */
     @Getter
     @Setter
@@ -316,9 +316,7 @@ public class RankList {
             if (getClass() != obj.getClass())
                 return false;
             RankItem other = (RankItem) obj;
-            if (id != other.id)
-                return false;
-            return true;
+            return id == other.id;
         }
 
         @Override

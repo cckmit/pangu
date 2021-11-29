@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 编解码上下文
  *
- * @author Ramon
+ * @author author
  */
 public class Definition {
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -280,7 +280,7 @@ public class Definition {
                 }
             }
         }
-        return (T) JsonUtils.convertObject(value, type);
+        return JsonUtils.convertObject(value, type);
     }
 
     // ----------

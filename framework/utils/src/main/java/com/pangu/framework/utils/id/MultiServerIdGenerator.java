@@ -5,12 +5,12 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 多服的主键生成器
- * @author frank
+ * @author author
  */
 public class MultiServerIdGenerator {
 
 	/** 主键生成器映射 */
-	private ConcurrentMap<Integer, IdGenerator> generators = new ConcurrentHashMap<Integer, IdGenerator>();
+	private final ConcurrentMap<Integer, IdGenerator> generators = new ConcurrentHashMap<Integer, IdGenerator>();
 
 	/**
 	 * 主键生成器映射键值

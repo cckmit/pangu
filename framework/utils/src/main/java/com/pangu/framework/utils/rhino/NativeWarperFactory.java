@@ -8,7 +8,7 @@ import org.mozilla.javascript.WrapFactory;
 
 /**
  * 公式参数包装器工厂 - Map 包装器
- * @author Ramon
+ * @author author
  */
 @SuppressWarnings("rawtypes")
 public class NativeWarperFactory extends WrapFactory {

@@ -37,7 +37,7 @@ package com.dianping.cat.message;
  * other messages nested is an atomic transaction.
  * </p>
  *
- * @author Frankie Wu
+ * @author authorie Wu
  */
 public interface Heartbeat extends Message {
 

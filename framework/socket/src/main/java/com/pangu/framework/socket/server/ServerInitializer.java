@@ -26,10 +26,10 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private final ServerHandler serverHandler;
     private final HeartBeatFilter heartBeatFilter = new HeartBeatFilter();
-    private Dispatcher dispatcher;
-    private SessionManager sessionManager;
-    private SslContext sslContext;
-    private List<SocketFilter> filters;
+    private final Dispatcher dispatcher;
+    private final SessionManager sessionManager;
+    private final SslContext sslContext;
+    private final List<SocketFilter> filters;
 
     ServerInitializer(Dispatcher dispatcher, SessionManager sessionManager, SslContext sslContext, List<SocketFilter> filters) {
         this.dispatcher = dispatcher;

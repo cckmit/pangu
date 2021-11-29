@@ -18,7 +18,7 @@ import org.apache.commons.io.LineIterator;
 
 /**
  * 文件系统工具类
- * @author Frank
+ * @author author
  */
 public class FileUtils extends org.apache.commons.io.FileUtils {
 

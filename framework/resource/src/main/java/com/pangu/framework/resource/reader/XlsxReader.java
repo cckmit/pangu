@@ -285,9 +285,9 @@ public class XlsxReader implements ResourceReader {
 	 */
 	class MyXSSFSheetHandler<E> extends DefaultHandler {
 		/** Table with styles */
-		private StylesTable stylesTable;
+		private final StylesTable stylesTable;
 		/** Table with unique strings */
-		private SharedStringsTable sharedStringsTable;
+		private final SharedStringsTable sharedStringsTable;
 		// Set when V start element is seen
 		private boolean vIsOpen;
 		// Set when cell start element is seen;
@@ -300,7 +300,7 @@ public class XlsxReader implements ResourceReader {
 		// The last column printed to the output stream
 		private int lastColumnNumber = -1;
 		// Gathers characters as they are seen.
-		private StringBuffer value;
+		private final StringBuffer value;
 
 		private List<String> cols;
 		private final String sheetName;
@@ -308,7 +308,7 @@ public class XlsxReader implements ResourceReader {
 		private final Class<E> clz;
 		private final Getter idGetter;
 		private int currentRow = 0;
-		private List<FieldInfo> fieldInfos;
+		private final List<FieldInfo> fieldInfos;
 		private boolean done;
 		private boolean start;
 
@@ -408,7 +408,7 @@ public class XlsxReader implements ResourceReader {
 						XSSFRichTextString rtss = new XSSFRichTextString(sharedStringsTable.getEntryAt(idx));
 						thisStr = rtss.toString();
 					} catch (NumberFormatException ex) {
-						throw new RuntimeException("Failed to parse SST index '" + sstIndex + "': " + ex.toString());
+						throw new RuntimeException("Failed to parse SST index '" + sstIndex + "': " + ex);
 					}
 					break;
 
@@ -544,15 +544,15 @@ public class XlsxReader implements ResourceReader {
 				try {
 					info.inject(instance, content);
 				} catch (Exception e) {
-					logger.error("数值表[{}]的[{}]分页第[{}]行的配置内容[{}]错误", new Object[] { clz.getSimpleName(), sheetName,
-						currentRow, content });
+					logger.error("数值表[{}]的[{}]分页第[{}]行的配置内容[{}]错误", clz.getSimpleName(), sheetName,
+							currentRow, content);
 					throw e;
 				}
 			}
 
 			if (idGetter.getValue(instance) == null) {
-				logger.error("数值表[{}]的[{}]分页第[{}]行的配置内容[{}]错误 - 主键列NULL", new Object[] { clz.getSimpleName(),
-					sheetName, currentRow, JsonUtils.object2String(instance) });
+				logger.error("数值表[{}]的[{}]分页第[{}]行的配置内容[{}]错误 - 主键列NULL", clz.getSimpleName(),
+						sheetName, currentRow, JsonUtils.object2String(instance));
 			}
 			results.add(instance);
 			if (StringUtils.isNotBlank(tag) && tag.equalsIgnoreCase(ROW_END)) {

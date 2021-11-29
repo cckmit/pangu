@@ -10,7 +10,7 @@ import static com.pangu.logic.module.account.facade.AccountModule.*;
 /**
  * 账号服务推送接口
  *
- * @author frank
+ * @author author
  */
 @SocketPush
 @SocketModule(MODULE)

@@ -9,7 +9,7 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * 字符串到日期对象的转换器
  * 
- * @author frank
+ * @author author
  */
 public class StringToDateConverter implements Converter<String, Date> {
 

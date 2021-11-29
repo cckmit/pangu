@@ -121,7 +121,7 @@ class ReflectUtils {
 
     private static final ConcurrentMap<String, Method> SIGNATURE_METHODS_CACHE = new ConcurrentHashMap<String, Method>();
 
-    private static Map<Class<?>, Object> primitiveDefaults = new HashMap<>();
+    private static final Map<Class<?>, Object> primitiveDefaults = new HashMap<>();
 
     static {
         primitiveDefaults.put(int.class, 0);
@@ -249,7 +249,7 @@ class ReflectUtils {
             }
             while (c.isArray());
 
-            return c.getName() + sb.toString();
+            return c.getName() + sb;
         }
         return c.getName();
     }
@@ -936,7 +936,7 @@ class ReflectUtils {
     public static Constructor<?> findConstructor(Class<?> clazz, Class<?> paramType) throws java.lang.NoSuchMethodException {
         Constructor<?> targetConstructor;
         try {
-            targetConstructor = clazz.getConstructor(new Class<?>[]{paramType});
+            targetConstructor = clazz.getConstructor(paramType);
         } catch (java.lang.NoSuchMethodException e) {
             targetConstructor = null;
             Constructor<?>[] constructors = clazz.getConstructors();
@@ -1202,13 +1202,13 @@ class ReflectUtils {
 
         Set<ParameterizedType> parameterizedTypes = genericTypes.stream()
                 .filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
-                .map(type -> ParameterizedType.class.cast(type))  // cast to ParameterizedType
+                .map(type -> (ParameterizedType) type)  // cast to ParameterizedType
                 .collect(Collectors.toSet());
 
         if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
             genericTypes.stream()
                     .filter(type -> type instanceof Class)
-                    .map(type -> Class.class.cast(type))
+                    .map(type -> (Class) type)
                     .forEach(superClass -> {
                         parameterizedTypes.addAll(findParameterizedTypes(superClass));
                     });

@@ -18,19 +18,15 @@ import org.springframework.context.ApplicationContextAware;
 import com.pangu.framework.resource.other.FormatDefinition;
 import com.pangu.framework.resource.other.ResourceDefinition;
 
-/**
- * 资源管理器
- * @author frank
- */
 @SuppressWarnings("rawtypes")
 public class StorageManager implements ApplicationContextAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(StorageManager.class);
 
 	/** 静态类资源定义 */
-	private ConcurrentHashMap<Class, ResourceDefinition> definitions = new ConcurrentHashMap<Class, ResourceDefinition>();
+	private final ConcurrentHashMap<Class, ResourceDefinition> definitions = new ConcurrentHashMap<Class, ResourceDefinition>();
 	/** 资源存储空间 */
-	private ConcurrentHashMap<Class<?>, Storage<?, ?>> storages = new ConcurrentHashMap<Class<?>, Storage<?, ?>>();
+	private final ConcurrentHashMap<Class<?>, Storage<?, ?>> storages = new ConcurrentHashMap<Class<?>, Storage<?, ?>>();
 
 	/**
 	 * 初始化静态类资源

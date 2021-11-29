@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NullMessageProducer implements MessageProducer {
     public static final NullMessageProducer NULL_MESSAGE_PRODUCER = new NullMessageProducer();
-    private AtomicInteger seq = new AtomicInteger(0);
+    private final AtomicInteger seq = new AtomicInteger(0);
 
     @Override
     public String createMessageId() {

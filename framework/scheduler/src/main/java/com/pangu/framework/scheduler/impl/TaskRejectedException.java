@@ -2,7 +2,7 @@ package com.pangu.framework.scheduler.impl;
 
 /**
  * 任务拒绝异常
- * @author Frank
+ * @author author
  */
 public class TaskRejectedException extends RuntimeException {
 

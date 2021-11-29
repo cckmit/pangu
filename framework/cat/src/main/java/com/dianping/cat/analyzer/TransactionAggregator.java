@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class TransactionAggregator {
-    private static TransactionAggregator instance = new TransactionAggregator();
+    private static final TransactionAggregator instance = new TransactionAggregator();
     private volatile ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> transactions = new ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>>();
 
     public static TransactionAggregator getInstance() {
@@ -168,13 +168,13 @@ public class TransactionAggregator {
 
     public class TransactionData {
 
-        private String type;
-        private String name;
-        private AtomicInteger count = new AtomicInteger();
-        private AtomicInteger fail = new AtomicInteger();
-        private AtomicLong sum = new AtomicLong();
-        private ConcurrentHashMap<Integer, AtomicInteger> durations = new ConcurrentHashMap<Integer, AtomicInteger>();
-        private ConcurrentHashMap<Integer, AtomicInteger> longDurations = new ConcurrentHashMap<Integer, AtomicInteger>();
+        private final String type;
+        private final String name;
+        private final AtomicInteger count = new AtomicInteger();
+        private final AtomicInteger fail = new AtomicInteger();
+        private final AtomicLong sum = new AtomicLong();
+        private final ConcurrentHashMap<Integer, AtomicInteger> durations = new ConcurrentHashMap<Integer, AtomicInteger>();
+        private final ConcurrentHashMap<Integer, AtomicInteger> longDurations = new ConcurrentHashMap<Integer, AtomicInteger>();
 
         TransactionData(String type, String name) {
             this.type = type;

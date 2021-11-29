@@ -56,7 +56,7 @@ public class CreateServer implements CommandMarker {
             queue.put(new ZookeeperTask(Constants.TASK_CREATE_GAME_DATABASE, sid));
             queue.close();
         } catch (Exception e) {
-            log.warning("创建任务失败,请检查" + e.toString());
+            log.warning("创建任务失败,请检查" + e);
         }
     }
 }

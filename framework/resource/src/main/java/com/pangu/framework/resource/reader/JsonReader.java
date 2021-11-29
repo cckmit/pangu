@@ -10,11 +10,6 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * JSON 资源读取器
- *
- * @author frank
- */
 @Slf4j
 public class JsonReader implements ResourceReader {
 

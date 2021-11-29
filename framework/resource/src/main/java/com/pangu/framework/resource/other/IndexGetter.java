@@ -2,10 +2,6 @@ package com.pangu.framework.resource.other;
 
 import java.util.Comparator;
 
-/**
- * 索引值获取器接口
- * @author frank
- */
 public interface IndexGetter {
 
 	/**

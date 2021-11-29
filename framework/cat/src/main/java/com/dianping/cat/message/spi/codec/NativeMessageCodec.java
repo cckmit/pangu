@@ -28,6 +28,7 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Stack;
 
@@ -154,7 +155,7 @@ public class NativeMessageCodec implements MessageCodec {
     public void reset() {
     }
 
-    static enum Codec {
+    enum Codec {
         HEADER {
             @Override
             protected Message decode(Context ctx, ByteBuf buf) {
@@ -215,7 +216,7 @@ public class NativeMessageCodec implements MessageCodec {
 
                 MessageTree tree = ctx.getMessageTree();
                 if (tree instanceof DefaultMessageTree) {
-                    ((DefaultMessageTree) tree).findOrCreateTransactions().add(t);
+                    tree.findOrCreateTransactions().add(t);
                 }
 
                 return t;
@@ -271,7 +272,7 @@ public class NativeMessageCodec implements MessageCodec {
 
                 MessageTree tree = ctx.getMessageTree();
                 if (tree instanceof DefaultMessageTree) {
-                    ((DefaultMessageTree) tree).findOrCreateEvents().add(e);
+                    tree.findOrCreateEvents().add(e);
                 }
 
                 return e;
@@ -304,7 +305,7 @@ public class NativeMessageCodec implements MessageCodec {
 
                 MessageTree tree = ctx.getMessageTree();
                 if (tree instanceof DefaultMessageTree) {
-                    ((DefaultMessageTree) tree).findOrCreateMetrics().add(m);
+                    tree.findOrCreateMetrics().add(m);
                 }
 
                 return m;
@@ -387,12 +388,11 @@ public class NativeMessageCodec implements MessageCodec {
     }
 
     private static class Context {
-        private static Charset UTF8 = Charset.forName("UTF-8");
-        ;
+        private static final Charset UTF8 = StandardCharsets.UTF_8;
 
-        private MessageTree m_tree;
+        private final MessageTree m_tree;
 
-        private Stack<DefaultTransaction> m_parents = new Stack<DefaultTransaction>();
+        private final Stack<DefaultTransaction> m_parents = new Stack<DefaultTransaction>();
 
         private byte[] m_data = new byte[256];
 

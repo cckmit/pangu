@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 
 /**
  * 资源定义信息对象
- * @author frank
+ * @author author
  */
 public class ResourceDefinition {
 
@@ -28,11 +28,8 @@ public class ResourceDefinition {
 	private final static ReflectionUtils.FieldFilter INJECT_FILTER = new ReflectionUtils.FieldFilter() {
 		@Override
 		public boolean matches(Field field) {
-			if (field.isAnnotationPresent(InjectBean.class)) {
-				return true;
-			}
-			return false;
-		}
+            return field.isAnnotationPresent(InjectBean.class);
+        }
 	};
 
 	/** 资源类 */
@@ -76,7 +73,7 @@ public class ResourceDefinition {
 				if (StringUtils.endsWith(dir, FILE_PATH)) {
 					end--;
 				}
-				builder.append(dir.substring(start, end)).append(FILE_PATH);
+				builder.append(dir, start, end).append(FILE_PATH);
 			}
 		}
 		builder.append(clz.getSimpleName()).append(FILE_SPLIT).append(format.getSuffix());
@@ -125,11 +122,8 @@ public class ResourceDefinition {
 	 * @return
 	 */
 	public boolean isNeedValidate() {
-		if (Validate.class.isAssignableFrom(clz)) {
-			return true;
-		}
-		return false;
-	}
+        return Validate.class.isAssignableFrom(clz);
+    }
 
 	/**
 	 * @param location

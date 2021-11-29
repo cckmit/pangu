@@ -47,7 +47,7 @@ public class UrlParser {
                         if (isNumber) {
                             sb.append("{num}");
                         } else {
-                            sb.append(nextSection.toString());
+                            sb.append(nextSection);
                         }
                         index = j;
 
@@ -57,7 +57,7 @@ public class UrlParser {
                             sb.append("{num}");
                         } else {
                             nextSection.append(next);
-                            sb.append(nextSection.toString());
+                            sb.append(nextSection);
                         }
                         index = j + 1;
                         break;

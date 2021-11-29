@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * 属性定义
- * @author Ramon
+ * @author author
  */
 public class FieldDef implements Comparable<FieldDef> {
 
@@ -65,10 +65,7 @@ public class FieldDef implements Comparable<FieldDef> {
 	}
 
 	public boolean isReadonly() {
-		if (type != null && setter == null && field == null) {
-			return true;
-		}
-		return false;
+		return type != null && setter == null && field == null;
 	}
 
 	@SuppressWarnings("rawtypes")

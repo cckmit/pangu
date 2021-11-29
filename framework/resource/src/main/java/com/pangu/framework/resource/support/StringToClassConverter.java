@@ -12,7 +12,7 @@ import org.springframework.core.convert.converter.Converter;
 
 /**
  * {@link String} 到 {@link Class} 的 {@link Converter}
- * @author frank
+ * @author author
  */
 @SuppressWarnings("rawtypes")
 public class StringToClassConverter implements Converter<String, Class>, ApplicationContextAware {

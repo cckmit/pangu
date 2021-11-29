@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 防火墙信息记录
  *
- * @author frank
+ * @author author
  */
 public class FirewallRecord {
     /**
@@ -21,7 +21,7 @@ public class FirewallRecord {
      * 每秒收到的数据包次数限制
      */
     private static int TIMES_IN_SECOND_LIMIT = 128;
-    private Logger logger = LoggerFactory.getLogger(FirewallRecord.class);
+    private final Logger logger = LoggerFactory.getLogger(FirewallRecord.class);
     /**
      * 最后记录时间
      */
@@ -90,7 +90,7 @@ public class FirewallRecord {
         // 边界判断
         if (bytesInSecond >= BYTES_IN_SECOND_LIMIT || timesInSecond >= TIMES_IN_SECOND_LIMIT) {
             violateTime++;
-            logger.error("请求违规:[{}]次字节数量[{}]包数量[{}]", new Object[]{violateTime, bytesInSecond, timesInSecond});
+            logger.error("请求违规:[{}]次字节数量[{}]包数量[{}]", violateTime, bytesInSecond, timesInSecond);
             bytesInSecond = 0;
             timesInSecond = 0;
             return true;

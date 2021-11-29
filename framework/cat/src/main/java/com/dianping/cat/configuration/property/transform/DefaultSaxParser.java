@@ -18,12 +18,12 @@ import java.io.StringReader;
 import java.util.Stack;
 
 public class DefaultSaxParser extends DefaultHandler {
-    private DefaultLinker linker = new DefaultLinker(true);
-    private DefaultSaxMaker maker = new DefaultSaxMaker();
-    private Stack<String> tags = new Stack<String>();
-    private Stack<Object> objects = new Stack<Object>();
+    private final DefaultLinker linker = new DefaultLinker(true);
+    private final DefaultSaxMaker maker = new DefaultSaxMaker();
+    private final Stack<String> tags = new Stack<String>();
+    private final Stack<Object> objects = new Stack<Object>();
     private IEntity<?> entity;
-    private StringBuilder text = new StringBuilder();
+    private final StringBuilder text = new StringBuilder();
 
     public static PropertyConfig parse(InputSource is) throws SAXException, IOException {
         return parseEntity(PropertyConfig.class, is);

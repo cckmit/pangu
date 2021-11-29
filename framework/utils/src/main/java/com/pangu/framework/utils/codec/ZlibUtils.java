@@ -58,7 +58,7 @@ public final class ZlibUtils {
     /**
      * 解压任务线程池
      */
-    private static ExecutorService executorService = Executors.newCachedThreadPool(
+    private static final ExecutorService executorService = Executors.newCachedThreadPool(
             new NamedThreadFactory(new ThreadGroup("ZlibUtils"), "解压处理"));
 
     /**

@@ -3,7 +3,7 @@ package com.pangu.framework.protocol.exception;
 /**
  * 未定义的传输对象类型
  * 
- * @author Ramon
+ * @author author
  *
  */
 public class UnknowTypeDefException extends RuntimeException{

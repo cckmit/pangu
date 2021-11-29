@@ -5,7 +5,7 @@ import com.pangu.framework.socket.anno.SocketDefine;
 /**
  * 玩家角色模块指令定义
  *
- * @author frank
+ * @author author
  */
 @SocketDefine
 public interface AccountModule {

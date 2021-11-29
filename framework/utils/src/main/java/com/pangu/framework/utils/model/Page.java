@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 分页对象，用于存储分页信息与页面内的数据
- * @author frank
+ * @author author
  */
 public class Page<T> implements Iterable<T>, Serializable {
 

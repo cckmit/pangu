@@ -27,7 +27,7 @@ public class ServiceSocketChannelDemo {
     public static class TCPEchoServer implements Runnable {
 
         /*服务器地址*/
-        private InetSocketAddress localAddress;
+        private final InetSocketAddress localAddress;
 
         public TCPEchoServer(int port) throws IOException {
             this.localAddress = new InetSocketAddress(port);

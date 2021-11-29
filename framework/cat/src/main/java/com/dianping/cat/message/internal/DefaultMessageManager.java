@@ -42,14 +42,14 @@ public class DefaultMessageManager implements MessageManager {
     private boolean firstMessage = true;
     private static final int SIZE = 200;
     private static final long HOUR = 3600 * 1000L;
-    private ClientConfigService configService = DefaultClientConfigService.getInstance();
-    private TcpSocketSender sender = TcpSocketSender.getInstance();
-    private MessageIdFactory factory = MessageIdFactory.getInstance();
-    private AtomicInteger sampleCount = new AtomicInteger();
-    private ThreadLocal<Context> context = new ThreadLocal<Context>();
-    private static CatLogger LOGGER = CatLogger.getInstance();
-    private TransactionHelper validator = new TransactionHelper();
-    private static MessageManager INSTANCE = new DefaultMessageManager();
+    private final ClientConfigService configService = DefaultClientConfigService.getInstance();
+    private final TcpSocketSender sender = TcpSocketSender.getInstance();
+    private final MessageIdFactory factory = MessageIdFactory.getInstance();
+    private final AtomicInteger sampleCount = new AtomicInteger();
+    private final ThreadLocal<Context> context = new ThreadLocal<Context>();
+    private static final CatLogger LOGGER = CatLogger.getInstance();
+    private final TransactionHelper validator = new TransactionHelper();
+    private static final MessageManager INSTANCE = new DefaultMessageManager();
 
     public static MessageManager getInstance() {
         return INSTANCE;
@@ -248,8 +248,8 @@ public class DefaultMessageManager implements MessageManager {
     }
 
     public class Context {
-        private MessageTree tree;
-        private Stack<Transaction> stack;
+        private final MessageTree tree;
+        private final Stack<Transaction> stack;
         private int length;
         private boolean traceMode;
         private long totalDurationInMicros;
@@ -450,11 +450,7 @@ public class DefaultMessageManager implements MessageManager {
 
             double samplingRate = configService.getSamplingRate();
 
-            if (samplingRate < 1.0 && hitSample(samplingRate)) {
-                tree.setHitSample(true);
-            } else {
-                tree.setHitSample(false);
-            }
+            tree.setHitSample(samplingRate < 1.0 && hitSample(samplingRate));
         }
 
         public void setTraceMode(boolean traceMode) {

@@ -50,14 +50,8 @@ public class Pair<K, V> implements Tuple {
             }
 
             if (value == null) {
-                if (o.value != null) {
-                    return false;
-                }
-            } else if (!value.equals(o.value)) {
-                return false;
-            }
-
-            return true;
+                return o.value == null;
+            } else return value.equals(o.value);
         }
 
         return false;

@@ -22,18 +22,19 @@ import com.dianping.cat.util.Properties;
 import com.dianping.cat.util.Threads;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CatLogger {
-    private MessageFormat format;
+    private final MessageFormat format;
     private BufferedWriter writer;
     private String lastPath;
-    private boolean devMode;
-    private ReentrantLock lock = new ReentrantLock();
+    private final boolean devMode;
+    private final ReentrantLock lock = new ReentrantLock();
     private static final String DEFAULT_BASE_DIR = "/data/applogs/cat";
-    private static CatLogger LOGGER = new CatLogger();
+    private static final CatLogger LOGGER = new CatLogger();
 
     public static CatLogger getInstance() {
         return LOGGER;
@@ -119,7 +120,7 @@ public class CatLogger {
             file.getParentFile().mkdirs();
 
             FileOutputStream fos = new FileOutputStream(file, true);
-            writer = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
+            writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
             lastPath = path;
         }
 
@@ -161,7 +162,7 @@ public class CatLogger {
                         writer.flush();
                     }
                 } catch (Exception e) {
-                    console(formatMessage("ERROR", timedMessage + e.toString()));
+                    console(formatMessage("ERROR", timedMessage + e));
                 }
             }
         } finally {

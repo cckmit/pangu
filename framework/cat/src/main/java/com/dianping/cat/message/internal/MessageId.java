@@ -21,10 +21,10 @@ package com.dianping.cat.message.internal;
 import com.dianping.cat.util.StringUtils;
 
 public class MessageId {
-    private String domain;
-    private String ipAddressInHex;
-    private int hour;
-    private int index;
+    private final String domain;
+    private final String ipAddressInHex;
+    private final int hour;
+    private final int index;
 
     public static MessageId parse(String messageId) {
         int index = -1;

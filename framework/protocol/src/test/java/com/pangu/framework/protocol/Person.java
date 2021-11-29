@@ -95,11 +95,8 @@ public class Person {
 		} else if (!name.equals(other.name))
 			return false;
 		if (ok == null) {
-			if (other.ok != null)
-				return false;
-		} else if (!ok.equals(other.ok))
-			return false;
-		return true;
+			return other.ok == null;
+		} else return ok.equals(other.ok);
 	}
 
 	public int getA() {

@@ -6,7 +6,7 @@ import com.pangu.framework.scheduler.TaskContext;
 
 /**
  * 简单的任务上下文对象
- * @author Frank
+ * @author author
  */
 public class SimpleTaskContext implements TaskContext {
 

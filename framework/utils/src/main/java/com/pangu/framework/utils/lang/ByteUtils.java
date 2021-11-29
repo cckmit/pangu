@@ -2,7 +2,7 @@ package com.pangu.framework.utils.lang;
 
 /**
  * Byte 工具类
- * @author frank
+ * @author author
  */
 public final class ByteUtils {
 	

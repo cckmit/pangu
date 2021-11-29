@@ -30,12 +30,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DefaultForkedTransaction extends AbstractMessage implements ForkedTransaction {
-    private String rootMessageId;
-    private String parentMessageId;
+    private final String rootMessageId;
+    private final String parentMessageId;
     private String messageId;
     private long durationInMicros;
     private List<Message> children;
-    private AtomicBoolean joined = new AtomicBoolean();
+    private final AtomicBoolean joined = new AtomicBoolean();
 
     public DefaultForkedTransaction(String rootMessageId, String parentMessageId) {
         super("System", "ChildThread");

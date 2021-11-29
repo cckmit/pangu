@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 public class ThreadInfoWriter {
     private static final int MAX_FRAMES = 200;
     private static final String PROTOCOL_ID = "ThreadDumpCat";
-    private Map<String, Integer> wordTable = new HashMap<String, Integer>();
+    private final Map<String, Integer> wordTable = new HashMap<String, Integer>();
     private short offset = 0;
 
     public ThreadInfoWriter() {

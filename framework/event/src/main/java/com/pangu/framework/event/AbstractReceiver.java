@@ -6,10 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * 抽象事件订阅者，用于简化编码
- * @author Frank
- */
 public abstract class AbstractReceiver<T> implements Receiver<T> {
 	
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());

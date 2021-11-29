@@ -95,7 +95,7 @@ public class WebSocketEnDecoder extends ChannelDuplexHandler {
             for (int i = 0; i < writerIndex; ++i) {
                 builder.append(buffer.getByte(i)).append(" ");
             }
-            log.debug(writerIndex + msg + builder.toString());
+            log.debug(writerIndex + msg + builder);
         }
     }
 }

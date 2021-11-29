@@ -6,7 +6,7 @@ import com.pangu.framework.utils.model.ResultCode;
 /**
  * 账号服务状态码声明
  *
- * @author frank
+ * @author author
  */
 @Constant
 public interface AccountResult extends ResultCode {

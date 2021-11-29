@@ -4,11 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * 激活码单元
- *
- * @author fei
- */
 @Getter
 @Setter
 @AllArgsConstructor

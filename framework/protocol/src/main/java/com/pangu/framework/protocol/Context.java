@@ -20,11 +20,11 @@ import com.pangu.framework.utils.model.Result;
 
 /**
  * 编解码上下文
- * @author Ramon
+ * @author author
  */
 public class Context {
-	private ByteBuf buffer;
-	private Definition root;
+	private final ByteBuf buffer;
+	private final Definition root;
 
 	Context(ByteBuf buffer, Definition root) {
 		this.buffer = buffer;

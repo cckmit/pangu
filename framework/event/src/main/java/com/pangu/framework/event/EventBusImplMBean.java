@@ -4,10 +4,6 @@ import java.util.List;
 
 import javax.management.MXBean;
 
-/**
- * 事件总线的JMX管理接口
- * @author frank
- */
 @MXBean
 public interface EventBusImplMBean {
 	

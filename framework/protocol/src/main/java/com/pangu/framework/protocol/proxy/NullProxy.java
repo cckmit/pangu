@@ -16,6 +16,6 @@ public class NullProxy extends AbstractProxy<Object> {
 	public void setValue(Context ctx, Object value) {
 		ByteBuf out = ctx.getBuffer();
 		byte flag = Types.NULL;
-		out.writeByte((byte) flag);
+		out.writeByte(flag);
 	}
 }

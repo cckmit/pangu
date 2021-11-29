@@ -28,7 +28,7 @@ package com.dianping.cat.message;
  * Super interface of <code>Event</code>, <code>Heartbeat</code> and <code>Transaction</code>.
  * </p>
  *
- * @author Frankie Wu
+ * @author authorie Wu
  * @see Event, Heartbeat, Transaction
  */
 public interface Message {

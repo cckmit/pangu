@@ -12,14 +12,14 @@ import java.util.Random;
 /**
  * 人品(RP = Ratio of Probability)对象
  *
- * @author Frank
+ * @author author
  */
 public class RatioProbability<T> {
 
     /**
      * 概率与结果的映射关系
      */
-    private LinkedHashMap<Key, T> odds = new LinkedHashMap<Key, T>();
+    private final LinkedHashMap<Key, T> odds = new LinkedHashMap<Key, T>();
 
     /**
      * 构造器
@@ -85,7 +85,7 @@ public class RatioProbability<T> {
             }
             prev = odd;
         }
-        throw new IllegalStateException("概率内容无法获取随机结果:" + odds.toString());
+        throw new IllegalStateException("概率内容无法获取随机结果:" + odds);
     }
 
     /**
@@ -105,7 +105,7 @@ public class RatioProbability<T> {
             }
             prev = odd;
         }
-        throw new IllegalStateException("概率内容无法获取随机结果:" + odds.toString());
+        throw new IllegalStateException("概率内容无法获取随机结果:" + odds);
     }
 
     /**
@@ -125,7 +125,7 @@ public class RatioProbability<T> {
             }
             prev = odd;
         }
-        throw new IllegalStateException("概率内容无法获取随机结果:" + odds.toString());
+        throw new IllegalStateException("概率内容无法获取随机结果:" + odds);
     }
 
     //获取种子最大数量
@@ -178,7 +178,7 @@ public class RatioProbability<T> {
     }
 
     /**
-     * @author Ramon
+     * @author author
      */
     private static class Key {
         private int seed;
@@ -214,9 +214,7 @@ public class RatioProbability<T> {
             Key other = (Key) obj;
             if (Double.doubleToLongBits(rate) != Double.doubleToLongBits(other.rate))
                 return false;
-            if (seed != other.seed)
-                return false;
-            return true;
+            return seed == other.seed;
         }
 
         @Override

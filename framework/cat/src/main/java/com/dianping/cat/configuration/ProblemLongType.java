@@ -62,9 +62,9 @@ public enum ProblemLongType {
         }
     };
 
-    private String name;
+    private final String name;
 
-    private int threshold;
+    private final int threshold;
 
     protected abstract boolean checkLongType(String type);
 

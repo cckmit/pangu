@@ -19,7 +19,7 @@ import com.pangu.framework.resource.anno.Static;
 
 /**
  * 静态资源变更观察者
- * @author frank
+ * @author author
  */
 @SuppressWarnings("rawtypes")
 public class StaticObserver implements Observer {
@@ -113,7 +113,7 @@ public class StaticObserver implements Observer {
 	/** 资源键值 */
 	private final Class<?> clz;
 	/** 转换服务 */
-	private ConversionService conversionService;
+	private final ConversionService conversionService;
 
 	public StaticObserver(ConversionService conversionService, Object target, Field field, Static anno, Object key,
 			Class<?> clz) {

@@ -1,9 +1,5 @@
 package com.pangu.framework.resource;
 
-/**
- * 静态资源的内容验证接口
- * @author frank
- */
 public interface Validate {
 
 	/**

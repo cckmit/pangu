@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 abstract class Mixin {
     private static final String PACKAGE_NAME = Mixin.class.getPackage().getName();
-    private static AtomicLong MIXIN_CLASS_COUNTER = new AtomicLong(0);
+    private static final AtomicLong MIXIN_CLASS_COUNTER = new AtomicLong(0);
 
     protected Mixin() {
     }
@@ -218,7 +218,7 @@ abstract class Mixin {
      */
     abstract public Object newInstance(Object[] ds);
 
-    public static interface MixinAware {
+    public interface MixinAware {
         void setMixinInstance(Object instance);
     }
 }

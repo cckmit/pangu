@@ -47,9 +47,9 @@ public class HashUtils {
 	/* End Of JS Hash Function */
 
 	public static long PJWHash(byte[] bytes, int len) {
-		long BitsInUnsignedInt = (long) (4 * 8);
-		long ThreeQuarters = (long) ((BitsInUnsignedInt * 3) / 4);
-		long OneEighth = (long) (BitsInUnsignedInt / 8);
+		long BitsInUnsignedInt = 4 * 8;
+		long ThreeQuarters = (BitsInUnsignedInt * 3) / 4;
+		long OneEighth = BitsInUnsignedInt / 8;
 		long HighBits = (long) (0xFFFFFFFF) << (BitsInUnsignedInt - OneEighth);
 		long hash = 0;
 		long test = 0;

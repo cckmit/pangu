@@ -36,7 +36,7 @@ public class MetricTagAggregator {
     private static final String OTHERS = "others";
     private static final String EMPTY = "empty";
     private volatile ConcurrentHashMap<String, Map<String, MetricTagItem>> metrics = new ConcurrentHashMap<String, Map<String, MetricTagItem>>();
-    private ConcurrentHashMap<String, Integer> metricThresholds = new ConcurrentHashMap<String, Integer>();
+    private final ConcurrentHashMap<String, Integer> metricThresholds = new ConcurrentHashMap<String, Integer>();
 
     public static MetricTagAggregator getInstance() {
         return instance;
@@ -263,9 +263,9 @@ public class MetricTagAggregator {
 
         private AtomicInteger count = new AtomicInteger();
 
-        private AtomicInteger slowCount = new AtomicInteger();
+        private final AtomicInteger slowCount = new AtomicInteger();
 
-        private AtomicLong sum = new AtomicLong();
+        private final AtomicLong sum = new AtomicLong();
 
         AtomicInteger getCount() {
             return count;

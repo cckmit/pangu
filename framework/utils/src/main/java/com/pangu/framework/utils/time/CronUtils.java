@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * CRON表达式工具类
- * @author Ramon
+ * @author author
  */
 public class CronUtils {
 
@@ -23,7 +23,7 @@ public class CronUtils {
 	private static final int DAY_OF_MONTH = 3;
 	private static final int DAY_OF_WEEK = 5;
 
-	private static volatile ConcurrentHashMap<String, CronExpression> caches = new ConcurrentHashMap<>();
+	private static final ConcurrentHashMap<String, CronExpression> caches = new ConcurrentHashMap<>();
 
 	private static CronExpression getCronExpression(String cron) {
 		return caches.computeIfAbsent(cron, CronUtils::buildCronExpression);

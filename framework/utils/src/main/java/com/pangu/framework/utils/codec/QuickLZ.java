@@ -242,7 +242,7 @@ public final class QuickLZ {
 
 		while (src <= source.length - 1) {
 			if ((cword_val & 1) == 1) {
-				fast_write(destination, cword_ptr, (long) ((cword_val >>> 1) | 0x80000000L), 4);
+				fast_write(destination, cword_ptr, (cword_val >>> 1) | 0x80000000L, 4);
 				cword_ptr = dst;
 				dst += CWORD_LEN;
 				cword_val = 0x80000000L;
@@ -256,7 +256,7 @@ public final class QuickLZ {
 		while ((cword_val & 1) != 1) {
 			cword_val = (cword_val >>> 1);
 		}
-		fast_write(destination, cword_ptr, (long) ((cword_val >>> 1) | 0x80000000L), CWORD_LEN);
+		fast_write(destination, cword_ptr, (cword_val >>> 1) | 0x80000000L, CWORD_LEN);
 		write_header(destination, level, true, source.length, dst);
 
 		d2 = new byte[dst];
@@ -353,7 +353,7 @@ public final class QuickLZ {
 						matchlen = ((fetch >>> 7) & 255) + 3;
 						src += 4;
 					}
-					offset2 = (int) (dst - offset);
+					offset2 = dst - offset;
 				}
 
 				destination[dst + 0] = destination[offset2 + 0];

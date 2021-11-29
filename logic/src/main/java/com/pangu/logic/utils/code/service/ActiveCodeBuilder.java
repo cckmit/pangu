@@ -11,7 +11,6 @@ import java.util.OptionalLong;
 /**
  * 激活码生成器 激活码构成: 填充+分割+顺序号+激活码id+类型id构成
  *
- * @author fei
  */
 public class ActiveCodeBuilder {
 

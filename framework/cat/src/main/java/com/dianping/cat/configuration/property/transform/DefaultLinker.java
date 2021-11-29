@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultLinker implements ILinker {
-   private boolean deferrable;
-   private List<Runnable> deferedJobs = new ArrayList<Runnable>();
+   private final boolean deferrable;
+   private final List<Runnable> deferedJobs = new ArrayList<Runnable>();
 
    public DefaultLinker(boolean deferrable) {
       this.deferrable = deferrable;

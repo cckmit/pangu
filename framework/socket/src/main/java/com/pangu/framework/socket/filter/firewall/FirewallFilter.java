@@ -303,7 +303,7 @@ public class FirewallFilter extends ChannelInboundHandlerAdapter implements Fire
             ByteBuf byteBuf = (ByteBuf) message;
             byte[] data = new byte[byteBuf.readableBytes()];
             byteBuf.readBytes(data);
-            log.warn("防火墙立即阻止会话[{}]，违规时请求数据包信息[{}]", new Object[]{ip, data});
+            log.warn("防火墙立即阻止会话[{}]，违规时请求数据包信息[{}]", ip, data);
             return true;
         }
 
@@ -323,7 +323,7 @@ public class FirewallFilter extends ChannelInboundHandlerAdapter implements Fire
      */
     private boolean isAllow(ChannelHandlerContext ctx) {
         Boolean result = getAttribute(ctx, ATT_ALLOW);
-        return result == null ? false : result;
+        return result != null && result;
     }
 
     /**

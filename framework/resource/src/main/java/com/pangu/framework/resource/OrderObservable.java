@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class OrderObservable extends Observable {
 
-	private Vector<Observer> obs;
+	private final Vector<Observer> obs;
 
 	/** Construct an Observable with zero Observers. */
 

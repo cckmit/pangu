@@ -46,10 +46,10 @@ public class DefaultClientConfigService implements ClientConfigService {
     private volatile double samplingRate = 1d;
     private volatile boolean block = false;
     private volatile int timeout = 1000;
-    private MessageTreeTypeParser treeParser = new MessageTreeTypeParser();
-    private Map<String, List<Integer>> longConfigs = new LinkedHashMap<String, List<Integer>>();
-    private static CatLogger LOGGER = CatLogger.getInstance();
-    private static DefaultClientConfigService instance = new DefaultClientConfigService();
+    private final MessageTreeTypeParser treeParser = new MessageTreeTypeParser();
+    private final Map<String, List<Integer>> longConfigs = new LinkedHashMap<String, List<Integer>>();
+    private static final CatLogger LOGGER = CatLogger.getInstance();
+    private static final DefaultClientConfigService instance = new DefaultClientConfigService();
 
     public static DefaultClientConfigService getInstance() {
         return instance;

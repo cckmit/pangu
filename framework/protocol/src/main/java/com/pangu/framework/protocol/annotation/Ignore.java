@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 忽略的传输属性
- * @author Ramon
+ * @author author
  */
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)

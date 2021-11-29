@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
 public class Threads {
-    private static volatile Manager manager = new Manager();
-    private static CatLogger logger = CatLogger.getInstance();
+    private static final Manager manager = new Manager();
+    private static final CatLogger logger = CatLogger.getInstance();
 
     public static void addListener(ThreadListener listener) {
         manager.addListener(listener);
@@ -86,11 +86,11 @@ public class Threads {
     }
 
     static class DefaultThreadFactory implements ThreadFactory {
-        private ThreadGroup threadGroup;
+        private final ThreadGroup threadGroup;
 
-        private String name;
+        private final String name;
 
-        private AtomicInteger index = new AtomicInteger();
+        private final AtomicInteger index = new AtomicInteger();
 
         private UncaughtExceptionHandler handler;
 
@@ -128,11 +128,11 @@ public class Threads {
     }
 
     static class Manager implements UncaughtExceptionHandler {
-        private Map<String, ThreadGroupManager> groupManagers = new LinkedHashMap<String, ThreadGroupManager>();
+        private final Map<String, ThreadGroupManager> groupManagers = new LinkedHashMap<String, ThreadGroupManager>();
 
-        private List<ThreadListener> listeners = new ArrayList<ThreadListener>();
+        private final List<ThreadListener> listeners = new ArrayList<ThreadListener>();
 
-        private ThreadPoolManager threadPoolManager;
+        private final ThreadPoolManager threadPoolManager;
 
         public Manager() {
             Thread shutdownThread = new Thread() {
@@ -244,9 +244,9 @@ public class Threads {
     }
 
     static class RunnableThread extends Thread {
-        private Runnable target;
-        private String caller;
-        private static ThreadLocal<String> callerThreadLocal = new ThreadLocal<String>();
+        private final Runnable target;
+        private final String caller;
+        private static final ThreadLocal<String> callerThreadLocal = new ThreadLocal<String>();
 
         public RunnableThread(ThreadGroup threadGroup, Runnable target, String name, UncaughtExceptionHandler handler) {
             super(threadGroup, target, name);
@@ -319,8 +319,8 @@ public class Threads {
     }
 
     public static class ThreadGroupManager {
-        private DefaultThreadFactory factory;
-        private ThreadGroup threadGroup;
+        private final DefaultThreadFactory factory;
+        private final ThreadGroup threadGroup;
         private boolean active;
         private boolean deamon;
 
@@ -439,8 +439,8 @@ public class Threads {
     }
 
     public static class ThreadPoolManager {
-        private UncaughtExceptionHandler handler;
-        private Map<String, ExecutorService> services = new LinkedHashMap<String, ExecutorService>();
+        private final UncaughtExceptionHandler handler;
+        private final Map<String, ExecutorService> services = new LinkedHashMap<String, ExecutorService>();
 
         public ThreadPoolManager(UncaughtExceptionHandler handler) {
             this.handler = handler;

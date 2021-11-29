@@ -13,10 +13,6 @@ import org.springframework.context.ApplicationContextAware;
 import com.pangu.framework.resource.other.ResourceDefinition;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-/**
- * 资源管理器工厂
- * @author frank
- */
 public class StorageManagerFactory extends DefaultListableBeanFactory implements FactoryBean<StorageManager>,
 		ApplicationContextAware {
 

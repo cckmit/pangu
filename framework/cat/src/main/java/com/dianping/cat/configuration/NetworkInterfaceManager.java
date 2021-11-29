@@ -31,7 +31,7 @@ public enum NetworkInterfaceManager {
 
     private InetAddress local;
     private String ip;
-    private String hostName;
+    private final String hostName;
     public final static String LOOPBACK = "127.0.0.1";
 
     NetworkInterfaceManager() {

@@ -28,11 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.pangu.framework.event.MonitorKey.EVENT;
 import static com.pangu.framework.event.MonitorKey.EVENT_COUNT;
 
-/**
- * 事件总线接口的实现类
- *
- * @author Frank
- */
 @Component
 public class EventBusImpl implements EventBus, EventBusImplMBean, ApplicationContextAware {
 
@@ -41,26 +36,26 @@ public class EventBusImpl implements EventBus, EventBusImplMBean, ApplicationCon
     /**
      * 注册的事件接收者
      */
-    private ConcurrentHashMap<String, CopyOnWriteArraySet<Receiver<?>>> receivers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CopyOnWriteArraySet<Receiver<?>>> receivers = new ConcurrentHashMap<>();
     @Getter
-    private BlockingQueue<Event<?>> eventQueue = new LinkedBlockingQueue<Event<?>>();
+    private final BlockingQueue<Event<?>> eventQueue = new LinkedBlockingQueue<Event<?>>();
 
     @Autowired(required = false)
     @Qualifier("event_queue_size")
-    private Integer queueSize = 10000;
+    private final Integer queueSize = 10000;
 
     @Autowired(required = false)
     @Qualifier("event_pool_size")
-    private Integer poolSize = 5;
+    private final Integer poolSize = 5;
     @Autowired(required = false)
     @Qualifier("event_pool_max_size")
-    private Integer poolMaxSize = 10;
+    private final Integer poolMaxSize = 10;
     @Autowired(required = false)
     @Qualifier("event_pool_alive_time")
-    private Integer poolKeepAlive = 60;
+    private final Integer poolKeepAlive = 60;
     @Autowired(required = false)
     @Qualifier("event_pool_await_time")
-    private Integer poolAwaitTime = 60;
+    private final Integer poolAwaitTime = 60;
 
     @Getter
     private static ThreadPoolExecutor pool;
@@ -70,7 +65,7 @@ public class EventBusImpl implements EventBus, EventBusImplMBean, ApplicationCon
     /**
      * 事件消费线程执行代码
      */
-    private Runnable consumerRunner = new Runnable() {
+    private final Runnable consumerRunner = new Runnable() {
 
         @Override
         public void run() {
@@ -304,12 +299,12 @@ public class EventBusImpl implements EventBus, EventBusImplMBean, ApplicationCon
 
     @Override
     public int getPoolActiveCount() {
-        return ((ThreadPoolExecutor) pool).getActiveCount();
+        return pool.getActiveCount();
     }
 
     @Override
     public int getPollQueueSize() {
-        return ((ThreadPoolExecutor) pool).getQueue().size();
+        return pool.getQueue().size();
     }
 
     @SuppressWarnings("rawtypes")

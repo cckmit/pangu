@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class JvmInfoCollector {
-    private static JvmInfoCollector collector = new JvmInfoCollector();
+    private static final JvmInfoCollector collector = new JvmInfoCollector();
     private boolean hasOldGc = false;
     private long lastGcCount = 0;
     private long lastGcTime = 0;
@@ -40,7 +40,7 @@ public class JvmInfoCollector {
     private long lastYoungGcTime = 0;
     private long lastYoungGcCount = 0;
 
-    private Set<String> youngGcAlgorithm = new LinkedHashSet<String>() {
+    private final Set<String> youngGcAlgorithm = new LinkedHashSet<String>() {
         private static final long serialVersionUID = -2953196532584721351L;
 
         {
@@ -51,7 +51,7 @@ public class JvmInfoCollector {
         }
     };
 
-    private Set<String> oldGcAlgorithm = new LinkedHashSet<String>() {
+    private final Set<String> oldGcAlgorithm = new LinkedHashSet<String>() {
         private static final long serialVersionUID = -8267829533109860610L;
 
         {

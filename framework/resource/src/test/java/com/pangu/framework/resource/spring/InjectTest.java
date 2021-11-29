@@ -12,7 +12,7 @@ import com.pangu.framework.resource.anno.Static;
 
 /**
  * 注入测试
- * @author frank
+ * @author author
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration

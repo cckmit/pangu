@@ -23,10 +23,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class HttpStats {
     private static volatile HttpStats current = null;
-    private AtomicInteger httpStatus400Count = new AtomicInteger();
-    private AtomicInteger httpStatus500Count = new AtomicInteger();
-    private AtomicInteger httpCount = new AtomicInteger();
-    private AtomicLong httpTimeSum = new AtomicLong();
+    private final AtomicInteger httpStatus400Count = new AtomicInteger();
+    private final AtomicInteger httpStatus500Count = new AtomicInteger();
+    private final AtomicInteger httpCount = new AtomicInteger();
+    private final AtomicLong httpTimeSum = new AtomicLong();
 
     public static HttpStats currentStatsHolder() {
         if (null == current) {

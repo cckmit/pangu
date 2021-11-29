@@ -3,10 +3,6 @@ package com.pangu.framework.resource.reader;
 import java.io.InputStream;
 import java.util.List;
 
-/**
- * 资源读取接口
- * @author frank
- */
 public interface ResourceReader {
 	
 	/**

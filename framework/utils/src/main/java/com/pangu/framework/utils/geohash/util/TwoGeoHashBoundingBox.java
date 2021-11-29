@@ -7,9 +7,9 @@ import com.pangu.framework.utils.geohash.GeoHash;
  * Created by IntelliJ IDEA. User: kevin Date: Jan 17, 2011 Time: 12:03:47 PM
  */
 public class TwoGeoHashBoundingBox {
-	private BoundingBox boundingBox;
-	private GeoHash bottomLeft;
-	private GeoHash topRight;
+	private final BoundingBox boundingBox;
+	private final GeoHash bottomLeft;
+	private final GeoHash topRight;
 
 	public static TwoGeoHashBoundingBox withCharacterPrecision(BoundingBox bbox, int numberOfCharacters) {
 		GeoHash bottomLeft = GeoHash.withCharacterPrecision(bbox.getMinLat(), bbox.getMinLon(), numberOfCharacters);

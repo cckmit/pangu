@@ -39,9 +39,9 @@ public class MemoryInformation {
     private final long maxMetaSpace;
     private final long usedNonHeapMemory;
     private final long maxNonHeapMemory;
-    private long usedCodeCache;
-    private long maxCodeCache;
-    private MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+    private final long usedCodeCache;
+    private final long maxCodeCache;
+    private final MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
     private static final String DIRECT_BUFFER_MBEAN = "java.nio:type=BufferPool,name=direct";
     private static final String MAPPED_BUFFER_MBEAN = "java.nio:type=BufferPool,name=mapped";
 

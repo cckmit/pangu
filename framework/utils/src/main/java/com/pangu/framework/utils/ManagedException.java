@@ -6,7 +6,7 @@ import com.pangu.framework.utils.model.Result;
 
 /**
  * 受管理异常
- * @author frank
+ * @author author
  */
 public class ManagedException extends RuntimeException {
 

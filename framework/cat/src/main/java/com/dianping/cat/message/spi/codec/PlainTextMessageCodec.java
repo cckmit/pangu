@@ -30,6 +30,7 @@ import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -43,7 +44,7 @@ public class PlainTextMessageCodec implements MessageCodec {
     private static final byte LF = '\n'; // line feed character
     private BufferWriter writer = new EscapingBufferWriter();
     private BufferHelper bufferHelper = new BufferHelper(writer);
-    private DateHelper dateHelper = new DateHelper();
+    private final DateHelper dateHelper = new DateHelper();
     private ThreadLocal<Context> ctx;
 
     public static String encodeTree(MessageTree tree) {
@@ -55,7 +56,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 
             buf = codec.encode(tree);
             buf.readInt(); // get rid of length
-            result = buf.toString(Charset.forName("utf-8"));
+            result = buf.toString(StandardCharsets.UTF_8);
         } catch (Exception ex) {
             Cat.logError(ex);
         } finally {
@@ -417,7 +418,7 @@ public class PlainTextMessageCodec implements MessageCodec {
     }
 
     protected static class BufferHelper {
-        private BufferWriter m_writer;
+        private final BufferWriter m_writer;
 
         public BufferHelper(BufferWriter writer) {
             m_writer = writer;
@@ -485,11 +486,7 @@ public class PlainTextMessageCodec implements MessageCodec {
                     ba[i] = (byte) (data[i] & 0xFF);
                 }
 
-                try {
-                    return new String(ba, 0, index, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    return new String(ba, 0, index);
-                }
+                return new String(ba, 0, index, StandardCharsets.UTF_8);
             }
         }
 
@@ -516,11 +513,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 
             byte[] data;
 
-            try {
-                data = str.getBytes("utf-8");
-            } catch (UnsupportedEncodingException e) {
-                data = str.getBytes();
-            }
+            data = str.getBytes(StandardCharsets.UTF_8);
 
             return m_writer.writeTo(buf, data);
         }
@@ -529,7 +522,7 @@ public class PlainTextMessageCodec implements MessageCodec {
     public static class Context {
         private ByteBuf m_buffer;
 
-        private char[] m_data;
+        private final char[] m_data;
 
         public Context() {
             m_data = new char[1024 * 1024];
@@ -557,9 +550,9 @@ public class PlainTextMessageCodec implements MessageCodec {
      * Thread safe date helper class. DateFormat is NOT thread safe.
      */
     protected static class DateHelper {
-        private BlockingQueue<SimpleDateFormat> m_formats = new ArrayBlockingQueue<SimpleDateFormat>(20);
+        private final BlockingQueue<SimpleDateFormat> m_formats = new ArrayBlockingQueue<SimpleDateFormat>(20);
 
-        private Map<String, Long> m_map = new ConcurrentHashMap<String, Long>();
+        private final Map<String, Long> m_map = new ConcurrentHashMap<String, Long>();
 
         public String format(long timestamp) {
             SimpleDateFormat format = m_formats.poll();

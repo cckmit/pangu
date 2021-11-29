@@ -34,7 +34,7 @@ import com.pangu.framework.scheduler.Scheduler;
 /**
  * 定时任务处理器<br/>
  * 由他负责检查定时任务声明，以及开启任务线程池
- * @author Frank
+ * @author author
  */
 @Component
 public class ScheduledProcessor implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent>, Ordered, BeanFactoryAware {
@@ -74,7 +74,7 @@ public class ScheduledProcessor implements BeanPostProcessor, ApplicationListene
 		final MethodInvokingRunnable runnable = new MethodInvokingRunnable();
 		runnable.setTargetObject(bean);
 		runnable.setTargetMethod(method.getName());
-		runnable.setArguments(new Object[0]);
+		runnable.setArguments();
 		try {
 			runnable.prepare();
 		} catch (Exception e) {

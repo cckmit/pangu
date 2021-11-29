@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 /**
  * JSON 转换相关的工具类 注意,Map的Key只能为简单类型 ,不可采用复杂类型.
  *
- * @author Frank
+ * @author author
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class JsonUtils {
@@ -57,8 +57,7 @@ public final class JsonUtils {
         // Long
         SimpleModule module = new SimpleModule();
         JsonSerializer<Long> longSerializer = new JsonSerializer<Long>() {
-            public void serialize(Long value, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-                    JsonProcessingException {
+            public void serialize(Long value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
                 if (value >= LONG_JS_MAX_VLAUE) {
                     jgen.writeString(value.toString());
                 } else {
@@ -68,15 +67,14 @@ public final class JsonUtils {
 
         };
         JsonDeserializer<? extends Long> longDeserializer = new JsonDeserializer<Long>() {
-            public Long deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
-                    JsonProcessingException {
+            public Long deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
                 return Long.valueOf(jp.getValueAsString());
             }
         };
         // BIGINTEGER
         JsonSerializer<BigInteger> bigIntSerializer = new JsonSerializer<BigInteger>() {
             public void serialize(BigInteger value, JsonGenerator jgen, SerializerProvider provider)
-                    throws IOException, JsonProcessingException {
+                    throws IOException {
                 if (value.longValue() >= LONG_JS_MAX_VLAUE) {
                     jgen.writeString(value.toString());
                 } else {
@@ -87,27 +85,24 @@ public final class JsonUtils {
         // BIGDECIMAL
         JsonSerializer<BigDecimal> bigDecSerializer = new JsonSerializer<BigDecimal>() {
             public void serialize(BigDecimal value, JsonGenerator jgen, SerializerProvider provider)
-                    throws IOException, JsonProcessingException {
+                    throws IOException {
                 jgen.writeString(String.valueOf(value));
             }
         };
         // BITSET
         JsonSerializer<BitSet> bitsetSerializer = new JsonSerializer<BitSet>() {
-            public void serialize(BitSet value, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-                    JsonProcessingException {
+            public void serialize(BitSet value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
                 jgen.writeString(CryptUtils.byte2hex(value.toByteArray()));
             }
         };
         JsonDeserializer<? extends BitSet> bitsetDeserializer = new JsonDeserializer<BitSet>() {
-            public BitSet deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
-                    JsonProcessingException {
+            public BitSet deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
                 return BitSet.valueOf(CryptUtils.hex2byte(jp.getValueAsString().getBytes()));
             }
         };
         // DATE
         JsonDeserializer<Date> dateDeserializer = new JsonDeserializer<Date>() {
-            public Date deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
-                    JsonProcessingException {
+            public Date deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
                 String text = jp.getValueAsString();
                 if (StringUtils.isEmpty(text)) {
                     return null;
@@ -148,7 +143,7 @@ public final class JsonUtils {
         // COLLECTION
         module.addSerializer(Collection.class, new JsonSerializer<Collection>() {
             public void serialize(Collection value, JsonGenerator jgen, SerializerProvider provider)
-                    throws IOException, JsonProcessingException {
+                    throws IOException {
                 jgen.writeStartArray();
                 Iterator it = value.iterator();
                 while (it.hasNext()) {
@@ -160,8 +155,7 @@ public final class JsonUtils {
         });
         // MAP
         module.addSerializer(Map.class, new JsonSerializer<Map>() {
-            public void serialize(Map value, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-                    JsonProcessingException {
+            public void serialize(Map value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
                 jgen.writeStartObject();
                 Iterator<Entry> it = value.entrySet().iterator();
                 while (it.hasNext()) {
@@ -262,7 +256,7 @@ public final class JsonUtils {
                 return null;
             }
             JavaType type = TYPE_FACTORY.constructArrayType(clz);
-            return (T[]) MAPPER.readValue(json, type);
+            return MAPPER.readValue(json, type);
         } catch (Exception e) {
             FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为数组时出现异常", json, e);
             throw new RuntimeException(message.getMessage(), e);
@@ -286,7 +280,7 @@ public final class JsonUtils {
                 return MAPPER.convertValue(json, clz);
             }
             JavaType type = TYPE_FACTORY.constructType(clz);
-            return (T) MAPPER.readValue(json, type);
+            return MAPPER.readValue(json, type);
         } catch (Exception e) {
             FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为对象[{}]时出现异常",
                     new Object[]{json, clz.getSimpleName(), e});
@@ -311,7 +305,7 @@ public final class JsonUtils {
                 return MAPPER.convertValue(json, (Class<T>) type);
             }
             JavaType t = TYPE_FACTORY.constructType(type);
-            return (T) MAPPER.readValue(json, t);
+            return MAPPER.readValue(json, t);
         } catch (Exception e) {
             FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为对象[{}]时出现异常", new Object[]{json, type, e});
             throw new RuntimeException(message.getMessage(), e);
@@ -327,7 +321,7 @@ public final class JsonUtils {
             return null;
         } else {
             try {
-                return (T) MAPPER.readValue(json, tr);
+                return MAPPER.readValue(json, tr);
             } catch (Exception e) {
                 FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为[{}]时出现异常", new Object[]{json, tr});
                 throw new RuntimeException(message.getMessage(), e);
@@ -349,7 +343,7 @@ public final class JsonUtils {
                 return null;
             }
             JavaType t = TYPE_FACTORY.constructType(type);
-            return (T) MAPPER.readValue(json, t);
+            return MAPPER.readValue(json, t);
         } catch (Exception e) {
             FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为对象[{}]时出现异常", new Object[]{json, type, e});
             throw new RuntimeException(message.getMessage(), e);
@@ -365,7 +359,7 @@ public final class JsonUtils {
             return null;
         } else {
             try {
-                return (T) MAPPER.readValue(json, tr);
+                return MAPPER.readValue(json, tr);
             } catch (Exception e) {
                 FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为[{}]时出现异常", new Object[]{json, tr});
                 throw new RuntimeException(message.getMessage(), e);
@@ -411,7 +405,7 @@ public final class JsonUtils {
                 return HashMap.class.newInstance();
             }
             JavaType type = TYPE_FACTORY.constructMapType(HashMap.class, keyType, valueType);
-            return (Map<K, V>) MAPPER.readValue(json, type);
+            return MAPPER.readValue(json, type);
         } catch (Exception e) {
             FormattingTuple message = MessageFormatter.format("将字符串[{}]转换为Map时出现异常", json);
             throw new RuntimeException(message.getMessage(), e);
@@ -488,7 +482,7 @@ public final class JsonUtils {
                 }
             }
             JavaType t = TYPE_FACTORY.constructType(type);
-            return (T) MAPPER_CONVERT.convertValue(value, t);
+            return MAPPER_CONVERT.convertValue(value, t);
         } catch (Exception e) {
             FormattingTuple message = MessageFormatter.format("将对象[{}]转换为类型[{}]时出现异常", new Object[]{value, type, e});
             throw new RuntimeException(message.getMessage(), e);

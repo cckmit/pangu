@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 推送接口声明<br>
  *
- * @author Ramon
+ * @author author
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiskInfo extends BaseEntity<DiskInfo> {
-    private List<DiskVolumeInfo> diskVolumes = new ArrayList<DiskVolumeInfo>();
+    private final List<DiskVolumeInfo> diskVolumes = new ArrayList<DiskVolumeInfo>();
 
     public DiskInfo() {
     }

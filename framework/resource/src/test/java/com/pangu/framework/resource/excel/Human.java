@@ -18,9 +18,9 @@ public class Human implements Validate {
 		public int compare(Human o1, Human o2) {
 			return -o1.id.compareTo(o2.id);
 		}
-	};
+	}
 
-	@Id
+    @Id
 	private Integer id;
 	@Index(name = INDEX_NAME, unique = true)
 	private String name;

@@ -7,13 +7,13 @@ import com.dianping.cat.status.model.entity.*;
 
 public class DefaultXmlBuilder implements IVisitor {
 
-    private IVisitor visitor = this;
+    private final IVisitor visitor = this;
 
     private int level;
 
-    private StringBuilder sb;
+    private final StringBuilder sb;
 
-    private boolean compact;
+    private final boolean compact;
 
     public DefaultXmlBuilder() {
         this(false);

@@ -12,7 +12,7 @@ import com.pangu.framework.resource.anno.Static;
 
 /**
  * 多表单合并测试
- * @author frank
+ * @author author
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration

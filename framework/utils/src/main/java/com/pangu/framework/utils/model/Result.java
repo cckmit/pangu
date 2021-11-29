@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * 返回对象
- * @author Frank
+ * @author author
  */
 public class Result<T> implements Serializable {
 
@@ -124,11 +124,8 @@ public class Result<T> implements Serializable {
 		if (code != other.code)
 			return false;
 		if (content == null) {
-			if (other.content != null)
-				return false;
-		} else if (!content.equals(other.content))
-			return false;
-		return true;
+			return other.content == null;
+		} else return content.equals(other.content);
 	}
 
 	@Override

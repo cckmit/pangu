@@ -3,7 +3,7 @@ package com.pangu.framework.protocol.exception;
 /**
  * 类型转换异常
  * 
- * @author Ramon
+ * @author author
  *
  */
 public class ObjectConvertException extends RuntimeException{

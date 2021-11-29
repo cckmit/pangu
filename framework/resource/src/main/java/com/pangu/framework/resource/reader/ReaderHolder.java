@@ -10,17 +10,13 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.pangu.framework.resource.other.FormatDefinition;
 
-/**
- * 资源读取器持有者
- * @author frank
- */
 public class ReaderHolder implements ApplicationContextAware {
 	
 	public final static String FORMAT_SETTER = "format";
 
 	/** 格式定义信息 */
 	private FormatDefinition format;
-	private ConcurrentHashMap<String, ResourceReader> readers = new ConcurrentHashMap<String, ResourceReader>();
+	private final ConcurrentHashMap<String, ResourceReader> readers = new ConcurrentHashMap<String, ResourceReader>();
 
 	@PostConstruct
 	protected void initialize() {

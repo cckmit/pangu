@@ -477,7 +477,7 @@ public final class CronExpression {
             throw pe;
         } catch (final Exception e) {
             throw new ParseException("Illegal cron expression format ("
-                + e.toString() + ")", 0);
+                + e + ")", 0);
         }
     }
 
@@ -1397,10 +1397,7 @@ public final class CronExpression {
                         daysToAdd = dow + (7 - cDow);
                     }
 
-                    boolean dayShifted = false;
-                    if (daysToAdd > 0) {
-                        dayShifted = true;
-                    }
+                    boolean dayShifted = daysToAdd > 0;
 
                     day += daysToAdd;
                     int weekOfMonth = day / 7;

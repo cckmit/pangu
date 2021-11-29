@@ -22,11 +22,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 
-/**
- * 存储空间对象
- *
- * @author frank
- */
 public class Storage<K, V> extends OrderObservable implements ResourceLoaderAware {
 
     private static final Logger logger = LoggerFactory.getLogger(Storage.class);
@@ -363,15 +358,15 @@ public class Storage<K, V> extends OrderObservable implements ResourceLoaderAwar
         /**
          * 主存储空间
          */
-        private Map<K, V> values;
+        private final Map<K, V> values;
         /**
          * 索引存储空间
          */
-        private Map<String, Map<Object, List<V>>> indexs;
+        private final Map<String, Map<Object, List<V>>> indexs;
         /**
          * 唯一值存储空间
          */
-        private Map<String, Map<Object, V>> uniques;
+        private final Map<String, Map<Object, V>> uniques;
 
         InnerValues(int size) {
             this.values = new HashMap<>(size);

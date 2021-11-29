@@ -5,7 +5,7 @@ import com.pangu.framework.protocol.annotation.Transable;
 /**
  * 账号状态
  *
- * @author frank
+ * @author author
  */
 @Transable
 public enum AccountState {
@@ -28,7 +28,7 @@ public enum AccountState {
      */
     private final int value;
 
-    private AccountState(int value) {
+    AccountState(int value) {
         this.value = value;
     }
 

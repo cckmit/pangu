@@ -4,7 +4,7 @@ import org.mozilla.javascript.Script;
 
 /**
  * 已编译公式对象
- * @author Ramon
+ * @author author
  */
 public class CompiledExpression {
 
@@ -13,9 +13,9 @@ public class CompiledExpression {
 		this.scriptObject = scriptObject;
 	}
 
-	private String expression;
+	private final String expression;
 
-	private Script scriptObject;
+	private final Script scriptObject;
 
 	public String getExpression() {
 		return expression;
@@ -43,11 +43,8 @@ public class CompiledExpression {
 			return false;
 		CompiledExpression other = (CompiledExpression) obj;
 		if (expression == null) {
-			if (other.expression != null)
-				return false;
-		} else if (!expression.equals(other.expression))
-			return false;
-		return true;
+			return other.expression == null;
+		} else return expression.equals(other.expression);
 	}
 
 	@Override

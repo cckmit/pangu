@@ -31,7 +31,7 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
     HEARTBEAT,
     FORKED_TRANSACTION;
 
-    private static String DEFAULT = "";
+    private static final String DEFAULT = "";
 
     @Override
     public Transaction addChild(Message message) {

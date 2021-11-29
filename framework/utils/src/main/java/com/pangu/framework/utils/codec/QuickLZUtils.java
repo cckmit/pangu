@@ -1,6 +1,7 @@
 package com.pangu.framework.utils.codec;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -24,7 +25,7 @@ public class QuickLZUtils {
 	 * @return
 	 */
 	public static byte[] zip(String src) {
-		byte[] bytes = src.getBytes(Charset.forName("UTF8"));
+		byte[] bytes = src.getBytes(StandardCharsets.UTF_8);
 		return zip(bytes);
 	}
 
@@ -39,11 +40,11 @@ public class QuickLZUtils {
 	}
 
 	/** 解压任务线程池 */
-	private static ExecutorService executorService = new ThreadPoolExecutor(1, Math.max(1, Runtime.getRuntime()
+	private static final ExecutorService executorService = new ThreadPoolExecutor(1, Math.max(1, Runtime.getRuntime()
 			.availableProcessors() / 2), 5, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
-		ThreadGroup group = new ThreadGroup("QuickLZ解压");
-		String prefix = "解压线程 - ";
-		AtomicInteger sn = new AtomicInteger();
+		final ThreadGroup group = new ThreadGroup("QuickLZ解压");
+		final String prefix = "解压线程 - ";
+		final AtomicInteger sn = new AtomicInteger();
 
 		public Thread newThread(Runnable r) {
 			return new Thread(group, r, prefix + sn.incrementAndGet());

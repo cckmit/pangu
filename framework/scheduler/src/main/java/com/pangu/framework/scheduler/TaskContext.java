@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * 任务上下文对象，封装任务的计划时间和完成时间
- * @author Frank
+ * @author author
  */
 public interface TaskContext {
 

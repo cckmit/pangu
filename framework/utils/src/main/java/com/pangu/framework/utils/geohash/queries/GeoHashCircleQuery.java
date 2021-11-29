@@ -22,9 +22,9 @@ import com.pangu.framework.utils.geohash.util.VincentyGeodesy;
  */
 public class GeoHashCircleQuery implements GeoHashQuery, Serializable {
 	private static final long serialVersionUID = 1263295371663796291L;
-	private double radius;
-	private GeoHashBoundingBoxQuery query;
-	private WGS84Point center;
+	private final double radius;
+	private final GeoHashBoundingBoxQuery query;
+	private final WGS84Point center;
 
 	/**
 	 * create a {@link GeoHashCircleQuery} with the given center point and a

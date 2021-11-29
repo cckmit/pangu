@@ -2,7 +2,7 @@ package com.pangu.framework.protocol.exception;
 
 /**
  * 错误的代理类型
- * @author Ramon
+ * @author author
  */
 public class WrongTypeException extends RuntimeException {
 	private static final long serialVersionUID = 4014279564958034497L;

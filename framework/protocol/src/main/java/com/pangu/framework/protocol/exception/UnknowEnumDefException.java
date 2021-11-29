@@ -3,7 +3,7 @@ package com.pangu.framework.protocol.exception;
 /**
  * 未定义的传输枚举类型
  * 
- * @author Ramon
+ * @author author
  *
  */
 public class UnknowEnumDefException extends RuntimeException{

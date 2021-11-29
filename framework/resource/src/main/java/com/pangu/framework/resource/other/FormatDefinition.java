@@ -1,9 +1,5 @@
 package com.pangu.framework.resource.other;
 
-/**
- * 格式信息定义
- * @author frank
- */
 public class FormatDefinition {
 
 	/** 路径 */

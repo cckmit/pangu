@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class SimpleWebsocketServer {
-    private int port;
+    private final int port;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private Channel serverChannel;

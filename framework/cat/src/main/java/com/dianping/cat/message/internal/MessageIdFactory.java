@@ -46,8 +46,8 @@ public class MessageIdFactory {
     private String idPrefix;
     private String idPrefixOfMultiMode;
     private static final long HOUR = 3600 * 1000L;
-    private static MessageIdFactory INSTANCE = new MessageIdFactory();
-    private Map<String, AtomicInteger> map = new ConcurrentHashMap<String, AtomicInteger>(100);
+    private static final MessageIdFactory INSTANCE = new MessageIdFactory();
+    private final Map<String, AtomicInteger> map = new ConcurrentHashMap<String, AtomicInteger>(100);
 
     public static MessageIdFactory getInstance() {
         return INSTANCE;
@@ -264,7 +264,7 @@ public class MessageIdFactory {
             byteBuffer.putInt(map.size());
 
             for (Entry<String, AtomicInteger> entry : map.entrySet()) {
-                byte[] bytes = entry.getKey().toString().getBytes();
+                byte[] bytes = entry.getKey().getBytes();
 
                 byteBuffer.putInt(bytes.length);
                 byteBuffer.put(bytes);

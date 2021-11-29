@@ -29,10 +29,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class DefaultForkableTransaction extends AbstractMessage implements ForkableTransaction {
-    private String rootMessageId;
-    private String parentMessageId;
+    private final String rootMessageId;
+    private final String parentMessageId;
     private long durationInMicros;
-    private List<Message> children = Collections.synchronizedList(new ArrayList<Message>());
+    private final List<Message> children = Collections.synchronizedList(new ArrayList<Message>());
 
     private static String generateThreadName() {
         String threadName = Thread.currentThread().getName();
@@ -44,7 +44,7 @@ public class DefaultForkableTransaction extends AbstractMessage implements Forka
         }
 
         if (threadName.length() > 80) {
-            threadName = "ThreadID-" + String.valueOf(Thread.currentThread().getId());
+            threadName = "ThreadID-" + Thread.currentThread().getId();
         }
 
         return threadName;

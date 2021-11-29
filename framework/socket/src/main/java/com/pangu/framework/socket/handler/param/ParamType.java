@@ -16,5 +16,4 @@ public enum ParamType {
 
     // 请求整个Message
     MESSAGE,
-    ;
 }

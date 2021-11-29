@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 修改过的 ScheduledThreadPoolExecutor
  * @see ScheduledThreadPoolExecutor
- * @author Frank
+ * @author author
  */
 public class FixScheduledThreadPoolExecutor extends FixThreadPoolExecutor implements ScheduledExecutorService {
 
@@ -542,7 +542,7 @@ public class FixScheduledThreadPoolExecutor extends FixThreadPoolExecutor implem
 
 		public Iterator<Runnable> iterator() {
 			return new Iterator<Runnable>() {
-				private Iterator<RunnableScheduledFuture> it = dq.iterator();
+				private final Iterator<RunnableScheduledFuture> it = dq.iterator();
 
 				public boolean hasNext() {
 					return it.hasNext();

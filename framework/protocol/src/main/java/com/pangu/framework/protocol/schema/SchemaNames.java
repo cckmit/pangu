@@ -1,10 +1,5 @@
 package com.pangu.framework.protocol.schema;
 
-/**
- * 配置名定义
- *
- * @author Frank
- */
 public interface SchemaNames {
 
     /**

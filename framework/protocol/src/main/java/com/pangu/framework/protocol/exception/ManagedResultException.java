@@ -5,12 +5,12 @@ import com.pangu.framework.utils.model.Result;
 
 /**
  * 转换结果对象的受控异常
- * @author Ramon
+ * @author author
  */
 public class ManagedResultException extends ManagedException {
 	private static final long serialVersionUID = 4138844494118698057L;
 
-	private Result<?> content;
+	private final Result<?> content;
 
 	public Result<?> getContent() {
 		return content;

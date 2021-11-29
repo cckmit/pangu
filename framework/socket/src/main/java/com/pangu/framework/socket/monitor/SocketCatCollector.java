@@ -28,7 +28,7 @@ public class SocketCatCollector {
 
             @Override
             public Map<String, String> getProperties() {
-                ThreadPoolExecutor[] messagePoolExecutors = dispatcher.getMessagePoolExecutors();
+                ThreadPoolExecutor[] messagePoolExecutors = DefaultDispatcher.getMessagePoolExecutors();
                 int maxQueue = 0;
                 for (ThreadPoolExecutor poolExecutor : messagePoolExecutors) {
                     BlockingQueue<Runnable> queue = poolExecutor.getQueue();
@@ -38,13 +38,13 @@ public class SocketCatCollector {
                 Map<String, String> values = new HashMap<>(3);
                 values.put("socket.thread.client", String.valueOf(maxQueue));
 
-                ThreadPoolExecutor managedExecutorService = dispatcher.getManagedExecutorService();
+                ThreadPoolExecutor managedExecutorService = DefaultDispatcher.getManagedExecutorService();
                 if (managedExecutorService != null) {
                     BlockingQueue<Runnable> queue = managedExecutorService.getQueue();
                     values.put("socket.thread.manage", String.valueOf(queue.size()));
                 }
 
-                SyncSupport syncSupport = dispatcher.getSyncSupport();
+                SyncSupport syncSupport = DefaultDispatcher.getSyncSupport();
                 ConcurrentMap<String, ThreadPoolExecutor> threads = syncSupport.getThreads();
                 for (Map.Entry<String, ThreadPoolExecutor> entry : threads.entrySet()) {
                     String name = entry.getKey();

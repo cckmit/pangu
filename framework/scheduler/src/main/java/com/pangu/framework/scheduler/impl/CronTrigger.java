@@ -8,7 +8,7 @@ import com.pangu.framework.scheduler.Trigger;
 
 /**
  * Cron定时表达式触发器
- * @author Frank
+ * @author author
  */
 public class CronTrigger implements Trigger {
 

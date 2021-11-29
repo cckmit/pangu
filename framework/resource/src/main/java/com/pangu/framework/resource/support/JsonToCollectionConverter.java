@@ -11,7 +11,7 @@ import com.pangu.framework.utils.json.JsonUtils;
 
 /**
  * 将json格式的array字符串转换成对应的数组实例
- * @author frank
+ * @author author
  */
 public class JsonToCollectionConverter implements ConditionalGenericConverter {
 
@@ -20,10 +20,7 @@ public class JsonToCollectionConverter implements ConditionalGenericConverter {
 		if (sourceType.getType() != String.class) {
 			return false;
 		}
-		if (!targetType.isCollection()) {
-			return false;
-		}
-		return true;
+		return targetType.isCollection();
 	}
 
 	public Set<ConvertiblePair> getConvertibleTypes() {

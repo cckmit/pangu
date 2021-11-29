@@ -42,16 +42,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChannelManager implements Threads.Task {
-    private ClientConfigService configService = DefaultClientConfigService.getInstance();
-    private Bootstrap bootstrap;
+    private final ClientConfigService configService = DefaultClientConfigService.getInstance();
+    private final Bootstrap bootstrap;
     private boolean active = true;
     private int channelStalledTimes = 0;
     private ChannelHolder activeChannelHolder;
-    private MessageIdFactory idFactory = MessageIdFactory.getInstance();
-    private AtomicInteger attempts = new AtomicInteger();
+    private final MessageIdFactory idFactory = MessageIdFactory.getInstance();
+    private final AtomicInteger attempts = new AtomicInteger();
     private int reconnectCount;
-    private static CatLogger LOGGER = CatLogger.getInstance();
-    private static ChannelManager instance = new ChannelManager();
+    private static final CatLogger LOGGER = CatLogger.getInstance();
+    private static final ChannelManager instance = new ChannelManager();
 
     public static ChannelManager getInstance() {
         return instance;
@@ -276,7 +276,7 @@ public class ChannelManager implements Threads.Task {
                     holder.setActiveIndex(i).setIp(hostAddress);
                     holder.setActiveServerConfig(serverConfig).setServerAddresses(addresses);
 
-                    LOGGER.info("success when init CAT server, new active holder" + holder.toString());
+                    LOGGER.info("success when init CAT server, new active holder" + holder);
                     return holder;
                 }
             }
@@ -290,7 +290,7 @@ public class ChannelManager implements Threads.Task {
             for (InetSocketAddress address : addresses) {
                 sb.append(address.toString()).append(";");
             }
-            LOGGER.info("Error when init CAT server " + sb.toString());
+            LOGGER.info("Error when init CAT server " + sb);
         } catch (Exception e) {
             // ignore
         }

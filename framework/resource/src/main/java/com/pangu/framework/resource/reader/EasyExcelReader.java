@@ -92,11 +92,6 @@ public class EasyExcelReader implements ResourceReader {
         return "xlsx";
     }
 
-    /**
-     * 属性信息
-     *
-     * @author frank
-     */
     private static class FieldInfo {
         /**
          * 第几列

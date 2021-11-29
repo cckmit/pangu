@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EventAggregator {
-    private static EventAggregator instance = new EventAggregator();
+    private static final EventAggregator instance = new EventAggregator();
     private volatile ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>> events = new ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>>();
 
     public static EventAggregator getInstance() {
@@ -138,13 +138,13 @@ public class EventAggregator {
 
     public class EventData {
 
-        private String type;
+        private final String type;
 
-        private String name;
+        private final String name;
 
-        private AtomicInteger count = new AtomicInteger();
+        private final AtomicInteger count = new AtomicInteger();
 
-        private AtomicInteger error = new AtomicInteger();
+        private final AtomicInteger error = new AtomicInteger();
 
         EventData(String type, String name) {
             this.type = type;

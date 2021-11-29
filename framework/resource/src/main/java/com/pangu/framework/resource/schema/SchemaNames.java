@@ -2,7 +2,7 @@ package com.pangu.framework.resource.schema;
 
 /**
  * 配置名定义
- * @author Frank
+ * @author author
  */
 public interface SchemaNames {
 	

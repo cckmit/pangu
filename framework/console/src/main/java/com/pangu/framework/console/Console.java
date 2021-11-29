@@ -99,7 +99,7 @@ public class Console {
     /**
      * 命令方法过滤器
      */
-    private ReflectionUtils.MethodFilter findCommand = method -> method.getAnnotation(ConsoleCommand.class) != null;
+    private final ReflectionUtils.MethodFilter findCommand = method -> method.getAnnotation(ConsoleCommand.class) != null;
 
     /**
      * 注册控制台命令
@@ -118,7 +118,7 @@ public class Console {
     /**
      * 停止控制台的指令
      */
-    private Command cmdStop = new Command() {
+    private final Command cmdStop = new Command() {
         @Override
         public String name() {
             return "stop";
@@ -137,7 +137,7 @@ public class Console {
     /**
      * 列出全部控制台指令的指令
      */
-    private Command cmdList = new Command() {
+    private final Command cmdList = new Command() {
         @Override
         public String name() {
             return "list";
@@ -160,7 +160,7 @@ public class Console {
     /**
      * 重载所有Command指令,需要配合JRebel使用,JRebel虽然支持热更新类,但是热更新后新增的指令并没有注册到commands集合,执行一遍registerCommand便可热更新Command
      */
-    private Command cmdReload = new Command() {
+    private final Command cmdReload = new Command() {
         @Override
         public String name() {
             return "reload";

@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * 静态资源注入基本功能测试用例
- * @author frank
+ * @author author
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -53,7 +53,7 @@ public class BasicTest {
 	public void test_basic() {
 		Human p1 = resourceManager.getResource(1, Human.class);
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		Human same = resourceManager.getResource(1, Human.class);
 		assertThat(p1, sameInstance(same));
 	}
@@ -66,7 +66,7 @@ public class BasicTest {
 		assertThat(storage, notNullValue());
 		Human p1 = resourceManager.getResource(1, Human.class);
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		Human same = resourceManager.getResource(1, Human.class);
 		assertThat(p1, sameInstance(same));
 	}
@@ -76,10 +76,10 @@ public class BasicTest {
 	 */
 	@Test
 	public void test_index_unique() {
-		Human p1 = storage.getUnique(Human.INDEX_NAME, "Frank");
+		Human p1 = storage.getUnique(Human.INDEX_NAME, "author");
 		assertThat(p1, notNullValue());
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		assertThat(p1, sameInstance(human1));
 	}
 	
@@ -98,7 +98,7 @@ public class BasicTest {
 		
 		Human p2 = list.get(1);
 		assertThat(p2.getId(), is(1));
-		assertThat(p2.getName(), is("Frank"));
+		assertThat(p2.getName(), is("author"));
 		assertThat(p2, sameInstance(human1));
 	}
 
@@ -116,7 +116,7 @@ public class BasicTest {
 		assertThat(humanNotFound, nullValue());
 		
 		assertThat(human1.getId(), is(1));
-		assertThat(human1.getName(), is("Frank"));
+		assertThat(human1.getName(), is("author"));
 
 		assertThat(human2.getId(), is(2));
 		assertThat(human2.getName(), is("May"));

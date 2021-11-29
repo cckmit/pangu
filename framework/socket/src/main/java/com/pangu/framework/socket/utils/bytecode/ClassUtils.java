@@ -243,7 +243,7 @@ class ClassUtils {
         // SHOULD sit in a package, so a length check is worthwhile.
         if (name != null && name.length() <= 8) {
             // Could be a primitive - likely.
-            result = (Class<?>) PRIMITIVE_TYPE_NAME_MAP.get(name);
+            result = PRIMITIVE_TYPE_NAME_MAP.get(name);
         }
         return result;
     }
@@ -329,11 +329,8 @@ class ClassUtils {
      * @return
      */
     public static boolean isTypeMatch(Class<?> type, String value) {
-        if ((type == boolean.class || type == Boolean.class)
-                && !("true".equals(value) || "false".equals(value))) {
-            return false;
-        }
-        return true;
+        return (type != boolean.class && type != Boolean.class)
+                || ("true".equals(value) || "false".equals(value));
     }
 
     /**

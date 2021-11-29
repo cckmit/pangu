@@ -2,7 +2,7 @@ package com.pangu.framework.event;
 
 /**
  * 事件总线接口
- * @author Ramon
+ * @author author
  */
 public interface EventBus {
 

@@ -4,7 +4,6 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Base64工具类
- * @author qu.yy
  */
 public class Base64Utils {
 	/**

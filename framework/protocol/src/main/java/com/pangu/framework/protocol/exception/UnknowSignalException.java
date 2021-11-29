@@ -3,7 +3,7 @@ package com.pangu.framework.protocol.exception;
 /**
  * 错误的值标志
  * 
- * @author Ramon
+ * @author author
  */
 public class UnknowSignalException extends RuntimeException{
 	private static final long serialVersionUID = -7844776109254208895L;

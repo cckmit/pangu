@@ -486,9 +486,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
 		}
 		if (obj instanceof GeoHash) {
 			GeoHash other = (GeoHash) obj;
-			if (other.significantBits == significantBits && other.bits == bits) {
-				return true;
-			}
+			return other.significantBits == significantBits && other.bits == bits;
 		}
 		return false;
 	}

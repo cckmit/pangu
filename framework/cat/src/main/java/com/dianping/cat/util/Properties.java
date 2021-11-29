@@ -29,7 +29,7 @@ public class Properties {
 
     public static class MapPropertyProvider<T> implements PropertyProvider {
         private String name;
-        private Map<String, T> map;
+        private final Map<String, T> map;
 
         public MapPropertyProvider(Map<String, T> map) {
             this.map = map;
@@ -57,7 +57,7 @@ public class Properties {
     }
 
     public static abstract class PropertyAccessor<T> {
-        private List<PropertyProvider> providers = new ArrayList<PropertyProvider>();
+        private final List<PropertyProvider> providers = new ArrayList<PropertyProvider>();
 
         public PropertyAccessor<T> fromEnv() {
             return fromEnv(null);
@@ -124,8 +124,8 @@ public class Properties {
     }
 
     public static class SystemPropertyProvider implements PropertyProvider {
-        private boolean properties;
-        private boolean env;
+        private final boolean properties;
+        private final boolean env;
         private String name;
 
         public SystemPropertyProvider(boolean properties, boolean env) {

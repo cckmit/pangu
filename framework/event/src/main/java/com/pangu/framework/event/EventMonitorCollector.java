@@ -33,7 +33,7 @@ public class EventMonitorCollector {
                 BlockingQueue<Event<?>> eventQueue = eventBus.getEventQueue();
                 Map<String, String> values = new HashMap<>(2);
                 values.put(EVENT_CURRENT_COUNT, String.valueOf(eventQueue.size()));
-                ThreadPoolExecutor pool = eventBus.getPool();
+                ThreadPoolExecutor pool = EventBusImpl.getPool();
                 if(pool!=null) {
                     values.put(EVENT_POOL_COUNT, String.valueOf(pool.getQueue().size()));
                 }

@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class RefTable<T> {
 
-	private volatile List<T> refs = new RefList<T>();
-	private volatile AtomicInteger index = new AtomicInteger();
+	private final List<T> refs = new RefList<T>();
+	private final AtomicInteger index = new AtomicInteger();
 
 	public int incrementAndGet() {
 		return index.incrementAndGet();
@@ -17,7 +17,7 @@ public final class RefTable<T> {
 		if (ref > refs.size()) {
 			return null;
 		}
-		T t = (T) refs.get(ref - 1);
+		T t = refs.get(ref - 1);
 		return t;
 	}
 

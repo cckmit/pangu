@@ -11,7 +11,6 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 伪装、还原数字，伪装后的字符串包含：占位符+分隔符+真实数字伪装
  *
- * @author fei
  */
 public class NumberFaker {
 

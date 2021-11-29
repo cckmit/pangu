@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 枚举定义
- * @author Ramon
+ * @author author
  */
 public class EnumDef implements Comparable<EnumDef> {
 
-	private static Logger log = LoggerFactory.getLogger(EnumDef.class);
+	private static final Logger log = LoggerFactory.getLogger(EnumDef.class);
 
 	private int code;
 	private Class<?> type;

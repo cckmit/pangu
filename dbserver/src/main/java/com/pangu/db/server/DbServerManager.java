@@ -383,7 +383,7 @@ public class DbServerManager implements Lifecycle {
                         log.warn("分配服务器[{}]到数据服[{}]失败", message.getParams(), serverInfo.getId());
                     }
                 } else {
-                    log.warn("不支持的任务类型[{}]", message.toString());
+                    log.warn("不支持的任务类型[{}]", message);
                 }
             }
 

@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * 变长整数格式错误
  * 
- * @author Ramon
+ * @author author
  *
  */
 public class MalformedVarintException extends RuntimeException{

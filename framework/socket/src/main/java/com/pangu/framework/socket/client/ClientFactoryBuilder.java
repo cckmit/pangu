@@ -40,7 +40,7 @@ public class ClientFactoryBuilder {
 
     private int keepAliveMs;
 
-    private Map<String, ChannelHandler> filters = new LinkedHashMap<>();
+    private final Map<String, ChannelHandler> filters = new LinkedHashMap<>();
 
     public ClientFactoryBuilder readBuffSize(int readBuffSize) {
         this.readBuffSize = readBuffSize;

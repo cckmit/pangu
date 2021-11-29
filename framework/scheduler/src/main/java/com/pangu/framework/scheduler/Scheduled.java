@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 计划任务触发条件声明注释(使用 Cron 表达式)
- * @author Frank
+ * @author author
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

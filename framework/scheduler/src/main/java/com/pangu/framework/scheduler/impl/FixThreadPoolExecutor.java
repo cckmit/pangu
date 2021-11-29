@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 修改的 ThreadPoolExecutor
  * @see ThreadPoolExecutor
- * @author Frank
+ * @author author
  */
 public class FixThreadPoolExecutor extends AbstractExecutorService {
 

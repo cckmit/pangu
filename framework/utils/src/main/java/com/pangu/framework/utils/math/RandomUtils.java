@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 随机数工具类
- * @author frank
+ * @author author
  */
 public final class RandomUtils {
 
@@ -36,10 +36,7 @@ public final class RandomUtils {
 			return false;
 		}
 		double value = random.nextDouble();
-		if (value <= rate) {
-			return true;
-		}
-		return false;
+		return value <= rate;
 	}
 
 	/**

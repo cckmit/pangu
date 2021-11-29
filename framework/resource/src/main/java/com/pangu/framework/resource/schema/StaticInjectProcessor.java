@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 
 /**
  * 静态注入处理器，负责完成 {@link Static} 声明的资源的注入工作
- * @author frank
+ * @author author
  */
 public class StaticInjectProcessor extends InstantiationAwareBeanPostProcessorAdapter {
 
@@ -32,13 +32,13 @@ public class StaticInjectProcessor extends InstantiationAwareBeanPostProcessorAd
 
 	/**
 	 * 注入类型定义
-	 * @author frank
+	 * @author author
 	 */
-	public static enum InjectType {
+	public enum InjectType {
 		/** 存储空间 */
 		STORAGE,
 		/** 实例 */
-		INSTANCE;
+		INSTANCE
 	}
 
 	@Autowired

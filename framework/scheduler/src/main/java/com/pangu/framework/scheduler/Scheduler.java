@@ -5,7 +5,7 @@ import java.util.concurrent.ScheduledFuture;
 
 /**
  * 定时任务调度器接口
- * @author Frank
+ * @author author
  */
 public interface Scheduler {
 

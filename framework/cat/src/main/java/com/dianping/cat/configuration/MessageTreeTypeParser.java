@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageTreeTypeParser {
-    private ConcurrentHashMap<String, MessageType> messageTypes = new ConcurrentHashMap<String, MessageType>();
+    private final ConcurrentHashMap<String, MessageType> messageTypes = new ConcurrentHashMap<String, MessageType>();
     private List<String> startTypes;
     private List<String> matchTypes;
     private String lastStartType;

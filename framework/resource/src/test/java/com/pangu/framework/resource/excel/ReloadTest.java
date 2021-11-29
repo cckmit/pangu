@@ -20,7 +20,7 @@ import com.pangu.framework.resource.anno.Static;
 /**
  * 重新加载静态资源的测试用例
  *
- * @author frank
+ * @author author
  */
 //@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -37,7 +37,7 @@ public class ReloadTest {
     public void test_reload() throws URISyntaxException, IOException {
         // 重新加载前的测试
         assertThat(human.getId(), is(1));
-        assertThat(human.getName(), is("Frank"));
+        assertThat(human.getName(), is("author"));
         assertThat(human.getAge(), is(32));
         assertThat(human.isSex(), is(true));
         Human target = storage.get(1, true);
@@ -74,7 +74,7 @@ public class ReloadTest {
     public void test_multi_thread() throws IOException, URISyntaxException, InterruptedException {
         // 重新加载前的测试
         assertThat(human.getId(), is(1));
-        assertThat(human.getName(), is("Frank"));
+        assertThat(human.getName(), is("author"));
         assertThat(human.getAge(), is(32));
         assertThat(human.isSex(), is(true));
         Human target = storage.get(1, true);

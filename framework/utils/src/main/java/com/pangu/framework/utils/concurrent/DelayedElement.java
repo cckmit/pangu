@@ -86,11 +86,8 @@ public class DelayedElement<T> implements Delayed {
 			return false;
 		DelayedElement other = (DelayedElement) obj;
 		if (content == null) {
-			if (other.content != null)
-				return false;
-		} else if (!content.equals(other.content))
-			return false;
-		return true;
+			return other.content == null;
+		} else return content.equals(other.content);
 	}
 
 }

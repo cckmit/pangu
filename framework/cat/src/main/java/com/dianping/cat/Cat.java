@@ -145,7 +145,7 @@ public class Cat {
         Iterator<ClientConfigProvider> iterator = clientConfigProviders.iterator();
         if (iterator.hasNext()) {
             //只支持一个ClientConfigProvider的实现，默认取查询结果第一个
-            ClientConfigProvider clientConfigProvider = (ClientConfigProvider) iterator.next();
+            ClientConfigProvider clientConfigProvider = iterator.next();
             return clientConfigProvider.getClientConfig();
         } else {
             return null;
@@ -390,7 +390,7 @@ public class Cat {
     private static void initializeInternal(ClientConfig config) {
         if (isEnabled()) {
             System.setProperty(Cat.CLIENT_CONFIG, config.toString());
-            CatLogger.getInstance().info("init cat with config:" + config.toString());
+            CatLogger.getInstance().info("init cat with config:" + config);
 
             initializeInternal();
         }

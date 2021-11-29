@@ -154,7 +154,7 @@ public class SessionManagerTest {
                 sessionManager.getPushProxy(FacadePush.class).close(value, new PlayerVo());
                 sessionManager.kick(value);
             }
-            sessionManager.bind(session, (long) value);
+            sessionManager.bind(session, value);
             return playerVo;
         }
     }

@@ -38,10 +38,6 @@ import com.pangu.framework.resource.reader.ResourceReader;
 import com.pangu.framework.utils.json.JsonUtils;
 import org.springframework.core.io.ResourceLoader;
 
-/**
- * 存储空间对象
- * @author frank
- */
 public class I18NStorage<K, V> extends Storage<K, V> {
 	private static final Logger logger = LoggerFactory.getLogger(Storage.class);
 
@@ -61,11 +57,11 @@ public class I18NStorage<K, V> extends Storage<K, V> {
 	/** 全部语言 */
 	private Set<String> langs = new HashSet<>();
 	/** 主存储空间 */
-	private ConcurrentHashMap<String, Map<K, V>> values = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, Map<K, V>> values = new ConcurrentHashMap<>();
 	/** 索引存储空间 */
-	private ConcurrentHashMap<String, Map<String, Map<Object, List<V>>>> indexs = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, Map<String, Map<Object, List<V>>>> indexs = new ConcurrentHashMap<>();
 	/** 唯一值存储空间 */
-	private ConcurrentHashMap<String, Map<String, Map<Object, V>>> uniques = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, Map<String, Map<Object, V>>> uniques = new ConcurrentHashMap<>();
 
 	/** 已初始化标识 */
 	private boolean initialized;

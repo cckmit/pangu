@@ -3,7 +3,7 @@ package com.pangu.framework.scheduler.impl;
 /**
  * 无法由 FixThreadPoolExecutor 执行的任务的处理程序。<br/>
  * 修改 ThreadPoolExecutor 的附带产物
- * @author Frank
+ * @author author
  */
 public interface RejectedExecutionHandler {
 

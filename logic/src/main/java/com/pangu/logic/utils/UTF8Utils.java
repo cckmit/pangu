@@ -1,15 +1,8 @@
 package  com.pangu.logic.utils;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-/**
- * UTF8字符工具类
- *
- * @author Skycat
- * @version 1.0 2013年9月18日 下午3:56:39
- */
 public class UTF8Utils {
     /**
      * 检测utf8mb4编码

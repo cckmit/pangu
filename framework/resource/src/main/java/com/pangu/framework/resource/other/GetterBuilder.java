@@ -12,10 +12,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * 唯一标示获取实例创建器
- * @author frank
- */
 public class GetterBuilder {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GetterBuilder.class);
@@ -70,7 +66,7 @@ public class GetterBuilder {
 	
 	/**
 	 * 识别信息
-	 * @author frank
+	 * @author author
 	 */
 	private static class IdentityInfo {
 		
@@ -106,10 +102,7 @@ public class GetterBuilder {
 		}
 		
 		public boolean isField() {
-			if (field != null) {
-				return true;
-			}
-			return false;
+			return field != null;
 		}
 	}
 
@@ -129,10 +122,6 @@ public class GetterBuilder {
 		return identifier;
 	}
 	
-	/**
-	 * 属性域索引值获取器
-	 * @author frank
-	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static class FieldIndexGetter extends FieldGetter implements IndexGetter {
 		
@@ -175,16 +164,13 @@ public class GetterBuilder {
 
 		@Override
 		public boolean hasComparator() {
-			if (comparator != null) {
-				return true;
-			}
-			return false;
+			return comparator != null;
 		}
 	}
 	
 	/**
 	 * 方法值索引值获取器
-	 * @author frank
+	 * @author author
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static class MethodIndexGetter extends MethodGetter implements IndexGetter {
@@ -228,10 +214,7 @@ public class GetterBuilder {
 
 		@Override
 		public boolean hasComparator() {
-			if (comparator != null) {
-				return true;
-			}
-			return false;
+			return comparator != null;
 		}
 	}
 

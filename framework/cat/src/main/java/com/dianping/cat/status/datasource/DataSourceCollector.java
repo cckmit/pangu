@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class DataSourceCollector extends AbstractCollector {
-    private Map<String, Object> lastValueMap = new HashMap<String, Object>();
+    private final Map<String, Object> lastValueMap = new HashMap<String, Object>();
     protected MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
     protected DatabaseParserHelper databaseParser = new DatabaseParserHelper();
 

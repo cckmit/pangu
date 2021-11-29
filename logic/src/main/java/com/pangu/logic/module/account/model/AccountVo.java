@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 账户VO
  *
- * @author Ramon
+ * @author author
  */
 @Transable
 @Data

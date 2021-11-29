@@ -26,8 +26,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class PriorityMessageQueue implements MessageQueue {
-    private BlockingQueue<MessageTree> highQueue;
-    private BlockingQueue<MessageTree> normalQueue;
+    private final BlockingQueue<MessageTree> highQueue;
+    private final BlockingQueue<MessageTree> normalQueue;
 
     public PriorityMessageQueue(int size) {
         highQueue = new ArrayBlockingQueue<MessageTree>(size / 2);

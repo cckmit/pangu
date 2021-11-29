@@ -1,9 +1,5 @@
 package com.pangu.framework.resource.other;
 
-/**
- * 唯一标示获取接口
- * @author frank
- */
 public interface Getter {
 
 	/**

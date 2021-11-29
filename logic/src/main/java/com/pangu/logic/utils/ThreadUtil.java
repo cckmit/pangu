@@ -5,11 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * 
- * @author hengyunabc 2015年12月7日 下午2:29:28
- *
- */
 abstract public class ThreadUtil {
 
     private static final BlockingLockInfo EMPTY_INFO = new BlockingLockInfo();

@@ -10,9 +10,9 @@ import com.pangu.framework.utils.geohash.GeoHash;
  * Select random samples of geohashes within a bounding box, without replacement
  */
 public class BoundingBoxSampler {
-	private TwoGeoHashBoundingBox boundingBox;
-	private Set<Integer> alreadyUsed = new HashSet<>();
-	private int maxSamples;
+	private final TwoGeoHashBoundingBox boundingBox;
+	private final Set<Integer> alreadyUsed = new HashSet<>();
+	private final int maxSamples;
 	private Random rand = new Random();
 
 	/**

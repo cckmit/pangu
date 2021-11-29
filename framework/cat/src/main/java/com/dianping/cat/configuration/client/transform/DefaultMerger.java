@@ -8,7 +8,7 @@ import java.util.Stack;
 
 public class DefaultMerger implements IVisitor {
 
-    private Stack<Object> objects = new Stack<Object>();
+    private final Stack<Object> objects = new Stack<Object>();
 
     private ClientConfig config;
 

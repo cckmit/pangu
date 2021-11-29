@@ -3,8 +3,8 @@ package com.pangu.framework.protocol;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
 public class IndexedClass implements Comparable<IndexedClass> {
-	private Class<?> clz;
-	private int idx;
+	private final Class<?> clz;
+	private final int idx;
 
 	public Class<?> getClz() {
 		return clz;

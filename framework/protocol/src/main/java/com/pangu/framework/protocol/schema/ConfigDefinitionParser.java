@@ -30,10 +30,6 @@ import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * 配置定义处理器
- * @author frank
- */
 public class ConfigDefinitionParser extends AbstractBeanDefinitionParser {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigDefinitionParser.class);

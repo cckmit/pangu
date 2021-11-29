@@ -26,7 +26,7 @@ public class JdkProxyTest {
         helloService.say("hello");
     }
 
-    private static interface HelloService {
+    private interface HelloService {
         void say(String hello);
     }
 }

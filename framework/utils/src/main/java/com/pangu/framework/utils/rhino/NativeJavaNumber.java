@@ -6,7 +6,7 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * Number 对象参数包装类
- * @author Ramon
+ * @author author
  */
 public class NativeJavaNumber extends NativeJavaObject {
 	private static final long serialVersionUID = 3960951059804772962L;

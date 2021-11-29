@@ -2,7 +2,7 @@ package com.pangu.framework.event;
 
 /**
  * 事件订阅者
- * @author Ramon
+ * @author author
  */
 public interface Receiver<T> {
 

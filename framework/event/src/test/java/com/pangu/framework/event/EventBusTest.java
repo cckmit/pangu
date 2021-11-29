@@ -35,7 +35,7 @@ public class EventBusTest {
 
 	}
 	
-	private static AtomicInteger count = new AtomicInteger();
+	private static final AtomicInteger count = new AtomicInteger();
 	
 	@Test(timeout = 1000)
 	public void test() throws InterruptedException {

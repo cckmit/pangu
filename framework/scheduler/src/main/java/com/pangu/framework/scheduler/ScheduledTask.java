@@ -2,7 +2,7 @@ package com.pangu.framework.scheduler;
 
 /**
  * 定时任务接口
- * @author Frank
+ * @author author
  */
 public interface ScheduledTask extends Runnable {
 

@@ -261,11 +261,8 @@ public class Account {
             return false;
         Account other = (Account) obj;
         if (getId() == null) {
-            if (other.getId() != null)
-                return false;
-        } else if (!getId().equals(other.getId()))
-            return false;
-        return true;
+            return other.getId() == null;
+        } else return getId().equals(other.getId());
     }
 
     // Static Method's ...

@@ -1,6 +1,7 @@
 package com.pangu.framework.utils.codec;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class Blowfish {
 	private static final int[] KP = { 0x243F6A88, 0x85A308D3, 0x13198A2E,
@@ -245,12 +246,8 @@ public class Blowfish {
 	}
 
 	public byte[] encrypt(final String input) {
-		try {
-			final byte[] bytes = input.getBytes("UTF-8");
-			return encrypt(bytes, 0, bytes.length);
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
+		final byte[] bytes = input.getBytes(StandardCharsets.UTF_8);
+		return encrypt(bytes, 0, bytes.length);
 	}
 
 	public byte[] encrypt(final byte[] source) {
@@ -282,11 +279,7 @@ public class Blowfish {
 	}
 
 	public String decryptString(final byte[] source) {
-		try {
-			return new String(decryptBytes(source), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
+		return new String(decryptBytes(source), StandardCharsets.UTF_8);
 	}
 
 	public byte[] decryptBytes(final byte[] source) {

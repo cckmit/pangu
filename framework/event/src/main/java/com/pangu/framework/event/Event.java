@@ -7,7 +7,7 @@ package com.pangu.framework.event;
 public class Event<T> {
 
 	/** 事件名 */
-	private String name;
+	private final String name;
 
 	/** 事件体 */
 	private T body;

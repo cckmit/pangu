@@ -8,11 +8,6 @@ import java.util.OptionalLong;
 import  com.pangu.logic.utils.code.service.NumberFaker;
 import lombok.Getter;
 
-/**
- * 礼包码类型。生成的礼包码会用最后一位记录码类型，所以目前支持不超过10种类型。
- *
- * @author fei
- */
 @Getter
 public enum GiftCodeType {
     /**
@@ -26,7 +21,7 @@ public enum GiftCodeType {
 
     ;
 
-    private static Map<Integer, GiftCodeType> map = new HashMap<>();
+    private static final Map<Integer, GiftCodeType> map = new HashMap<>();
 
     static {
         for (GiftCodeType type : GiftCodeType.values()) {
@@ -37,7 +32,7 @@ public enum GiftCodeType {
     /**
      * 值，不能超过10
      */
-    private int id;
+    private final int id;
 
     GiftCodeType(int id) {
         this.id = id;

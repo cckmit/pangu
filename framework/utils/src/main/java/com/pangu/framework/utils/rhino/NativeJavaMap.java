@@ -10,7 +10,7 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * Map 对象参数包装类
- * @author Ramon
+ * @author author
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class NativeJavaMap extends NativeJavaObject {
@@ -70,10 +70,7 @@ public class NativeJavaMap extends NativeJavaObject {
 	 */
 	private <T> boolean isKeyType(Class<T> clz) {
 		Type[] kvType = this.getKVType();
-		if (kvType[0] == Object.class || kvType[0] == clz || ((Class) kvType[0]).isAssignableFrom(clz)) {
-			return true;
-		}
-		return false;
+		return kvType[0] == Object.class || kvType[0] == clz || ((Class) kvType[0]).isAssignableFrom(clz);
 	}
 
 	@Override

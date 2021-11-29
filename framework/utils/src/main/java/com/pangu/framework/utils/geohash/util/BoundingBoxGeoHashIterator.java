@@ -10,7 +10,7 @@ import com.pangu.framework.utils.geohash.GeoHash;
  * resolution
  */
 public class BoundingBoxGeoHashIterator implements Iterator<GeoHash> {
-	private TwoGeoHashBoundingBox boundingBox;
+	private final TwoGeoHashBoundingBox boundingBox;
 	private GeoHash current;
 
 	public BoundingBoxGeoHashIterator(TwoGeoHashBoundingBox bbox) {

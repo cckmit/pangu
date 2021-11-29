@@ -5,10 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-/**
- * 服务的启动方法
- * @author frank
- */
 public class Main {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);

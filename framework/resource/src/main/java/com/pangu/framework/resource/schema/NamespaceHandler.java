@@ -4,7 +4,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * 模块的 XML 命名空间注册器
- * @author frank
+ * @author author
  */
 public class NamespaceHandler extends NamespaceHandlerSupport {
 

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 抽象的延迟对象, 定义了开始时间和延迟时长
  * 
- * @author Ramon
+ * @author author
  *
  */
 public class DelayedElement implements Delayed {

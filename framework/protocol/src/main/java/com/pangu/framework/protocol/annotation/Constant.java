@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * 用于传输常量定义
  * 
- * @author Ramon
+ * @author author
  *
  */
 @Target({ElementType.TYPE})

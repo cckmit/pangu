@@ -2,7 +2,7 @@ package com.pangu.framework.protocol.exception;
 
 /**
  * 类型代理异常
- * @author Ramon
+ * @author author
  */
 public class ObjectProxyException extends RuntimeException {
 	private static final long serialVersionUID = -671045745597774362L;

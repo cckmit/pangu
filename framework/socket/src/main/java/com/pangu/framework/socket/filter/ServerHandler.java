@@ -21,10 +21,10 @@ import java.net.SocketAddress;
 public class ServerHandler extends ChannelDuplexHandler {
 
     // 消息分发器
-    private Dispatcher dispatcher;
+    private final Dispatcher dispatcher;
 
     // SESSION管理器
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
 
     public ServerHandler(SessionManager sessionManager, Dispatcher dispatcher) {
         this.sessionManager = sessionManager;
@@ -93,7 +93,7 @@ public class ServerHandler extends ChannelDuplexHandler {
                         || className.startsWith("org.springframework")) {
                     continue;
                 }
-                sb.append("\t").append(st.toString()).append("\n");
+                sb.append("\t").append(st).append("\n");
                 // NETTY底层错误不再打印
                 if (className.startsWith("io.netty.handler")) {
                     break;
@@ -112,6 +112,6 @@ public class ServerHandler extends ChannelDuplexHandler {
         }
 
         log.error("{}\tError: {} - {}\n{}",
-                throwable.getClass().getName(), throwable.getMessage(), remoteAddress, sb.toString());
+                throwable.getClass().getName(), throwable.getMessage(), remoteAddress, sb);
     }
 }

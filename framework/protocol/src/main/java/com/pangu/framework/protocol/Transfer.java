@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 编解码上下文
- * @author Ramon
+ * @author author
  */
 public class Transfer {
 	protected Logger log = LoggerFactory.getLogger(getClass());

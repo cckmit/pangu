@@ -99,7 +99,6 @@ public class CaseVsIfElse {
         E,
         F,
         G,
-        ;
     }
 
     interface IType {

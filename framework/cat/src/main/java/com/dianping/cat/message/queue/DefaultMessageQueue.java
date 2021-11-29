@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DefaultMessageQueue implements MessageQueue {
 
-    private BlockingQueue<MessageTree> queue;
+    private final BlockingQueue<MessageTree> queue;
 
     public DefaultMessageQueue(int size) {
         queue = new ArrayBlockingQueue<MessageTree>(size);

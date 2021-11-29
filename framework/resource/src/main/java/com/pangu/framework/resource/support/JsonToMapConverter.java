@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 将json格式的map字符串转换成对应的Map实例
  *
- * @author frank
+ * @author author
  */
 public class JsonToMapConverter implements ConditionalGenericConverter {
 
@@ -21,10 +21,7 @@ public class JsonToMapConverter implements ConditionalGenericConverter {
         if (sourceType.getType() != String.class) {
             return false;
         }
-        if (!Map.class.isAssignableFrom(targetType.getType())) {
-            return false;
-        }
-        return true;
+        return Map.class.isAssignableFrom(targetType.getType());
     }
 
     @Override

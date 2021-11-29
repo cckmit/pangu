@@ -8,11 +8,6 @@ import org.springframework.context.ApplicationContext;
 
 import com.pangu.framework.resource.anno.InjectBean;
 
-/**
- * 注入信息定义
- * 
- * @author frank
- */
 public class InjectDefinition {
 
 	/** 被注入的属性 */

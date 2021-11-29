@@ -1301,8 +1301,7 @@ public class IndexedTreeMap<K, V> extends AbstractMap<K, V> implements IndexedNa
 		final boolean tooLow(Object key) {
 			if (!fromStart) {
 				int c = m.compare(key, lo);
-				if (c < 0 || (c == 0 && !loInclusive))
-					return true;
+				return c < 0 || (c == 0 && !loInclusive);
 			}
 			return false;
 		}
@@ -1310,8 +1309,7 @@ public class IndexedTreeMap<K, V> extends AbstractMap<K, V> implements IndexedNa
 		final boolean tooHigh(Object key) {
 			if (!toEnd) {
 				int c = m.compare(key, hi);
-				if (c > 0 || (c == 0 && !hiInclusive))
-					return true;
+				return c > 0 || (c == 0 && !hiInclusive);
 			}
 			return false;
 		}

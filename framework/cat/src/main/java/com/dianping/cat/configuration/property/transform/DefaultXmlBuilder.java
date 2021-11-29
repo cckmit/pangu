@@ -8,10 +8,10 @@ import com.dianping.cat.configuration.property.entity.Property;
 import com.dianping.cat.configuration.property.entity.PropertyConfig;
 
 public class DefaultXmlBuilder implements IVisitor {
-    private IVisitor visitor = this;
+    private final IVisitor visitor = this;
     private int level;
-    private StringBuilder sb;
-    private boolean compact;
+    private final StringBuilder sb;
+    private final boolean compact;
 
     public DefaultXmlBuilder() {
         this(false);

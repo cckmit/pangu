@@ -51,19 +51,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class TcpSocketSender implements Threads.Task, MessageSender {
-    private MessageCodec nativeCodec = new NativeMessageCodec();
-    private MessageStatistics statistics = new DefaultMessageStatistics();
-    private ClientConfigService configService = DefaultClientConfigService.getInstance();
-    private MessageQueue messageQueue = new PriorityMessageQueue(SIZE);
-    private MessageIdFactory factory = MessageIdFactory.getInstance();
-    private AtomicMessageManager atomicQueueManager = new AtomicMessageManager(SIZE);
-    private ChannelManager channelManager = ChannelManager.getInstance();
+    private final MessageCodec nativeCodec = new NativeMessageCodec();
+    private final MessageStatistics statistics = new DefaultMessageStatistics();
+    private final ClientConfigService configService = DefaultClientConfigService.getInstance();
+    private final MessageQueue messageQueue = new PriorityMessageQueue(SIZE);
+    private final MessageIdFactory factory = MessageIdFactory.getInstance();
+    private final AtomicMessageManager atomicQueueManager = new AtomicMessageManager(SIZE);
+    private final ChannelManager channelManager = ChannelManager.getInstance();
 
     private boolean active;
     private static final int SIZE = 3000;
     private static final long HOUR = 1000 * 60 * 60L;
-    private static CatLogger LOGGER = CatLogger.getInstance();
-    private static TcpSocketSender INSTANCE = new TcpSocketSender();
+    private static final CatLogger LOGGER = CatLogger.getInstance();
+    private static final TcpSocketSender INSTANCE = new TcpSocketSender();
 
     public static TcpSocketSender getInstance() {
         return INSTANCE;
@@ -274,7 +274,7 @@ public class TcpSocketSender implements Threads.Task, MessageSender {
     }
 
     public class AtomicMessageManager {
-        private MessageQueue smallMessages;
+        private final MessageQueue smallMessages;
         private static final long HOUR = 1000 * 60 * 60L;
         private static final int MAX_CHILD_NUMBER = 200;
         private static final int MAX_DURATION = 1000 * 30;

@@ -37,8 +37,8 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
     private long durationStart;
     private List<Message> children;
     private MessageManager manager;
-    private static Map<String, Integer> map = new ConcurrentHashMap<String, Integer>();
-    private static ConcurrentMap<Long, ConcurrentHashMap<String, AtomicInteger>> count = new ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>>();
+    private static final Map<String, Integer> map = new ConcurrentHashMap<String, Integer>();
+    private static final ConcurrentMap<Long, ConcurrentHashMap<String, AtomicInteger>> count = new ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>>();
 
     public static void clearCache() {
         long time = System.currentTimeMillis() / 1000 / 60 - 3;

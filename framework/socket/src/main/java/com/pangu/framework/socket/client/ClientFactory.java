@@ -322,7 +322,7 @@ public class ClientFactory {
                             || className.startsWith("org.springframework")) {
                         continue;
                     }
-                    sb.append("\t").append(st.toString()).append("\n");
+                    sb.append("\t").append(st).append("\n");
                     // NETTY底层错误不再打印
                     if (className.startsWith("io.netty.handler")) {
                         break;
@@ -341,7 +341,7 @@ public class ClientFactory {
             }
 
             log.error("{}\tError: {} - {}\n{}",
-                    throwable.getClass().getName(), throwable.getMessage(), remoteAddress, sb.toString());
+                    throwable.getClass().getName(), throwable.getMessage(), remoteAddress, sb);
         }
     }
 }

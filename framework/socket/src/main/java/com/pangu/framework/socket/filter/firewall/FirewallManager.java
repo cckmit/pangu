@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * 防火墙管理接口
  *
- * @author frank
+ * @author author
  */
 public interface FirewallManager {
 

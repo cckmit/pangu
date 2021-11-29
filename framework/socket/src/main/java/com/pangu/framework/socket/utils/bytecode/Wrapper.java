@@ -88,7 +88,7 @@ public abstract class Wrapper {
             throw new NoSuchMethodException("Method [" + mn + "] not found.");
         }
     };
-    private static AtomicLong WRAPPER_CLASS_COUNTER = new AtomicLong(0);
+    private static final AtomicLong WRAPPER_CLASS_COUNTER = new AtomicLong(0);
 
     /**
      * get wrapper.

@@ -45,7 +45,7 @@ import com.pangu.framework.resource.reader.XlsxReader;
 
 /**
  * 配置定义处理器
- * @author frank
+ * @author author
  */
 public class ConfigDefinitionParser extends AbstractBeanDefinitionParser {
 
@@ -55,9 +55,9 @@ public class ConfigDefinitionParser extends AbstractBeanDefinitionParser {
 	protected static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
 	/** 资源搜索分析器，由它来负责检索EAO接口 */
-	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+	private final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 	/** 类的元数据读取器，由它来负责读取类上的注释信息 */
-	private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
+	private final MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
 
 	@Override
 	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {

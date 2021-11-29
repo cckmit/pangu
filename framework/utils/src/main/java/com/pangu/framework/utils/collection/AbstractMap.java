@@ -309,7 +309,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
             keySet = new com.pangu.framework.utils.collection.AbstractSet<K>() {
                 public Iterator<K> iterator() {
                     return new Iterator<K>() {
-                        private Iterator<Entry<K, V>> i = entrySet().iterator();
+                        private final Iterator<Entry<K, V>> i = entrySet().iterator();
 
                         public boolean hasNext() {
                             return i.hasNext();
@@ -357,7 +357,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
             values = new AbstractCollection<V>() {
                 public Iterator<V> iterator() {
                     return new Iterator<V>() {
-                        private Iterator<Entry<K, V>> i = entrySet().iterator();
+                        private final Iterator<Entry<K, V>> i = entrySet().iterator();
 
                         public boolean hasNext() {
                             return i.hasNext();

@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DatabaseParserHelper {
-    private Map<String, Database> connections = new LinkedHashMap<String, Database>();
+    private final Map<String, Database> connections = new LinkedHashMap<String, Database>();
 
     private String find(String con, String key) {
         int index = con.indexOf(key);

@@ -210,7 +210,7 @@ public abstract class ReflectionUtils{
 
 		// Look up any cached descriptors for this bean class
 		PropertyDescriptor[] descriptors = null;
-		descriptors = (PropertyDescriptor[]) DESCRIPTORS_CACHE.get(beanClass);
+		descriptors = DESCRIPTORS_CACHE.get(beanClass);
 		if (descriptors != null) {
 			return (descriptors);
 		}
@@ -253,7 +253,7 @@ public abstract class ReflectionUtils{
 					try {
 						descriptor.setReadMethod(readMethod);
 					} catch (Exception e) {
-						LOG.error("无法设置属性[{}]Getter[{}]方法", new Object[] { name, readMethod, e });
+						LOG.error("无法设置属性[{}]Getter[{}]方法", name, readMethod, e);
 					}
 				}
 			}
@@ -272,7 +272,7 @@ public abstract class ReflectionUtils{
 					try {
 						descriptor.setWriteMethod(writeMethod);
 					} catch (Exception e) {
-						LOG.error("无法设置属性[{}]Setter[{}]方法", new Object[] { name, writeMethod, e });
+						LOG.error("无法设置属性[{}]Setter[{}]方法", name, writeMethod, e);
 					}
 				}
 			}

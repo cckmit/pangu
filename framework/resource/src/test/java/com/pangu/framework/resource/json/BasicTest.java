@@ -18,7 +18,7 @@ import com.pangu.framework.resource.anno.Static;
 
 /**
  * 静态资源注入基本功能测试用例
- * @author frank
+ * @author author
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -53,7 +53,7 @@ public class BasicTest {
 	public void test_basic() {
 		Person p1 = resourceManager.getResource(1, Person.class);
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		Person same = resourceManager.getResource(1, Person.class);
 		assertThat(p1, sameInstance(same));
 	}
@@ -66,7 +66,7 @@ public class BasicTest {
 		assertThat(storage, notNullValue());
 		Person p1 = resourceManager.getResource(1, Person.class);
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		Person same = resourceManager.getResource(1, Person.class);
 		assertThat(p1, sameInstance(same));
 	}
@@ -76,10 +76,10 @@ public class BasicTest {
 	 */
 	@Test
 	public void test_index_unique() {
-		Person p1 = storage.getUnique(Person.INDEX_NAME, "Frank");
+		Person p1 = storage.getUnique(Person.INDEX_NAME, "author");
 		assertThat(p1, notNullValue());
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		assertThat(p1, sameInstance(person1));
 	}
 	
@@ -94,7 +94,7 @@ public class BasicTest {
 		
 		Person p1 = list.get(0);
 		assertThat(p1.getId(), is(1));
-		assertThat(p1.getName(), is("Frank"));
+		assertThat(p1.getName(), is("author"));
 		assertThat(p1, sameInstance(person1));
 		
 		Person p2 = list.get(1);
@@ -113,7 +113,7 @@ public class BasicTest {
 		assertThat(personNotFound, nullValue());
 		
 		assertThat(person1.getId(), is(1));
-		assertThat(person1.getName(), is("Frank"));
+		assertThat(person1.getName(), is("author"));
 
 		assertThat(person2.getId(), is(2));
 		assertThat(person2.getName(), is("May"));

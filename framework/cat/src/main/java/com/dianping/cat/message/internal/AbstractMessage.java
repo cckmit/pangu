@@ -25,6 +25,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractMessage implements Message {
     protected String type;
@@ -165,7 +166,7 @@ public abstract class AbstractMessage implements Message {
 
             codec.encodeMessage(this, buf);
             codec.reset();
-            return buf.toString(Charset.forName("utf-8"));
+            return buf.toString(StandardCharsets.UTF_8);
         } finally {
             BufReleaseHelper.release(buf);
         }

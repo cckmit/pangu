@@ -46,7 +46,7 @@ public enum ExceptionCode {
 
     TIME_OUT(13, "请求超时");
 
-    private static ExceptionCode[] CODES;
+    private static final ExceptionCode[] CODES;
 
     static {
         ExceptionCode[] values = ExceptionCode.values();

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 可传输对象
- * @author Ramon
+ * @author author
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

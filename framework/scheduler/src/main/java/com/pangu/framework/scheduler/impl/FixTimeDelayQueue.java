@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 带时间修正的延迟队列
  * @see DelayQueue
- * @author Frank
+ * @author author
  */
 @SuppressWarnings("rawtypes")
 public class FixTimeDelayQueue<E extends Delayed> extends AbstractQueue<E> implements

@@ -2,7 +2,7 @@ package com.pangu.framework.utils.model;
 
 /**
  * 全局的返回状态码定义
- * @author frank
+ * @author author
  */
 public interface ResultCode {
 

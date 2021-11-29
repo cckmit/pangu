@@ -15,7 +15,7 @@ import com.pangu.framework.scheduler.Trigger;
 
 /**
  * 计划任务执行者
- * @author Frank
+ * @author author
  */
 @SuppressWarnings("rawtypes")
 public class SchedulingRunner implements ScheduledTask, ScheduledFuture<Object> {

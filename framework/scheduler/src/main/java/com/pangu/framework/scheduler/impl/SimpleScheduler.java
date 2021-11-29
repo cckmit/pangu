@@ -25,7 +25,7 @@ import com.pangu.framework.utils.thread.NamedThreadFactory;
 
 /**
  * 定时任务调度器
- * @author Frank
+ * @author author
  */
 @Component
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -35,12 +35,12 @@ public class SimpleScheduler implements Scheduler, ApplicationListener<ContextRe
 
 	@Autowired(required = false)
 	@Qualifier("scheduling_delay_time")
-	private Long delayTime = 60000L;
+	private final Long delayTime = 60000L;
 	@Autowired(required = false)
 	@Qualifier("scheduling_pool_size")
-	private Integer poolSize = 5;
+	private final Integer poolSize = 5;
 
-	private AtomicBoolean running = new AtomicBoolean();
+	private final AtomicBoolean running = new AtomicBoolean();
 
 	private FixScheduledThreadPoolExecutor executor;
 
@@ -165,11 +165,11 @@ public class SimpleScheduler implements Scheduler, ApplicationListener<ContextRe
 
 	/**
 	 * 用于做日志记录的任务装饰类
-	 * @author Frank
+	 * @author author
 	 */
 	private static class LogDecorateTask implements ScheduledTask {
 
-		private ScheduledTask task;
+		private final ScheduledTask task;
 
 		public LogDecorateTask(ScheduledTask task) {
 			this.task = task;

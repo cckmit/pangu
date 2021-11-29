@@ -19,11 +19,11 @@ import java.util.*;
 /**
  * 传输类型定义
  *
- * @author Ramon
+ * @author author
  */
 public class TypeDef implements Comparable<TypeDef> {
 
-    private static Logger log = LoggerFactory.getLogger(TypeDef.class);
+    private static final Logger log = LoggerFactory.getLogger(TypeDef.class);
 
     public static TypeDef NULL = TypeDef.valueOf(-1, Object.class);
 
@@ -195,7 +195,7 @@ public class TypeDef implements Comparable<TypeDef> {
             if (fieldDef != null) {
                 Object value = fieldDef.getValue(instance);
                 if (log.isDebugEnabled()) {
-                    log.debug("对象[{}]属性[{}:{}]取值[{}]", new Object[]{instance, index, fieldDef.getName(), value});
+                    log.debug("对象[{}]属性[{}:{}]取值[{}]", instance, index, fieldDef.getName(), value);
                 }
                 return value;
             }

@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 基于本地时间的伪唯一标识生成器
- * @author Ramon
+ * @author author
  */
 public class PseudoIdGenerator {
 
