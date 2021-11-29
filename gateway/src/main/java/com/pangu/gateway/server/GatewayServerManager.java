@@ -267,6 +267,7 @@ public class GatewayServerManager implements Lifecycle {
                     Client client = clientFactory.getClient(serverInfo.getAddress());
                     DbFacade dbFacade = client.getProxy(DbFacade.class);
                     dbFacade.online(session.getId(), identity);
+                    // todo 当存在替换的sessionId时，必须通知对应网关将tcp连接关闭
                 } catch (Throwable throwable) {
                     log.warn("[{}][{}]同步离线数据失败[{}]", session.getId(), identity, serverInfo.getAddress(), throwable);
                 }

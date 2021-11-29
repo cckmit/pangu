@@ -5,6 +5,8 @@ import com.pangu.dbaccess.service.EntityService;
 import com.pangu.logic.module.account.model.Sex;
 import com.pangu.logic.server.IdGeneratorHolder;
 
+import java.util.Date;
+
 @ServiceLogic
 public class AccountService {
 
@@ -31,7 +33,12 @@ public class AccountService {
     public boolean login(String account) {
         String userServerId = Account.toInfo(account);
         Account unique = entityService.unique(userServerId, Account.class, "name", account);
-        return unique != null;
+        if (unique == null) {
+            return false;
+        }
+        unique.login(new Date(), true, null);
+        entityService.updateToDB(userServerId, unique);
+        return true;
     }
 
     public Account loadByName(String uid) {

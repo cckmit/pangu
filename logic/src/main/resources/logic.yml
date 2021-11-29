@@ -11,3 +11,4 @@ socket:
 system:
   checkLoginKeyValid: -1
   loginKey: test
+  excelPath: file:excel

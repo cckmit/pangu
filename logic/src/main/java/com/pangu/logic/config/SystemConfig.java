@@ -6,4 +6,5 @@ import lombok.Data;
 public class SystemConfig {
     private int checkLoginKeyValid;
     private String loginKey;
+    private String excelPath;
 }

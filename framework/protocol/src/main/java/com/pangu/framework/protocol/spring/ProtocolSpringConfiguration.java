@@ -41,8 +41,6 @@ public class ProtocolSpringConfiguration implements ImportBeanDefinitionRegistra
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        // 要创建的对象信息
-        BeanDefinitionBuilder factory = BeanDefinitionBuilder.rootBeanDefinition(TransferFactory.class);
 
         String coder = "com.pangu.framework.socket.handler.param.ProtocolCoder";
         BeanDefinitionBuilder protocolCoder = BeanDefinitionBuilder.rootBeanDefinition(coder);
@@ -87,6 +85,8 @@ public class ProtocolSpringConfiguration implements ImportBeanDefinitionRegistra
             }
         }
         Collections.sort(resources);
+        // 要创建的对象信息
+        BeanDefinitionBuilder factory = BeanDefinitionBuilder.rootBeanDefinition(TransferFactory.class);
         factory.addPropertyValue("transables", resources);
         AbstractBeanDefinition beanDefinition = factory.getBeanDefinition();
         registry.registerBeanDefinition("transfer", beanDefinition);

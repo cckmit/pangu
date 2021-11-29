@@ -492,7 +492,7 @@ public class NativeMessageCodec implements MessageCodec {
         }
 
         public void writeTimestamp(ByteBuf buf, long timestamp) {
-            writeVarint(buf, timestamp); // TODO use relative value of root message timestamp
+            writeVarint(buf, timestamp);
         }
 
         private void writeVarint(ByteBuf buf, long value) {

@@ -11,6 +11,7 @@ import com.pangu.logic.module.account.model.LoginInfoVo;
 import com.pangu.logic.module.account.model.Sex;
 import com.pangu.logic.module.account.service.Account;
 import com.pangu.logic.module.account.service.AccountService;
+import com.pangu.logic.module.player.service.PlayerService;
 import com.pangu.logic.utils.UTF8Utils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,10 +23,13 @@ public class AccountFacadeImpl implements AccountFacade {
 
     private final AccountService accountService;
 
+    private final PlayerService playerService;
+
     private final LogicConfig logicConfig;
 
-    public AccountFacadeImpl(AccountService accountService, LogicConfig logicConfig) {
+    public AccountFacadeImpl(AccountService accountService, PlayerService playerService, LogicConfig logicConfig) {
         this.accountService = accountService;
+        this.playerService = playerService;
         this.logicConfig = logicConfig;
     }
 
@@ -91,23 +95,11 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public Result<Boolean> checkAccount(String uid) {
-        Account account = accountService.loadByName(uid);
-        return Result.SUCCESS(account != null);
-    }
-
-    @Override
     public Result<String> randomName(Sex sex) {
-        return null;
-    }
-
-    @Override
-    public Result<Void> loginComplete(long accountId) {
-        return null;
-    }
-
-    @Override
-    public Result<Integer> updateChannel(long accountId, String channel) {
-        return null;
+        String name = playerService.randomName();
+        if (name == null) {
+            return Result.ERROR(AccountResult.RANDOM_NAME_NOT_EXISTS);
+        }
+        return Result.SUCCESS(name);
     }
 }

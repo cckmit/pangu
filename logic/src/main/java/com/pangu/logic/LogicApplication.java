@@ -4,6 +4,9 @@ import com.pangu.core.common.Log4jCloseThread;
 import com.pangu.core.db.model.EntityRes;
 import com.pangu.framework.protocol.spring.EnableProtocol;
 import com.pangu.framework.protocol.spring.ProtocolClass;
+import com.pangu.framework.resource.spring.EnableResource;
+import com.pangu.framework.resource.spring.ResourceFormat;
+import com.pangu.framework.resource.spring.ResourcePackage;
 import com.pangu.framework.socket.spring.EnableClientFactory;
 import com.pangu.framework.socket.spring.EnableSocketServer;
 import com.pangu.framework.utils.time.DateUtils;
@@ -23,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @EnableSocketServer
 @EnableClientFactory
 @EnableProtocol(clz = {@ProtocolClass(index = 3, clz = EntityRes.class)})
+@EnableResource(format = @ResourceFormat("${system.excelPath}"),value = {@ResourcePackage("com.pangu.logic.module.**.resource")})
 public class LogicApplication {
 
     public static ApplicationContext CONTEXT;

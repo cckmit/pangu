@@ -32,9 +32,7 @@ public class Test {
 		} else if(Types.DOUBLE == b) {
 			return buf.getDouble();			
 		} else if(Types.RAW_OBJECT == b) {
-			// TODO
-		} else if(Types.OBJECT_POOLS == b) {	
-			// TODO
+		} else if(Types.OBJECT_POOLS == b) {
 		} else if(Types.ARRAY == (b & Types.ARRAY)) {
 			int sub =  b & Types.ARRAY_MASK;
 			int len = getInteger(buf, sub); 
@@ -79,7 +77,6 @@ public class Test {
 			byte[] dst = new byte[len];
 			return String.valueOf(dst);
 		} else if(Types.OBJECT_REF == (b & Types.OBJECT_REF)) {
-			// TODO
 		}
 		
 	}
