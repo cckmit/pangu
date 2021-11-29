@@ -103,12 +103,12 @@ public class ResourceSpringConfiguration implements ImportBeanDefinitionRegistra
 //        <bean class="org.springframework.context.support.ConversionServiceFactoryBean">
 //        <property name="converters">
 //            <list>
-//                <bean class="com.xman.common.resource.support.StringToDateConverter"/>
-//                <bean class="com.xman.common.resource.support.StringToClassConverter"/>
-//                <bean class="com.xman.common.resource.support.JsonToMapConverter"/>
-//                <bean class="com.xman.common.resource.support.JsonToArrayConverter"/>
-//                <bean class="com.xman.common.resource.support.JsonToCollectionConverter"/>
-//                <bean class="com.xman.common.resource.support.JsonToObjectConverter"/>
+//                <bean class="com.pangu.framework.resource.support.StringToDateConverter"/>
+//                <bean class="com.pangu.framework.resource.support.StringToClassConverter"/>
+//                <bean class="com.pangu.framework.resource.support.JsonToMapConverter"/>
+//                <bean class="com.pangu.framework.resource.support.JsonToArrayConverter"/>
+//                <bean class="com.pangu.framework.resource.support.JsonToCollectionConverter"/>
+//                <bean class="com.pangu.framework.resource.support.JsonToObjectConverter"/>
 //                <bean class="com.xa.shennu.game.utils.StringToNumberConverter"/>
 //            </list>
 //        </property>
