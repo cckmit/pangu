@@ -9,6 +9,7 @@ import com.pangu.dbaccess.config.FieldDesc;
 import com.pangu.framework.socket.client.Client;
 import com.pangu.framework.socket.client.ClientFactory;
 import com.pangu.framework.socket.handler.param.ProtocolCoder;
+import com.pangu.framework.utils.id.IdGenerator;
 import com.pangu.framework.utils.json.JsonUtils;
 import com.pangu.framework.utils.lang.NumberUtils;
 import com.pangu.framework.utils.model.Result;
@@ -136,6 +137,10 @@ public class EntityService {
         return entityConfig;
     }
 
+    public <PK extends Comparable<PK> & Serializable, T> T loadOrCreate(long id, Class<T> clz, PK pk, EntityBuilder<PK, T> builder) {
+        return loadOrCreate(toServerId(id), clz, pk, builder);
+    }
+
     public <PK extends Comparable<PK> & Serializable, T> T loadOrCreate(String userServerId, Class<T> clz, PK pk, EntityBuilder<PK, T> builder) {
         T load = load(userServerId, clz, pk);
         if (load != null) {
@@ -176,6 +181,16 @@ public class EntityService {
         return loadOne(userServerId, clz, uniqueName, uniqueValue);
     }
 
+    public void create(long id, Object entity) {
+        String serverId = toServerId(id);
+        create(serverId, entity);
+    }
+
+    private String toServerId(long id) {
+        IdGenerator.IdInfo idInfo = new IdGenerator.IdInfo(id);
+        return idInfo.getOperator() + "_" + idInfo.getServer();
+    }
+
     public void create(String userServerId, Object entity) {
         Class<?> clz = entity.getClass();
         EntityConfig entityConfig = getEntityConfig(clz);
@@ -204,9 +219,13 @@ public class EntityService {
     /**
      * 更新实体
      *
-     * @param userServerId
+     * @param id
      * @param entity
      */
+    public void updateToDB(long id, Object entity) {
+        updateToDB(toServerId(id), entity);
+    }
+
     public void updateToDB(String userServerId, Object entity) {
         Class<?> clz = entity.getClass();
         EntityConfig entityConfig = getEntityConfig(clz);
@@ -235,9 +254,13 @@ public class EntityService {
     /**
      * 删除实体
      *
-     * @param userServerId
+     * @param id
      * @param entity
      */
+    public void delete(long id, Object entity) {
+        delete(toServerId(id), entity);
+    }
+
     public void delete(String userServerId, Object entity) {
         Class<?> clz = entity.getClass();
         EntityConfig entityConfig = getEntityConfig(clz);
