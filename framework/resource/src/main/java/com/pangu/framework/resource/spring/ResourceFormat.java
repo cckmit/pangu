@@ -10,7 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ResourceFormat {
     String value();
 
-    String type() default "excel";
+    String type() default "xlsx";
 
     String i18n() default "false";
 
