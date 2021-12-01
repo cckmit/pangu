@@ -51,12 +51,12 @@ public class QiKai implements DamagePassive, SkillReleasePassive {
             return;
         }
 
-        /* 查找目标 */
+
         List<Unit> targets = TargetSelector.select(owner, param.getSelectId(), time);
 
         long targetDamage = (long) (-owner.getValue(UnitValue.HP_MAX) * param.getDamagePct());
 
-        /* 伤害上限 */
+
         if (param.getDmgLimit() > 0) {
             long maxDamage = (long) (-owner.getValue(UnitValue.ATTACK_P) * param.getDmgLimit());
             targetDamage = Math.max(targetDamage, maxDamage);
@@ -66,7 +66,7 @@ public class QiKai implements DamagePassive, SkillReleasePassive {
             targetDamage = -1;
         }
 
-        /* 造成伤害 */
+
         for (Unit target : targets) {
             context.addPassiveValue(target, AlterType.HP, targetDamage);
             skillReport.add(time, target.getId(),

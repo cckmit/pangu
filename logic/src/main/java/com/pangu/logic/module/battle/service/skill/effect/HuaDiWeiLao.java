@@ -32,21 +32,21 @@ public class HuaDiWeiLao implements SkillEffect {
     public void execute(EffectState state, Unit owner, Unit target, SkillReport skillReport, int time,
                         SkillState skillState, Context context) {
         HuaDiWeiLaoParam param = state.getParam(HuaDiWeiLaoParam.class);
-        /* 地牢开始 */
+
         if (context.getLoopTimes() <= 1) {
             owner.addState(UnitState.NO_MOVE);
             PassiveState passiveState = PassiveFactory.initState(param.getPassiveId(), time);
             owner.addPassive(passiveState, owner);
             state.setAddition(passiveState);
         }
-        /* 地牢结束 */
+
         else {
             owner.removeState(UnitState.NO_MOVE);
             PassiveState passiveState = state.getAddition(PassiveState.class);
             owner.removePassive(passiveState);
             state.setAddition(null);
 
-            /* 进入眩晕状态，该技能为boss技能，boss自身带霸体，因此要跳过免疫鉴定直接添加状态 */
+
             final int expTime = time + param.getDisableDuration();
             owner.addState(UnitState.DISABLE, expTime);
             skillReport.add(time, owner.getId(), new StateAdd(UnitState.DISABLE, expTime));

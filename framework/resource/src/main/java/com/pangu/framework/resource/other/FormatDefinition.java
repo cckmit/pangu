@@ -2,15 +2,15 @@ package com.pangu.framework.resource.other;
 
 public class FormatDefinition {
 
-	/** 路径 */
+	
 	private final String location;
-	/** 类型 */
+	
 	private final String type;
-	/** N18支持(true/false) */
+	
 	private final String i18n;
-	/** 后缀 */
+	
 	private final String suffix;
-	/** 配置信息 */
+	
 	private final String config;
 
 	public FormatDefinition(String location, String type, String n18, String suffix, String config) {

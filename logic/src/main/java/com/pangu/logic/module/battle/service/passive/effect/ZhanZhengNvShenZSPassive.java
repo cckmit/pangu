@@ -51,15 +51,15 @@ public class ZhanZhengNvShenZSPassive implements SkillReleasePassive, OwnerDiePa
         PassiveState wushuangTieBiPassive = owner.getPassiveStateByType(PassiveType.WU_SHUANG_TIE_BI).get(0);
         WuShuangTieBiParam wushuangTieBiParam = wushuangTieBiPassive.getParam(WuShuangTieBiParam.class);
         String tag = skillState.getTag();
-        /* 举盾开始 */
+
         if (wushuangTieBiParam.getStartSkillTag().equals(tag)) {
-            /* 给自己添加降低周围回能的光环BUFF */
+
             BuffFactory.addBuff(param.getBuffId(), owner, owner, time, skillReport, null);
         }
-        /* 举盾结束 */
+
         if (wushuangTieBiPassive.getAddition(int.class, 0) > time
                 || (wushuangTieBiParam.getEndSkillTag() != null && wushuangTieBiParam.getEndSkillTag().equals(tag))) {
-            /* 给自己移除降低周围回能的光环BUFF */
+
             BuffFactory.removeBuffState(param.getBuffId(), owner, time);
         }
     }
@@ -69,10 +69,10 @@ public class ZhanZhengNvShenZSPassive implements SkillReleasePassive, OwnerDiePa
                     Context context) {
         ZhanZhengNvShenZSPassiveParam param = passiveState.getParam(ZhanZhengNvShenZSPassiveParam.class);
 
-        /* 给自己移除降低周围回能的光环BUFF */
+
         BuffFactory.removeBuffState(param.getBuffId(), owner, time);
 
-        /* 眩晕光环BUFF重置 */
+
         List<BuffState> list = owner.getBuffBySettingId(param.getXuanYunBuffId());
         for (BuffState buffState : list) {
             IntervalRangeAura.IntervalRangeAuraAddition addition = buffState

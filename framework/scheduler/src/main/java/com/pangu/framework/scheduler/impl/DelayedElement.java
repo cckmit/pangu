@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class DelayedElement implements Delayed {
 	
-	/** 开始时间 */
+	
 	private Date start;
-	/** 时长，单位秒 */
+	
 	private long len;
 	
 	/**
@@ -46,7 +46,7 @@ public class DelayedElement implements Delayed {
 		this.start = start;
 	}
 
-	/** 时长，单位秒 */
+	
 	protected void setLen(long len) {
 		this.len = len;
 	}

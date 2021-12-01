@@ -14,7 +14,7 @@ public class ReaderHolder implements ApplicationContextAware {
 	
 	public final static String FORMAT_SETTER = "format";
 
-	/** 格式定义信息 */
+
 	private FormatDefinition format;
 	private final ConcurrentHashMap<String, ResourceReader> readers = new ConcurrentHashMap<String, ResourceReader>();
 

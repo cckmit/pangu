@@ -16,7 +16,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 public class StorageManagerFactory extends DefaultListableBeanFactory implements FactoryBean<StorageManager>,
 		ApplicationContextAware {
 
-	/** 资源定义列表 */
+
 	private List<ResourceDefinition> definitions;
 
 	public void setDefinitions(List<ResourceDefinition> definitions) {

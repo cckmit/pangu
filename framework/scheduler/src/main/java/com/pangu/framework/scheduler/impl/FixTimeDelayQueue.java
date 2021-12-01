@@ -26,7 +26,7 @@ public class FixTimeDelayQueue<E extends Delayed> extends AbstractQueue<E> imple
 
 	private final PriorityQueue<E> q = new PriorityQueue<E>();
 
-	/** 最大修正时间 */
+
 	private final long delayTime;
 	
 	/**

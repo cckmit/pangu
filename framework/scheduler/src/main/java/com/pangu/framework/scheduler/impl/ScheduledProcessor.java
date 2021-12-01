@@ -44,7 +44,7 @@ public class ScheduledProcessor implements BeanPostProcessor, ApplicationListene
 	// 定时任务注册部分
 	private final Map<ScheduledTask, String> tasks = new HashMap<ScheduledTask, String>();
 
-	/** 获取定时任务信息 */
+
 	public Object postProcessAfterInitialization(final Object bean, String beanName) {
 		ReflectionUtils.doWithMethods(AopUtils.getTargetClass(bean), new MethodCallback() {
 			public void doWith(Method method) throws IllegalArgumentException,
@@ -62,7 +62,7 @@ public class ScheduledProcessor implements BeanPostProcessor, ApplicationListene
 		return bean;
 	}
 
-	/** 创建定时任务 */
+
 	private ScheduledTask createTask(Object bean, Method method, Scheduled annotation) {
 		if (!void.class.equals(method.getReturnType())) {
 			throw new IllegalArgumentException("定时方法的返回值必须为 void");
@@ -95,7 +95,7 @@ public class ScheduledProcessor implements BeanPostProcessor, ApplicationListene
 		};
 	}
 
-	/** 获取Cron表达式 */
+
 	private String resolveExperssion(Object bean, Scheduled annotation) {
 		String result = null;
 		switch (annotation.type()) {
@@ -133,7 +133,7 @@ public class ScheduledProcessor implements BeanPostProcessor, ApplicationListene
 		return result;
 	}
 
-	/** 定时任务调度器 */
+
 	@Autowired
 	private Scheduler scheduler;
 	

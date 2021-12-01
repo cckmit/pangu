@@ -66,7 +66,7 @@ public class SkillEffectAction extends CloseableAction {
             return;
         }
 
-        /* 已结束 */
+        
         if (isDone()) {
             return;
         }

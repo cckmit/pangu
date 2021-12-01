@@ -60,10 +60,10 @@ public class ChuanHuo implements SkillReleasePassive {
             return;
         }
 
-        /* 找出范围内的目标 */
+
         List<Unit> targetUnits = TargetSelector.select(owner, param.getSelectId(), time);
 
-        /* 范围伤害 */
+
         EffectState damageEffectState = new EffectState(null, 0);
         damageEffectState.setParamOverride(new DamageParam(param.getFactor()));
 

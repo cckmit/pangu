@@ -8,12 +8,12 @@ import com.pangu.framework.protocol.annotation.Transable;
 @Transable
 public enum UnitType {
 	
-	/** 力量 */
+	
 	STRENGTH,
 	
-	/** 敏捷 */
+	
 	AGILITY,
 	
-	/** 智力 */
+	
 	INTELLECT;
 }

@@ -90,7 +90,7 @@ public class HaiYaoGongZhuZSPassive implements SkillReleasePassive, AttackBefore
             return;
         }
 
-        /* 给分身加自然庇护效果和被动 */
+
         for (Unit summon : summons) {
             if (summon.getSummonUnit() != owner) {
                 continue;
@@ -125,7 +125,7 @@ public class HaiYaoGongZhuZSPassive implements SkillReleasePassive, AttackBefore
             return;
         }
 
-        /* 免疫当前伤害 */
+
         buffState.setAddition(overlayTimes - 1);
         skillReport.add(time, owner.getId(), new Immune());
         PassiveUtils.hpUpdate(context, skillReport, owner, -hpChange, time);

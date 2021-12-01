@@ -10,11 +10,11 @@ import com.pangu.framework.resource.anno.InjectBean;
 
 public class InjectDefinition {
 
-	/** 被注入的属性 */
+
 	private final Field field;
-	/** 注入配置 */
+
 	private final InjectBean inject;
-	/** 注入类型 */
+
 	private final InjectType type;
 	
 	public InjectDefinition(Field field) {

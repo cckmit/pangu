@@ -32,7 +32,7 @@ public class Player {
     // 等级
     private int level ;
 
-    /* 战力信息 */
+    
     private long fight;
 
     //玩家历史最大战力

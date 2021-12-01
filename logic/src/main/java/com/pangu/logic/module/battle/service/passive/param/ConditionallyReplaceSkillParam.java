@@ -10,13 +10,13 @@ import java.util.Map;
 
 @Getter
 public class ConditionallyReplaceSkillParam {
-    /** 释放条件字符串*/
+
     private Map<ConditionType,String> strConditions;
 
-    /** 反序列化后的释放条件*/
+
     private Map<ConditionType, Object> realConditions;
 
-    /** 替换的技能*/
+
     private String skillId;
 
     public Map<ConditionType, Object> getRealConditions() {

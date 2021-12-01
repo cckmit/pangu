@@ -35,7 +35,7 @@ public enum SortType {
      */
     DMG_HIGH(new DmgHigh()),
 
-    /** 累计伤害从低到高*/
+    
     DMG_LOW(new DmgLow()),
 
     /**
@@ -55,7 +55,7 @@ public enum SortType {
      */
     ATK_HIGH(new ATK_High()),
 
-    /** 物理防御力从低到高*/
+    
     DEF_P_LOW(new DEF_P_LOW()),
 
     /**
@@ -68,7 +68,7 @@ public enum SortType {
      */
     HP_LOW(new HP_Low()),
 
-    /** 血量百分比（从低到高） */
+    
     HP_PCT_LOW(new HpPctLow()),
 
     /**
@@ -76,10 +76,10 @@ public enum SortType {
      */
     HP_HIGH(new HP_High()),
 
-    /** 能量从低到高 */
+    
     MP_LOW(new MP_Low()),
 
-    /** 能量从高到低 */
+    
     MP_HIGH(new MP_High()),
 
     ;

@@ -10,9 +10,9 @@ import lombok.Getter;
 public class SuckHpBySkillTypeParam {
     private double rate;
 
-    /** 触发该被动的技能类型*/
+
     private SkillType[] types;
 
-    /** 生命值回复的目标（未必为自己）*/
+
     private String targetId = "SELF";
 }

@@ -26,7 +26,7 @@ public class ServiceSocketChannelDemo {
 
     public static class TCPEchoServer implements Runnable {
 
-        /*服务器地址*/
+        
         private final InetSocketAddress localAddress;
 
         public TCPEchoServer(int port) throws IOException {
@@ -45,18 +45,18 @@ public class ServiceSocketChannelDemo {
             Random rnd = new Random();
 
             try {
-                /*创建选择器*/
+                
                 selector = Selector.open();
 
-                /*创建服务器通道*/
+                
                 ssc = ServerSocketChannel.open();
                 ssc.setOption(StandardSocketOptions.SO_RCVBUF, 128);
                 ssc.configureBlocking(false);
 
-                /*设置监听服务器的端口，设置最大连接缓冲数为100*/
+                
                 ssc.bind(localAddress, 100);
 
-                /*服务器通道只能对tcp链接事件感兴趣*/
+                
                 ssc.register(selector, SelectionKey.OP_ACCEPT);
 
             } catch (IOException e1) {
@@ -66,7 +66,7 @@ public class ServiceSocketChannelDemo {
 
             System.out.println("server start with address : " + localAddress);
 
-            /*服务器线程被中断后会退出*/
+            
             try {
 
                 while (!Thread.currentThread().isInterrupted()) {
@@ -83,12 +83,12 @@ public class ServiceSocketChannelDemo {
                     while (it.hasNext()) {
 
                         key = it.next();
-                        /*防止下次select方法返回已处理过的通道*/
+                        
                         it.remove();
 
-                        /*若发现异常，说明客户端连接出现问题,但服务器要保持正常*/
+                        
                         try {
-                            /*ssc通道只能对链接事件感兴趣*/
+                            
                             if (key.isAcceptable()) {
 
                                 /*accept方法会返回一个普通通道，
@@ -97,7 +97,7 @@ public class ServiceSocketChannelDemo {
                                 sc.setOption(StandardSocketOptions.SO_RCVBUF, 128);
                                 sc.configureBlocking(false);
 
-                                /*向选择器注册这个通道和普通通道感兴趣的事件，同时提供这个新通道相关的缓冲区*/
+                                
                                 int interestSet = SelectionKey.OP_READ;
                                 sc.register(selector, interestSet);
 
@@ -105,15 +105,15 @@ public class ServiceSocketChannelDemo {
                             }
 
 
-                            /*（普通）通道感兴趣读事件且有数据可读*/
+                            
                             if (key.isReadable()) {
 
-                                /*通过SelectionKey获取通道对应的缓冲区*/
+                                
 
-                                /*通过SelectionKey获取对应的通道*/
+                                
                                 SocketChannel sc = (SocketChannel) key.channel();
                                 ByteBuffer readBuffer = ByteBuffer.allocate(128);
-                                /*从底层socket读缓冲区中读入数据*/
+                                
                                 sc.read(readBuffer);
                                 Thread.sleep(1000);
                                 readBuffer.flip();
@@ -127,7 +127,7 @@ public class ServiceSocketChannelDemo {
                             }
                         } catch (IOException e) {
                             System.out.println("service encounter client error");
-                            /*若客户端连接出现异常，从Seletcor中移除这个key*/
+                            
                             key.cancel();
                             key.channel().close();
                         }

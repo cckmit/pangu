@@ -16,7 +16,7 @@ public class GetterBuilder {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GetterBuilder.class);
 
-	/** 属性识别器 */
+
 	private static class FieldGetter implements Getter {
 		
 		private final Field field;
@@ -40,7 +40,7 @@ public class GetterBuilder {
 		}
 	}
 	
-	/** 方法识别器 */
+
 	private static class MethodGetter implements Getter {
 		
 		private final Method method;

@@ -32,7 +32,7 @@ public class WuGuGuiShu implements SkillEffect {
     public void execute(EffectState state, Unit owner, Unit target, SkillReport skillReport, int time,
                         SkillState skillState, Context context) {
         WuGuGuiShuAddition addition = state.getAddition(WuGuGuiShuAddition.class, WuGuGuiShuAddition.of(time));
-        /* 重置伤害目标 */
+        
         if (addition.time != time) {
             addition = WuGuGuiShuAddition.of(time);
             state.setAddition(addition);

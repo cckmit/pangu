@@ -27,7 +27,7 @@ public class YSSXListener implements SkillReleasePassive {
 
     @Override
     public void skillRelease(PassiveState passiveState, Unit owner, Unit attacker, SkillState skillState, int time, Context context, SkillReport skillReport) {
-        /*  非友方大招不计数*/
+        
         if (SkillType.SPACE != skillState.getType()) {
             return;
         }
@@ -35,7 +35,7 @@ public class YSSXListener implements SkillReleasePassive {
             return;
         }
 
-        /*  释放技能者为自己，说明当次技能为触发技能，此时才清空计数*/
+        
         final String ownerId = owner.getId();
         if (attacker == owner) {
             passiveState.setAddition(0);

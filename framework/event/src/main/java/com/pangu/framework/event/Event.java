@@ -6,10 +6,10 @@ package com.pangu.framework.event;
  */
 public class Event<T> {
 
-	/** 事件名 */
+	
 	private final String name;
 
-	/** 事件体 */
+	
 	private T body;
 	
 	public static <T> Event<T> valueOf(String name, T body) {

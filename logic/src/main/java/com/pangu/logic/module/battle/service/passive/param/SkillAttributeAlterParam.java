@@ -12,17 +12,17 @@ import java.util.Map;
 @Getter
 public class SkillAttributeAlterParam {
 
-    /** 触发阶段 */
+
     private Phase phase;
-    /** 变更属性是否作用于自己 */
+
     private boolean alterOwner;
-    /** 变更条件，为空表示 */
+
     private String condition;
-    /** 属性计算类型 */
+
     private CalType calType;
-    /** 变更的属性值 */
+
     private Map<UnitValue, String> values = Collections.emptyMap();
-    /** 变更的属性比率 */
+
     private Map<UnitRate, String> rates = Collections.emptyMap();
 
 }

@@ -24,7 +24,7 @@ public class ResourceDefinition {
 	public final static String FILE_SPLIT = ".";
 	public final static String FILE_PATH = File.separator;
 
-	/** 注入属性域过滤器 */
+
 	private final static ReflectionUtils.FieldFilter INJECT_FILTER = new ReflectionUtils.FieldFilter() {
 		@Override
 		public boolean matches(Field field) {
@@ -32,20 +32,20 @@ public class ResourceDefinition {
         }
 	};
 
-	/** 资源类 */
+
 	private final Class<?> clz;
-	/** 资源路径 */
+
 	private final String location;
-	/** 资源路径 */
+
 	private String resolverLocation;
-	/** 资源路径 */
+
 	private final String path;
-	/** 资源格式信息 */
+
 	private final FormatDefinition format;
-	/** 资源的注入信息 */
+
 	private final Set<InjectDefinition> injects = new HashSet<InjectDefinition>();
 
-	/** 构造方法 */
+
 	public ResourceDefinition(Class<?> clz, FormatDefinition format) {
 		this.clz = clz;
 		this.format = format;

@@ -35,9 +35,9 @@ public class StaticInjectProcessor extends InstantiationAwareBeanPostProcessorAd
 	 * @author author
 	 */
 	public enum InjectType {
-		/** 存储空间 */
+
 		STORAGE,
-		/** 实例 */
+
 		INSTANCE
 	}
 

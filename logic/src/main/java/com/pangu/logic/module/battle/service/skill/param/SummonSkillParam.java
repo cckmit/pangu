@@ -28,7 +28,7 @@ public class SummonSkillParam {
      */
     private String baseId;
 
-    /** 0:正常召唤物     1:源石神像      2:主神试炼*/
+
     private int unitType;
     /**
      * 属性比率(可选 和计算方式2选一)

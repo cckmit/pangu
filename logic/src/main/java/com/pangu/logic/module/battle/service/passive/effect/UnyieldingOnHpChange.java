@@ -41,15 +41,15 @@ public class UnyieldingOnHpChange implements UnitHpChangePassive {
 
         passiveState.addCD(time);
 
-        /* 添加HOT*/
+        
         final UnyieldingOnHpChangeParam param = passiveState.getParam(UnyieldingOnHpChangeParam.class);
         BuffFactory.addBuff(param.getBuffId(), owner, owner, time, damageReport, null);
 
-        /* 确保直接修改生命能够进入afterValue*/
+        
         owner.setValue(UnitValue.HP, 1);
         context.addPassiveValue(owner, AlterType.HP, 0);
 
-        /* 添加一个无敌状态，此处不走状态添加上下文，因为上下文状态生效时间太晚*/
+        
         final int duration = param.getDuration();
         int validTime;
         if (duration > 0) {

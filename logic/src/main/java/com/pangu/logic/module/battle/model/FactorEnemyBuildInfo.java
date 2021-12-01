@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class FactorEnemyBuildInfo {
-    /** EnemyFighterSettingId*/
+
     private String enemyId;
-    /** 属性倍率*/
+
     private double factor;
 
     public static FactorEnemyBuildInfo of(String enemyId,double factor){

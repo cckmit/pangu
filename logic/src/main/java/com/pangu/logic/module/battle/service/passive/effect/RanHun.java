@@ -47,7 +47,7 @@ public class RanHun implements AttackPassive, UnitDiePassive {
             return;
         }
 
-        /* 概率眩晕 */
+        
         if (!RandomUtils.isHit(param.getTriggerRate())) {
             return;
         }

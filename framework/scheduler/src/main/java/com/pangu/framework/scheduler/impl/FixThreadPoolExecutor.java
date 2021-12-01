@@ -533,7 +533,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 		}
 	}
 
-	/* Utilities for worker thread control */
+
 
 	/**
 	 * Gets the next task for a worker thread to run. The general approach is
@@ -627,7 +627,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 		}
 	}
 
-	/* Termination support. */
+
 
 	/**
 	 * Transitions to TERMINATED state if either (SHUTDOWN and pool and queue
@@ -855,7 +855,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 		shutdown();
 	}
 
-	/* Getting and setting tunable parameters */
+
 
 	/**
 	 * Sets the thread factory used to create new threads.
@@ -1084,7 +1084,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 		return unit.convert(keepAliveTime, TimeUnit.NANOSECONDS);
 	}
 
-	/* User-level queue utilities */
+
 
 	/**
 	 * Returns the task queue used by this executor. Access to the task queue is
@@ -1141,7 +1141,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 		}
 	}
 
-	/* Statistics */
+
 
 	/**
 	 * Returns the current number of threads in the pool.
@@ -1229,7 +1229,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 		}
 	}
 
-	/* Extension hooks */
+
 
 	/**
 	 * Method invoked prior to executing the given Runnable in the given thread.
@@ -1276,7 +1276,7 @@ public class FixThreadPoolExecutor extends AbstractExecutorService {
 	protected void terminated() {
 	}
 
-	/* Predefined RejectedExecutionHandlers */
+
 
 	/**
 	 * A handler for rejected tasks that runs the rejected task directly in the

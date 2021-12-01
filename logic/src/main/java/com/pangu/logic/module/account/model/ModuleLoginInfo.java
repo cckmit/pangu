@@ -1,10 +1,10 @@
 package com.pangu.logic.module.account.model;
 
 public class ModuleLoginInfo {
-	/** 模块号 */
+	
 	private short module;
 
-	/** 模块登录信息 */
+	
 	private Object content;
 
 	public short getModule() {

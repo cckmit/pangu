@@ -49,13 +49,13 @@ public class XingChenSheShouZS implements SkillReleasePassive, AttackBeforePassi
             return;
         }
 
-        /* 初始化 */
+
         if (passiveState.getAddition(XingChenSheShouZSAddition.class) == null) {
             XingChenSheShouZSAddition addition = new XingChenSheShouZSAddition(owner);
             passiveState.setAddition(addition);
         }
 
-        /* 将被动赋予给队友 */
+
         attacker.addPassive(passiveState, owner);
     }
 
@@ -105,7 +105,7 @@ public class XingChenSheShouZS implements SkillReleasePassive, AttackBeforePassi
         if (addition == null) {
             return;
         }
-        /* 移除之前添加的临时属性 */
+
         Map<UnitRate, Double> changeValues = addition.removeChangeValue(owner);
         if (changeValues == null || changeValues.isEmpty()) {
             return;

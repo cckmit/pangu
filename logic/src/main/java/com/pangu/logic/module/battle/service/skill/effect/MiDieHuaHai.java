@@ -53,7 +53,7 @@ public class MiDieHuaHai implements SkillEffect {
 
         MiDieHuaHaiAddition addition = state.getAddition(MiDieHuaHaiAddition.class, new MiDieHuaHaiAddition());
 
-        /* 记录移动到达时间 */
+        
         if (addition.nextMovePoint != null) {
             addition.nextMoveTime = time;
             effectMovePoint(owner, skillReport, addition, false);
@@ -63,7 +63,7 @@ public class MiDieHuaHai implements SkillEffect {
             addition.unreleases = new LinkedList<>(owner.getEnemy().getCurrent());
         }
 
-        /* 找出下一个要睡的目标（按最短距离计算） */
+        
         Unit addEnemy = null;
 
         Iterator<Unit> iterator = addition.unreleases.iterator();
@@ -82,7 +82,7 @@ public class MiDieHuaHai implements SkillEffect {
             }
         }
 
-        /* 没有要添加的目标，技能结束 */
+        
         if (addEnemy == null) {
             effectMovePoint(owner, skillReport, addition, true);
             addition.unreleases = null;
@@ -97,7 +97,7 @@ public class MiDieHuaHai implements SkillEffect {
             return;
         }
 
-        /* 距离够近了，给目标加BUFF */
+        
         int currDis = owner.getPoint().distance(addEnemy.getPoint());
         if (currDis <= param.getAddBuffRange()) {
             effectMovePoint(owner, skillReport, addition, true);
@@ -110,10 +110,10 @@ public class MiDieHuaHai implements SkillEffect {
                 passiveState.setAddition(buffState);
                 addEnemy.addPassive(passiveState, owner);
             }
-            /* 记录该目标已加BUFF */
+            
             addition.unreleases.remove(addEnemy);
         }
-        /* 距离不够近，继续往目标移动 */
+        
         else {
             int speed = (int) (owner.getValue(UnitValue.SPEED) * param.getMoveRate());
             int moveDis = Math.max(1, Math.min(currDis, speed));

@@ -9,12 +9,12 @@ import java.util.Map;
 
 @Getter
 public class ValModCounterParam extends CounterParam{
-    /** 修改参数*/
+    
     private CalType calType;
     private Map<AlterType,String> alters;
     private double factor;
 
-    /** 添加异常*/
+    
     private StateAddParam stateAddParam;
     private boolean needStateReport;
 }

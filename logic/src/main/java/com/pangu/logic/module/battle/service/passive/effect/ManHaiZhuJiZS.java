@@ -57,7 +57,7 @@ public class ManHaiZhuJiZS implements SkillReleasePassive {
 
         List<Unit> targets = new LinkedList<>();
 
-        /* 找出符合的目标 */
+
         int prevDebuffCount = 0;
         for (Unit unit : owner.getFriend().getCurrent()) {
             if (unit.getMpPct() >= param.getMpRequirePct()) {
@@ -73,7 +73,7 @@ public class ManHaiZhuJiZS implements SkillReleasePassive {
         EffectState effectState = new EffectState(null, 0);
         effectState.setParamOverride(DispelType.HARMFUL);
 
-        /* 释放海之洗涤 */
+
         int currDebuffCount = 0;
         for (Unit target : targets) {
             buffDispel.execute(effectState, owner, target, skillReport, time, null, context);
@@ -86,7 +86,7 @@ public class ManHaiZhuJiZS implements SkillReleasePassive {
 
         int dispelCount = prevDebuffCount - currDebuffCount;
 
-        /* 恢复能量 */
+
         if (dispelCount > 0 && param.getMpCureValue() > 0) {
             long expectMpCureValue = dispelCount * param.getMpCureValue();
             long finalMpCureValue = Math.min(expectMpCureValue, param.getMpCureLimit());

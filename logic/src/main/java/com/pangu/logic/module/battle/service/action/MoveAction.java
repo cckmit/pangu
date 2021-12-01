@@ -193,7 +193,7 @@ public class MoveAction implements Action {
         }
     }
 
-    /* 将路径中障碍物（非死亡单元）与移动中主体的碰撞区域在AStar的节点列表中设为true，以便在选择可移动区域时进行排除*/
+    
     void fill(int x, int y, BitSet bitSet, int scope, int maxX, int maxY, Point ownerPoint, Point targetPoint) {
         int square = scope >> 1;
         if (square <= 0) {

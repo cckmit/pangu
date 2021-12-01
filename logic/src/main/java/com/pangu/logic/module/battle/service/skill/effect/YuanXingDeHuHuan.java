@@ -88,7 +88,7 @@ public class YuanXingDeHuHuan implements SkillEffect {
 
             hpRecover.execute(cureState, owner, candidate, skillReport, time, skillState, context);
 
-            /* 专属装备 */
+
             final int zsMpAdd = param.getZsMpAdd();
             if (zsMpAdd > 0) {
                 context.addValue(candidate, AlterType.MP, zsMpAdd);

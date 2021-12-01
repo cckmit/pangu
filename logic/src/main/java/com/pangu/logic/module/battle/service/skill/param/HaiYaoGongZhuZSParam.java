@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class HaiYaoGongZhuZSParam {
 
-    /** BUFF标识 */
+    
     private String buffId;
-    /** 叠加层数 */
+    
     private int overlayTimes;
 }

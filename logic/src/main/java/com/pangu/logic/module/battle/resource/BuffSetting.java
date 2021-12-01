@@ -74,7 +74,7 @@ public class BuffSetting implements Validate {
         return true;
     }
 
-    /** 与客户端相同的分隔符*/
+
     final private static String SPLIT = "_LV";
     public static String getPrefix(String buffId) {
         return buffId.split("_LV")[0];

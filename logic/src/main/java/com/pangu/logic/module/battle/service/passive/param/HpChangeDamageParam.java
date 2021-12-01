@@ -17,6 +17,6 @@ public class HpChangeDamageParam {
     //是否递减（为false 代表血量越低伤害越高 否则血量越高伤害越高）
     private boolean decrease;
 
-    /** false以攻击目标的属性作为判断依据，true以自身属性为判断依据*/
+    
     private boolean target;
 }

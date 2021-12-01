@@ -45,30 +45,30 @@ public class I18NStorage<K, V> extends Storage<K, V> {
 
 	@Autowired
 	private ReaderHolder readerHolder;
-	/** 资源定义 */
+	
 	private ResourceDefinition resourceDefinition;
-	/** 资源读取器 */
+	
 	private ResourceReader reader;
-	/** 标识获取器 */
+	
 	private Getter identifier;
-	/** 索引获取器集合 */
+	
 	private Map<String, IndexGetter> indexGetters;
 
-	/** 全部语言 */
+	
 	private Set<String> langs = new HashSet<>();
-	/** 主存储空间 */
+	
 	private final ConcurrentHashMap<String, Map<K, V>> values = new ConcurrentHashMap<>();
-	/** 索引存储空间 */
+	
 	private final ConcurrentHashMap<String, Map<String, Map<Object, List<V>>>> indexs = new ConcurrentHashMap<>();
-	/** 唯一值存储空间 */
+	
 	private final ConcurrentHashMap<String, Map<String, Map<Object, V>>> uniques = new ConcurrentHashMap<>();
 
-	/** 已初始化标识 */
+	
 	private boolean initialized;
 
-	/** 读取锁 */
+	
 	private final Lock readLock;
-	/** 写入锁 */
+	
 	private final Lock writeLock;
 
 	public I18NStorage() {
@@ -385,7 +385,7 @@ public class I18NStorage<K, V> extends Storage<K, V> {
 		}
 	}
 
-	/** 生成全部语言列表 */
+	
 	private void buildLangs() {
 		Resource resource = resourceLoader.getResource(resourceDefinition.getLocation());
 		boolean exits = false;

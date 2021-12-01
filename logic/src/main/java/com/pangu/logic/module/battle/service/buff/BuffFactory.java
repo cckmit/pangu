@@ -118,7 +118,7 @@ public class BuffFactory {
                         && buff.add(buffState, target, time);
                 buffState.setSuccess(success);
 
-                /* 添加失败 */
+                
                 if (!success) {
                     skillReport.add(time, target.getId(), new Immune());
                     return;
@@ -234,7 +234,7 @@ public class BuffFactory {
     }
 
     private BuffState initState(Unit caster, Unit target, BuffSetting config, BuffReport buffReport, Object addition) {
-        /* 持续时间减免计算 */
+        
         int keepTime = config.getTime();
         keepTime = keepTimeModifier(target, config, keepTime);
         return new BuffState(config, caster, buffReport, keepTime, addition);

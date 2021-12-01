@@ -45,7 +45,7 @@ public class DaDiShouHuZSPassive implements SkillReleasePassive, AttackBeforePas
             return;
         }
 
-        /* 释放图腾守护时（会产生护盾），添加关联的BUFF */
+
         DaDiShouHuZSPassiveParam param = passiveState.getParam(DaDiShouHuZSPassiveParam.class);
         if (param.getSkillTag() != null && param.getSkillTag().equals(skillState.getTag())) {
             passiveState.setAddition(true);
@@ -57,7 +57,7 @@ public class DaDiShouHuZSPassive implements SkillReleasePassive, AttackBeforePas
 
         boolean active = passiveState.getAddition(boolean.class, false);
 
-        /* 在已释放图腾守护的情况下（会产生护盾），释放大招时，添加关联的BUFF */
+
         if (skillState.getType() == SkillType.SPACE && active) {
             for (String buffId : param.getBuffIds()) {
                 BuffFactory.addBuff(buffId, owner, owner, time, skillReport, null);
@@ -80,12 +80,12 @@ public class DaDiShouHuZSPassive implements SkillReleasePassive, AttackBeforePas
 
         DaDiShouHuZSPassiveParam param = passiveState.getParam(DaDiShouHuZSPassiveParam.class);
 
-        /* 嘲讽时，自身恢复能量 */
+
         int mpRecover = param.getSneerMpRecover();
         context.addPassiveValue(owner, AlterType.MP, mpRecover);
         skillReport.add(time, owner.getId(), PassiveValue.single(passiveState.getId(), owner.getId(), new Mp(mpRecover)));
 
-        /* 嘲讽时，给对方添加BUFF */
+
         BuffFactory.addBuff(param.getSneerBuffId(), owner, target, time, skillReport, null);
     }
 
@@ -104,7 +104,7 @@ public class DaDiShouHuZSPassive implements SkillReleasePassive, AttackBeforePas
 
         boolean active = passiveState.getAddition(boolean.class, false);
 
-        /* 无护盾时，删除关联的BUFF */
+
         if (active) {
             for (String buffId : param.getBuffIds()) {
                 for (BuffState buffState : owner.getBuffBySettingId(buffId)) {

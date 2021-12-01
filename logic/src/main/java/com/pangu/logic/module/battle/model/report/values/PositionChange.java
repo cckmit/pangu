@@ -21,7 +21,7 @@ public class PositionChange implements IValues {
 
     private int y;
 
-    /** 位置变更结束时的时刻，仅供前端表现。实际位移早已完成*/
+
     private int stopTime;
 
     public PositionChange(int x, int y) {

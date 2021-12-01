@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CommandHelper {
 	
-	/** 命令或参数的分隔符 */
+	
 	public static final String SPLIT = " ";
 
 	/**

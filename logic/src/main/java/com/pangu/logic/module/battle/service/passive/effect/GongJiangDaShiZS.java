@@ -71,7 +71,7 @@ public class GongJiangDaShiZS implements RecoverPassive, OwnerDiePassive {
             addition.addBuff(buffState);
         }
 
-        /* 累计最大值，免疫所有控制 */
+
         if (addCount >= param.getBuffOverlayLimit() && param.isBati()) {
             PassiveUtils.addState(owner, owner, UnitState.BA_TI, Integer.MAX_VALUE, time, passiveState, context, skillReport);
         }

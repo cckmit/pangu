@@ -48,7 +48,7 @@ public class BaoFengJiangLinDamage implements SkillEffect {
         FixPointCircleDamageAddition addition = state.getAddition(
                 FixPointCircleDamageAddition.class, new FixPointCircleDamageAddition());
 
-        /* 找出目标最多的中心点 */
+
         if (addition.point == null) {
             List<Point> enemyPoints = owner.getEnemy().getCurrent().stream().map(Unit::getPoint)
                     .collect(Collectors.toList());
@@ -68,11 +68,11 @@ public class BaoFengJiangLinDamage implements SkillEffect {
         EffectState effectState = new EffectState(null, 0);
         effectState.setParamOverride(new DamageParam(last ? param.getLastFactor() : param.getFactor()));
 
-        /* 对当前区域内的目标造成伤害 */
+
         for (Unit enemy : owner.getEnemy().getCurrent()) {
             if (circle.inShape(enemy.getPoint().getX(), enemy.getPoint().getY())) {
                 magicDamage.execute(effectState, owner, enemy, skillReport, time, skillState, context);
-                /* 如果是最后一次伤害，能量损失 */
+
                 if (last && param.getLastMpLostPct() > 0) {
                     EffectState mpChangePctEffectState = new EffectState(null, 0);
                     mpChangePctEffectState.setParamOverride(param.getLastMpLostPct());
@@ -81,7 +81,7 @@ public class BaoFengJiangLinDamage implements SkillEffect {
             }
         }
 
-        /* 技能结束，重置目标选择 */
+
         if (last) {
             state.setAddition(null);
         }

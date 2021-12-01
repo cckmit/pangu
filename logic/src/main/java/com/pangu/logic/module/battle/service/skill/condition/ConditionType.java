@@ -19,16 +19,16 @@ public enum ConditionType {
     // 身上有指定被动类型的被动
     HAS_PASSIVE_TYPE(PassiveType.class, new HasPassiveType()),
 
-    /** 自身血量低于百分比时 */
+
     HP_PCT_LOWER(Double.class, new HpPctLower()),
 
-    /** 战斗开始一段时间后  */
+
     TIME_LAPSE(Integer.class, new TimeLapse()),
 
-    /** 技能类型  */
+
     IS_SKILL_TYPE(SkillType.class, new IsSkillType()),
 
-    /** 表达式 */
+
     EXPR(new Expr()),
 
     ;

@@ -15,6 +15,6 @@ public class DmgAndDispelBuffOnSkillReleaseParam {
      */
     private DamageParam damageParam;
 
-    /** 作用半径*/
+    
     private int r;
 }

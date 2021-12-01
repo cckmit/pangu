@@ -32,7 +32,7 @@ public class BuffState {
     @Setter
     private Object addition;
 
-    /* 总生效时间 */
+    
     private int keepTime;
 
     public BuffState(BuffSetting buffSetting, Unit caster, BuffReport buffReport, int keepTime, Object addition) {

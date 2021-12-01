@@ -82,12 +82,12 @@ public class MessageEncoderTest {
         assertThat(packagePrefix, is(0xFFFFFFFF));
 
         // 数据长度校验
-        int dataLength = buffer.readableBytes() - 4/*包标识*/ - 4/*数据包长度字段*/ - 4/*校验码长度*/;
+        int dataLength = buffer.readableBytes() - 4;
         assertThat(dataLength, is(dataBuff.readableBytes()));
 
         // 读取数据内容
         ByteBuf readData = Unpooled.buffer(dataLength);
-        buffer.getBytes(4/*包标识*/ + 4/*数据包长度字段*/, readData, dataLength);
+        buffer.getBytes(4, readData, dataLength);
         assertEquals(dataBuff, readData);
 
         // 校验码校验

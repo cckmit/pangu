@@ -95,9 +95,9 @@ public class FixScheduledThreadPoolExecutor extends FixThreadPoolExecutor implem
 
 	private class ScheduledFutureTask<V> extends FutureTask<V> implements RunnableScheduledFuture<V> {
 
-		/** Sequence number to break ties FIFO */
+		
 		private final long sequenceNumber;
-		/** The time the task is enabled to execute in nanoTime units */
+		
 		private long time;
 		/**
 		 * Period in nanoseconds for repeating tasks. A positive value indicates fixed-rate execution. A negative value

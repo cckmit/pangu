@@ -9,7 +9,7 @@ public class Main {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	
-	/** 默认的上下文配置名 */
+
 	private static final String DEFAULT_APPLICATION_CONTEXT = "applicationContext.xml";
 
 	public static void main(String[] args) {

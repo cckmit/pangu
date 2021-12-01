@@ -18,7 +18,7 @@ public class GiftCodeBuilder {
      * 礼包码中礼包id部分最短位数最少位数
      */
     public static final int NUMBER_MIN_LEN = 8;
-    /** 长度最少NUMBER_MIN_LEN位，类型1位，所以最少 MAX_LEN + 1 */
+    
     public static final int MIN_LEN = 8 + 1;
 
     /**

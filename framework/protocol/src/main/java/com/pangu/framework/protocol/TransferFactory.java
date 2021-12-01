@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TransferFactory implements FactoryBean<Transfer> {
 
-	/** 资源定义列表 */
+	
 	private List<IndexedClass> transables;
 
 	private Transfer transfer;

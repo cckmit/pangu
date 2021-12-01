@@ -53,7 +53,7 @@ public class DaDiPaoXiaoZSAction implements Action {
         DaDiPaoXiaoZS.DaDiPaoXiaoZSAddition addition = effectState
                 .getAddition(DaDiPaoXiaoZS.DaDiPaoXiaoZSAddition.class);
 
-        /* 检查BUFF是否还存在 */
+
         fixAddition(addition, owner);
 
         List<Unit> units = TargetSelector.select(owner, param.getSelectId(), time);
@@ -61,7 +61,7 @@ public class DaDiPaoXiaoZSAction implements Action {
         LinkedList<BuffState> attBuffs = addition.getAttBuffs();
         int diff = attBuffs.size() - units.size();
 
-        /* 攻击BUFF */
+
 
         if (diff > 0) {
             for (int i = 0; i < diff; i++) {
@@ -78,7 +78,7 @@ public class DaDiPaoXiaoZSAction implements Action {
             }
         }
 
-        /* 治疗BUFF和免控状态 */
+
 
         if (!StringUtils.isBlank(param.getCureBuffId())) {
             int total = owner.getFriend().getCurrent().size() + owner.getEnemy().getCurrent().size();
@@ -104,7 +104,7 @@ public class DaDiPaoXiaoZSAction implements Action {
             }
         }
 
-        /* 进入下一次行为 */
+
         gotoNextAction();
     }
 

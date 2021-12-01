@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Resource {
 	
-	/** 资源位置 */
+	
 	String[] value() default "";
 }

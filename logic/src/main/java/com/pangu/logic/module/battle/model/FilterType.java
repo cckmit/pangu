@@ -39,7 +39,7 @@ public enum FilterType {
      */
     FRIEND(new FriendFilter()),
 
-    /** 无视不可选中状态强行选中我方*/
+
     ALIVE_FRIEND(new AliveFriend()),
 
     /**

@@ -26,7 +26,7 @@ public class StaticObserver implements Observer {
 
 	private final static Logger logger = LoggerFactory.getLogger(StaticObserver.class);
 
-	/** 接收更新通知 */
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		if (!(o instanceof Storage)) {
@@ -40,7 +40,7 @@ public class StaticObserver implements Observer {
 		inject((Storage) o);
 	}
 
-	/** 注入资源实例 */
+	
 	private void inject(Storage o) {
 		@SuppressWarnings("unchecked")
 		final Object value = o.get(key, false);
@@ -102,17 +102,17 @@ public class StaticObserver implements Observer {
 		}
 	}
 
-	/** 注入目标 */
+	
 	private final Object target;
-	/** 注入属性 */
+	
 	private final Field field;
-	/** 注入属性 */
+	
 	private final Static anno;
-	/** 资源键值 */
+	
 	private final Object key;
-	/** 资源键值 */
+	
 	private final Class<?> clz;
-	/** 转换服务 */
+	
 	private final ConversionService conversionService;
 
 	public StaticObserver(ConversionService conversionService, Object target, Field field, Static anno, Object key,

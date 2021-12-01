@@ -52,7 +52,7 @@ public class HuoLiZhiYuan implements SkillEffect {
 
         HuoLiZhiYuanAddition addition = state.getAddition(HuoLiZhiYuanAddition.class, new HuoLiZhiYuanAddition());
 
-        /* 找出目标最多的中心点 */
+        
         final List<Unit> enemies = FilterType.ENEMY.filter(owner, time);
         if (addition.point == null) {
             List<Point> enemyPoints = enemies.stream().map(Unit::getPoint)
@@ -69,7 +69,7 @@ public class HuoLiZhiYuan implements SkillEffect {
         Circle circle = new Circle(addition.point.getX(), addition.point.getY(), param.getRadius());
 
 
-        /* 如果自己在区域内，加BUFF */
+        
         if (!StringUtils.isBlank(param.getOwnerBuffId())) {
             if (circle.inShape(owner.getPoint().getX(), owner.getPoint().getY())) {
                 BuffFactory.addBuff(param.getOwnerBuffId(), owner, owner, time, skillReport, null);
@@ -79,7 +79,7 @@ public class HuoLiZhiYuan implements SkillEffect {
         EffectState effectState = new EffectState(null, 0);
         effectState.setParamOverride(new DamageParam(param.getFactor()));
 
-        /* 给区域内的目标加BUFF并造成伤害 */
+        
         Set<Unit> targets = new HashSet<>();
         for (Unit enemy : enemies) {
             if (circle.inShape(enemy.getPoint().getX(), enemy.getPoint().getY())) {
@@ -87,7 +87,7 @@ public class HuoLiZhiYuan implements SkillEffect {
                     BuffFactory.addBuff(targetBuffId, owner, enemy, time, skillReport, null);
                 }
                 physicsDamage.execute(effectState, owner, enemy, skillReport, time, skillState, context);
-                /* 专属装备BUFF */
+                
                 for (String targetBuffId : param.getZsTargetBuffIds()) {
                     BuffFactory.addBuff(targetBuffId, owner, enemy, time, skillReport, null);
                 }
@@ -95,7 +95,7 @@ public class HuoLiZhiYuan implements SkillEffect {
             }
         }
 
-        /* 专属装备BUFF，友军普攻目标处于范围内时，友军的攻速+10% */
+        
         if (!StringUtils.isBlank(param.getZsFriendBuffId())) {
             for (Unit friend : FilterType.FRIEND.filter(owner, time)) {
                 Unit currTarget = friend.getTarget();
@@ -105,7 +105,7 @@ public class HuoLiZhiYuan implements SkillEffect {
             }
         }
 
-        /* 技能结束，重置目标选择 */
+        
         if (context.getLoopTimes() >= skillState.getExecuteTimes()) {
             state.setAddition(null);
         }

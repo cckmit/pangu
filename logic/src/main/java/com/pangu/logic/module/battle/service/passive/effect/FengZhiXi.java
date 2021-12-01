@@ -55,7 +55,7 @@ public class FengZhiXi implements SkillSelectPassive, AttackBeforePassive {
             return null;
         }
 
-        /* 重置风之息BUFF */
+        
         for (BuffState buffState : buffStates) {
             BuffFactory.removeBuffState(buffState, owner, time);
         }
@@ -80,12 +80,12 @@ public class FengZhiXi implements SkillSelectPassive, AttackBeforePassive {
         if (skillSetting.getType() != SkillType.NORMAL) {
             return;
         }
-        /* 触发概率 */
+        
         FengZhiXiParam param = passiveState.getParam(FengZhiXiParam.class);
         if (!RandomUtils.isHit(param.getRate())) {
             return;
         }
-        /* 叠加一层风之息BUFF */
+        
         BuffFactory.addBuff(param.getBuffId(), owner, owner, time, skillReport, null);
     }
 

@@ -36,8 +36,8 @@ public class TwinsMeleeSpaceParam {
      */
     private boolean crit;
 
-    /** 基础伤害参数*/
+    
     private DamageParam dmgParam;
-    /** 执行间隔和次数*/
+    
     private int[] intervals;
 }

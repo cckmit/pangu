@@ -65,7 +65,7 @@ public class ShenYuanTuFuZS implements SkillReleasePassive, AttackBeforePassive 
         ShenYuanTuFuZSAddition addition = passiveState
                 .getAddition(ShenYuanTuFuZSAddition.class, new ShenYuanTuFuZSAddition());
 
-        /* CD中 */
+
         if (addition.lastActiveTime + param.getHarmUpCd() >= time) {
             return;
         }

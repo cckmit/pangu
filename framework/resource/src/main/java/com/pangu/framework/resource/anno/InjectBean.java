@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface InjectBean {
 
-	/** 被注入的 Bean 标识(默认按类型进行注入) */
+
 	String value() default "";
 	
 }

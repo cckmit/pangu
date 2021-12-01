@@ -53,20 +53,20 @@ public class YinBaiZhiCiZS implements SkillReleasePassive {
 
         List<IValues> ivalues = new LinkedList<>();
 
-        /* 能量恢复 */
+        
         if (param.getCureMpValue() > 0) {
             context.addPassiveValue(owner, AlterType.MP, param.getCureMpValue());
             ivalues.add(new Mp(param.getCureMpValue(), MpFrom.SKILL));
         }
 
-        /* 血量恢复 */
+        
         if (param.getCureHpRate() > 0) {
             long cureHp = (long) (owner.getValue(UnitValue.ATTACK_P) * param.getCureHpRate());
             context.addPassiveValue(owner, AlterType.HP, cureHp);
             ivalues.add(new UnitValues(AlterType.HP, cureHp));
         }
 
-        /* 暴击提升 */
+        
         if (!StringUtils.isBlank(param.getBuffId())) {
             BuffFactory.addBuff(param.getBuffId(), owner, owner, time, skillReport, null);
         }

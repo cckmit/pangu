@@ -35,15 +35,15 @@ public class YongHengShouWangZS implements SkillEffect {
                         SkillState skillState, Context context) {
         YongHengShouWangZSParam param = state.getParam(YongHengShouWangZSParam.class);
 
-        /* 自己在前排 */
+        
         if (!param.getSequences().contains(owner.getSequence())) {
             return;
         }
 
-        /* 找出后排英雄 */
+        
         List<Unit> units = TargetSelector.select(owner, param.getSelectId(), time);
 
-        /* 添加属性BUFF */
+        
         for (Unit unit : units) {
             BuffFactory.addBuff(param.getBuffId(), owner, unit, time, skillReport, null);
         }

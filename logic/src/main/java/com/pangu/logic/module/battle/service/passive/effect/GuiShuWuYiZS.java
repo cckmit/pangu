@@ -67,7 +67,7 @@ public class GuiShuWuYiZS implements SkillReleasePassive {
             return;
         }
 
-        /* 创建图腾 */
+        
         String unitId = param.getUnitId();
         EnemyUnitSetting enemyUnitSetting = enemyUnitReader.get(unitId, true);
         Fighter friend = owner.getFriend();
@@ -97,17 +97,17 @@ public class GuiShuWuYiZS implements SkillReleasePassive {
                 .single(passiveState.getId(), owner.getId(), new SummonUnits(Collections.singletonList(UnitInfo.valueOf(summonUnit))));
         skillReport.add(time, owner.getId(), passiveValue);
 
-        /* 找出图腾范围内的目标 */
+        
         List<Unit> targetUnits = TargetSelector.select(summonUnit, param.getSelectId(), time);
 
-        /* 范围伤害 */
+        
         EffectState damageEffectState = new EffectState(null, 0);
         damageEffectState.setParamOverride(new DamageParam(param.getFactor()));
         for (Unit target : targetUnits) {
             hpMagicDamage.execute(damageEffectState, owner, target, skillReport, time, null, context);
         }
 
-        /* 嘲讽 */
+        
         EffectState sneerEffectState = new EffectState(null, 0);
         StateAddParam stateAddParam = new StateAddParam();
         stateAddParam.setState(UnitState.SNEER);
@@ -117,7 +117,7 @@ public class GuiShuWuYiZS implements SkillReleasePassive {
             sneer.execute(sneerEffectState, summonUnit, target, skillReport, time, null, context);
         }
 
-        /* 图腾自身的回血BUFF */
+        
         if (!StringUtils.isBlank(param.getCureBuffId())) {
             BuffFactory.addBuff(param.getCureBuffId(), summonUnit, summonUnit, time, skillReport, null);
         }

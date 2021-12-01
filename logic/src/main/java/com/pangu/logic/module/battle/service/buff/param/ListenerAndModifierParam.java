@@ -37,7 +37,7 @@ public class ListenerAndModifierParam {
          * 每次监听若满足条件则修改数据，条件不满足时，不回滚修改
          */
         REPEAT_UNRECOVERABLE,
-        /** 监听时若满足条件，添加一次状态*/
+        
         STATE_ADD_UNRECOVERABLE,
     }
 }

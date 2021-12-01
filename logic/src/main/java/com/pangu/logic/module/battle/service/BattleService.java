@@ -161,7 +161,7 @@ public class BattleService {
         int winGap = winLine;
         int chances = size;
         for (int i = 0; i < size; i++) {
-            /*  剩余可参战场次<获胜剩余所需场次时，直接判负*/
+            
             if (chances < winGap) {
                 break;
             }
@@ -176,7 +176,7 @@ public class BattleService {
             --chances;
             battles.add(battle);
 
-            /*  距离胜利的剩余场次为0时，直接判胜*/
+            
             if (winGap == 0) {
                 return FightResult.of(BattleResult.ATTACKER, battles);
             }

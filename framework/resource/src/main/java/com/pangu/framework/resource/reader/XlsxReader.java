@@ -42,33 +42,33 @@ public class XlsxReader implements ResourceReader {
 
 	private final static Logger logger = LoggerFactory.getLogger(XlsxReader.class);
 
-	/** 配置分隔符 */
+
 	private final static String SPLIT = ":";
-	/** 结束标识 */
+
 	private final static String ROW_END = "END";
-	/** 上行结束标识 */
+
 	private final static String ROW_END_BEFORE = "END_BEFORE";
-	/** 忽略标识 */
+
 	private final static String ROW_IGNORE = "NO";
 
 	private final static TypeDescriptor sourceType = TypeDescriptor.valueOf(String.class);
 
-	/** 客户端控制标识 */
+
 	private final static String ROW_CLIENT = "CLIENT";
-	/** 管理后台控制标识 */
+
 	private final static String ROW_MANAGER = "MANAGER";
-	/** 服务端控制标识同时也是数据开始标识 */
+
 	private final static String ROW_SERVER = "SERVER";
 
 	@Autowired
 	@Setter
 	private ConversionService conversionService;
 
-	/** 数据标记行 */
+
 	private String tagRow = "SERVER";
-	/** 数据开始行号 */
+
 	private int startRow = 0;
-	/** 每个分页独立表头 */
+
 	private boolean titlePerSheet;
 
 	@Override
@@ -165,14 +165,14 @@ public class XlsxReader implements ResourceReader {
 	 * 属性信息
 	 */
 	private class FieldInfo {
-		/** 第几列 */
+
 		public final int index;
-		/** 资源类属性 */
+
 		public final Field field;
-		/** 数值类型 */
+
 		public Type valueType;
 
-		/** MAP 映射 */
+
 		public final boolean mapped;
 		public String keyName;
 		public Type keyType;
@@ -284,9 +284,9 @@ public class XlsxReader implements ResourceReader {
 	 * A web-friendly version is http://openiso.org/Ecma/376/Part4
 	 */
 	class MyXSSFSheetHandler<E> extends DefaultHandler {
-		/** Table with styles */
+
 		private final StylesTable stylesTable;
-		/** Table with unique strings */
+
 		private final SharedStringsTable sharedStringsTable;
 		// Set when V start element is seen
 		private boolean vIsOpen;

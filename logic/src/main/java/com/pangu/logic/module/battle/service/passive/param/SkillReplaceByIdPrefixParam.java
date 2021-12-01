@@ -14,7 +14,7 @@ public class SkillReplaceByIdPrefixParam {
     private String newPrefix = "";
     private String oldPrefix;
 
-    /** 替换条件*/
+
     private String cond;
 
     /**

@@ -44,24 +44,24 @@ public class OwnerEffectWhenSkillRelease implements SkillReleasePassive {
 
     @Override
     public void skillRelease(PassiveState passiveState, Unit owner, Unit attacker, SkillState skillState, int time, Context context, SkillReport skillReport) {
-        /*  非自身释放技能，不执行*/
+        
         if (owner != attacker) {
             return;
         }
 
         final OwnerEffectByTagSkillReleaseParam param = passiveState.getParam(OwnerEffectByTagSkillReleaseParam.class);
 
-        /*  非特定tag的技能，不执行*/
+        
         if (!skillState.getTag().equals(param.getSkillTag())) {
             return;
         }
 
-        /*  未通过概率校验，不执行*/
+        
         if (param.getRate() > 0 && !RandomUtils.isHit(param.getRate())) {
             return;
         }
 
-        /*  计算影响目标*/
+        
         final List<Unit> targets = targetSelect(param.getTargetId(), skillState, owner, time);
         final String psvId = passiveState.getId();
         for (Unit target : targets) {

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class KillParam {
-    /** 复活系被动是否可免疫即死*/
+
     private boolean revivable;
 
     /**

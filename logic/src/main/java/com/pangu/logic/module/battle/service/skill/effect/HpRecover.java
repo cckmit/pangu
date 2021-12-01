@@ -100,7 +100,7 @@ public class HpRecover implements SkillEffect {
             recoverResult.recover = ((Number) normalFormula.calculate(formulaCtx)).longValue();
         }
 
-        /* 值修正 */
+
         if (recoverResult.recover < 0) {
             recoverResult.recover = 0;
         }

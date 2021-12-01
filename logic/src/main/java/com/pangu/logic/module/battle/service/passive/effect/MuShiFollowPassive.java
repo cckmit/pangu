@@ -44,7 +44,7 @@ public class MuShiFollowPassive implements UnitDiePassive {
 
         MuShiFollowPassiveParam param = passiveState.getParam(MuShiFollowPassiveParam.class);
 
-        /* 专属装备BUFF */
+
         if (!StringUtils.isBlank(param.getZsBuffId())) {
             String zsBuffId = param.getZsBuffId();
             BuffSetting setting = BuffFactory.getSetting(zsBuffId);

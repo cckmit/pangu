@@ -48,7 +48,7 @@ public class SenLinZhiYuZS implements AttackPassive {
 
         boolean cureUp = false;
         if (param.getCritUpCureRate() > 0 && context.isCrit(owner)) {
-            /* 添加临时属性 */
+
             owner.increaseRate(UnitRate.CURE, param.getCritUpCureRate());
             cureUp = true;
         }
@@ -60,7 +60,7 @@ public class SenLinZhiYuZS implements AttackPassive {
         }
 
         if (cureUp) {
-            /* 移除临时属性 */
+
             owner.increaseRate(UnitRate.CURE, -param.getCritUpCureRate());
         }
     }

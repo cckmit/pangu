@@ -34,12 +34,12 @@ public class ConfigDefinitionParser extends AbstractBeanDefinitionParser {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigDefinitionParser.class);
 
-	/** 默认资源匹配符 */
+	
 	protected static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
-	/** 资源搜索分析器 */
+	
 	private final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-	/** 类的元数据读取器，由它来负责读取类上的注释信息 */
+	
 	private final MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
 
 	@Override

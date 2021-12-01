@@ -60,7 +60,7 @@ public class AnYingMoZhuZS implements SkillSelectPassive, SkillReleasePassive, A
             return null;
         }
 
-        /* 生成弱化版暗影狂暴 */
+        
         if (addition.skillState == null) {
             SkillState sourceSkill = anYingKuangBaoSkills.get(0);
             String skillId = sourceSkill.getId();
@@ -90,7 +90,7 @@ public class AnYingMoZhuZS implements SkillSelectPassive, SkillReleasePassive, A
         AnYingMoZhuZSAddition addition = passiveState
                 .getAddition(AnYingMoZhuZSAddition.class, new AnYingMoZhuZSAddition());
 
-        /* 累计普攻次数 */
+        
         if (skillState.getType() == SkillType.NORMAL) {
             addition.normalTime++;
         }

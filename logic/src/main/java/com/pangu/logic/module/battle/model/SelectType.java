@@ -182,7 +182,7 @@ public enum SelectType {
     OPPOSITE_POSITION_AVOID_BA_TI(new OppositePositionAvoidBaTiSelect()),
 
 
-    /* 以选择目标为圆心，范围里的目标 */
+
     UNIT_ARROUND(new UnitAround()),
 
     ;

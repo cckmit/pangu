@@ -10,13 +10,13 @@ import java.util.Comparator;
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Index {
 	
-	/** 索引名，同一资源的索引名必须唯一 */
+	
 	String name();
 	
-	/** 索引值是否唯一 */
+	
 	boolean unique() default false;
 
-	/** 排序器配置 */
+	
 	@SuppressWarnings("rawtypes")
 	Class<? extends Comparator> comparatorClz() default Comparator.class;
 	

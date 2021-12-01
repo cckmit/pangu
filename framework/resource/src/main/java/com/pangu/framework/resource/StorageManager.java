@@ -23,9 +23,9 @@ public class StorageManager implements ApplicationContextAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(StorageManager.class);
 
-	/** 静态类资源定义 */
+	
 	private final ConcurrentHashMap<Class, ResourceDefinition> definitions = new ConcurrentHashMap<Class, ResourceDefinition>();
-	/** 资源存储空间 */
+	
 	private final ConcurrentHashMap<Class<?>, Storage<?, ?>> storages = new ConcurrentHashMap<Class<?>, Storage<?, ?>>();
 
 	/**

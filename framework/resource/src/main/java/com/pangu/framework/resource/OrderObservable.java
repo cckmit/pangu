@@ -8,7 +8,7 @@ public class OrderObservable extends Observable {
 
 	private final Vector<Observer> obs;
 
-	/** Construct an Observable with zero Observers. */
+	
 
 	public OrderObservable() {
 		obs = new Vector<>();
@@ -65,7 +65,7 @@ public class OrderObservable extends Observable {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void notifyObservers(Object arg) {
-		/* a temporary array buffer, used as a snapshot of the state of current Observers. */
+		
 		Object[] arrLocal;
 
 		synchronized (this) {

@@ -10,11 +10,11 @@ import com.pangu.framework.scheduler.TaskContext;
  */
 public class SimpleTaskContext implements TaskContext {
 
-	/** 计划执行时间 */
+
 	private volatile Date lastScheduledTime;
-	/** 实际执行时间 */
+
 	private volatile Date lastActualTime;
-	/** 实际完成时间 */
+
 	private volatile Date lastCompletionTime;
 
 	public void update(Date scheduledTime, Date actualTime, Date completionTime) {

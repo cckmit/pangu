@@ -12,12 +12,12 @@ public class ZuiZhongShenPanParam {
     //能触发该被动的主动技能标签
     private String skillTag;
 
-    /** 触发延长的条件*/
+    
     private double condition;
-    /** 需要延长buffTag*/
+    
     private String delayBuffTag;
-    /** 延长buff*/
+    
     private BuffUpdateParam buff;
-    /** 延长状态*/
+    
     private UnitState unitState = UnitState.MAGIC_IMMUNE;
 }

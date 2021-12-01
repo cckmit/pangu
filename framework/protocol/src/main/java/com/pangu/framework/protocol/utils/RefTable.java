@@ -40,7 +40,7 @@ public final class RefTable<T> {
 		refs.add(value);
 	}
 
-	/** 引用列表 */
+	
 	private static class RefList<T> extends ArrayList<T> {
 		private static final long serialVersionUID = -6214784282104632316L;
 

@@ -55,15 +55,15 @@ public class FengKuangBoShiZS implements AttackBeforePassive, OwnerDiePassive {
 
         addition.times++;
 
-        /* 普攻伤害增加 */
+
         String buffId = getBuffId(param, addition.times);
         if (!StringUtils.isBlank(buffId)) {
-            /* 尝试删除旧的BUFF */
+
             if (addition.buffState != null && !addition.buffState.getId().equals(buffId)) {
                 BuffFactory.removeBuffState(addition.buffState, owner, time);
                 addition.buffState = null;
             }
-            /* 添加新的BUFF */
+
             if (addition.buffState == null) {
                 addition.buffState = BuffFactory.addBuff(buffId, owner, owner, time, skillReport, null);
             }
@@ -73,7 +73,7 @@ public class FengKuangBoShiZS implements AttackBeforePassive, OwnerDiePassive {
             return;
         }
 
-        /* 普攻范围变化 */
+
         if (param.getSelectTimes() > 0 && addition.times >= param.getSelectTimes()) {
             List<EffectState> effectStates = new LinkedList<>();
             for (SkillState skillState : owner.getActiveSkills()) {

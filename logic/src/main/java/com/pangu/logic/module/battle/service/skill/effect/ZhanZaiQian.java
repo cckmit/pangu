@@ -54,7 +54,7 @@ public class ZhanZaiQian implements SkillEffect {
 
         addition.resetExec();
 
-        /* 找出要突进的目标 */
+
 
         List<Unit> units = new ArrayList<>(owner.getEnemy().getCurrent());
         Collections.shuffle(units);
@@ -72,27 +72,27 @@ public class ZhanZaiQian implements SkillEffect {
             return;
         }
 
-        /* 记录突进目标的时间 */
+
         addition.record(beAttacker, time);
 
         Set<Unit> beAttackers = new HashSet<>();
         beAttackers.add(beAttacker);
 
-        /* 是否是范围攻击 */
+
         if (addition.incTimes >= param.getRangeSelectTujinCount() && !StringUtils.isBlank(param.getRangeSelectId())) {
             List<Unit> extra = TargetSelector.select(beAttacker, param.getRangeSelectId(), time);
             beAttackers.addAll(extra);
             addition.incTimes = 0;
         }
 
-        /* 位置变更 */
+
         final Point ownerPoint = owner.getPoint();
         Point movePoint = TwoPointDistanceUtils
                 .getNearEndPointDistance(ownerPoint, beAttacker.getPoint(), BattleConstant.SCOPE_HALF);
         owner.move(movePoint);
         skillReport.add(time, owner.getId(), PositionChange.of(ownerPoint.getX(), ownerPoint.getY()));
 
-        /* 伤害计算 */
+
         EffectState effectState = new EffectState(null, 0);
         effectState.setParamOverride(new DamageParam(param.getFactor() * (1 + addition.dmgUpRate)));
 
@@ -100,10 +100,10 @@ public class ZhanZaiQian implements SkillEffect {
             physicsDamage.execute(effectState, owner, unit, skillReport, time, null, context);
         }
 
-        /* 累计突进次数 */
+
         addition.incTimes();
 
-        /* 累计伤害系数提升率 */
+
         if (param.getTujinDmgUpRate() > 0) {
             addition.dmgUpRate(param.getTujinDmgUpRate(), param.getTujinDmgUpRateLimit());
         }
@@ -113,11 +113,11 @@ public class ZhanZaiQian implements SkillEffect {
 
     private static class ZhanZaiQianAddition {
 
-        /** 累计伤害系数提升率 */
+
         double dmgUpRate;
-        /** 累计突进次数 */
+
         int incTimes;
-        /** 是否成功执行 */
+
         @Getter
         boolean exec;
 

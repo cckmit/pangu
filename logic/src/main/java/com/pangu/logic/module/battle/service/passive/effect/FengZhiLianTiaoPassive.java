@@ -53,7 +53,7 @@ public class FengZhiLianTiaoPassive implements DamagePassive, OwnerDiePassive {
     @Override
     public void die(PassiveState passiveState, Unit owner, Unit attack, ITimedDamageReport timedDamageReport, int time,
                     Context context) {
-        /* 其中一个死亡后，链接相关信息清除 */
+        
 
         FengZhiLianTiao.FengZhiLianTiaoAddition addition = passiveState
                 .getAddition(FengZhiLianTiao.FengZhiLianTiaoAddition.class);
@@ -66,17 +66,17 @@ public class FengZhiLianTiaoPassive implements DamagePassive, OwnerDiePassive {
         addition.getUnit1().removePassive(passiveState);
         addition.getUnit2().removePassive(passiveState);
 
-        /* 清除链接BUFF */
+        
         BuffFactory.removeBuffState(addition.getLinkBuffId(), addition.getUnit1(), time);
         BuffFactory.removeBuffState(addition.getLinkBuffId(), addition.getUnit2(), time);
 
-        /* 清除链接时添加的BUFF */
+        
         if (!StringUtils.isBlank(addition.getBuffId())) {
             BuffFactory.removeBuffState(addition.getBuffId(), addition.getUnit1(), time);
             BuffFactory.removeBuffState(addition.getBuffId(), addition.getUnit2(), time);
         }
 
-        /* 其中一个死亡后，另一个要被旋风吹起来 */
+        
         if (!other.isDead() && !StringUtils.isBlank(addition.getXuanFengSkillId())) {
             SkillFactory.updateNextExecuteSkill(time, other, addition.getXuanFengSkillId());
         }

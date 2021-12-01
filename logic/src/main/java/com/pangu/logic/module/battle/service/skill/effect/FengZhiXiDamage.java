@@ -53,14 +53,14 @@ public class FengZhiXiDamage implements SkillEffect {
         EffectState effectState = new EffectState(null, 0);
         effectState.setParamOverride(new DamageParam(param.getFactor()));
 
-        /* 范围伤害 */
+
         for (Unit round : rounds) {
             physicsDamage.execute(effectState, owner, round, skillReport, time, skillState, context);
-            /* 击飞 */
+
             round.addState(UnitState.DISABLE, time + param.getJifeiTime());
         }
 
-        /* 重置风之息BUFF */
+
         BuffFactory.removeBuffStates(buffStates, owner, time);
     }
 }

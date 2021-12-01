@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NiaoZuiYiShengZSParam {
 
-    /** BUFF标识 */
+    
     private String buffId;
 
 }

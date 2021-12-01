@@ -6,10 +6,10 @@ package com.pangu.framework.scheduler;
  */
 public enum ValueType {
 	
-	/** 直接为字符串表达式 */
+	
 	EXPRESSION,
-	/** Bean名 */
+	
 	BEANNAME,
-	/** Spring EL 表达式*/
+	
 	SPEL
 }

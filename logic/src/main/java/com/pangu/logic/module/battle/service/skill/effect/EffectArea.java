@@ -47,7 +47,7 @@ public class EffectArea implements SkillEffect {
     public void execute(EffectState state, Unit owner, Unit target, SkillReport skillReport, int time, SkillState skillState, Context context) {
         final EffectAreaParam param = state.getParam(EffectAreaParam.class);
 
-        /* 首次执行效果时，构建区域并缓存*/
+
         List<AreaParam> areaParams = context.getRootSkillEffectAction().getAddition(List.class);
         if (areaParams == null) {
             final List<Unit> targets = TargetSelector.select(owner, param.getAnchorTargetId(), time);
@@ -75,14 +75,14 @@ public class EffectArea implements SkillEffect {
             context.getRootSkillEffectAction().setAddition(areaParams);
         }
 
-        /* 应用自定义过滤器和区域参数筛选出符合条件的目标*/
+
         final List<Unit> targets = param.getFilter().filter(owner, time);
         final Set<Unit> inArea = new HashSet<>(6);
         for (AreaParam areaParam : areaParams) {
             inArea.addAll(areaParam.inArea(targets));
         }
 
-        /* 修改其属性*/
+
         final DefaultAddValueParam valModParam = param.getValModParam();
         if (valModParam != null) {
             for (Unit unit : inArea) {
@@ -96,7 +96,7 @@ public class EffectArea implements SkillEffect {
             }
         }
 
-        /* 为其添加异常状态*/
+
         final StateAddParam stateAddParam = param.getStateAddParam();
         if (stateAddParam != null) {
             for (Unit unit : inArea) {
@@ -104,7 +104,7 @@ public class EffectArea implements SkillEffect {
             }
         }
 
-        /* 更新buff*/
+
         final BuffUpdateParam buffUpdateParam = param.getBuff();
         if (buffUpdateParam != null) {
             for (Unit unit : inArea) {

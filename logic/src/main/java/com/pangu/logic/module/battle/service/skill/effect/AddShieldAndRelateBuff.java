@@ -31,7 +31,7 @@ public class AddShieldAndRelateBuff implements SkillEffect {
     @Override
     public void execute(EffectState state, Unit owner, Unit target, SkillReport skillReport, int time,
                         SkillState skillState, Context context) {
-        /* 取消之前的关联行为 */
+
         ShieldRelateBuffAction action = state.getAddition(ShieldRelateBuffAction.class);
         if (action != null) {
             action.cancel(time);
@@ -40,7 +40,7 @@ public class AddShieldAndRelateBuff implements SkillEffect {
 
         AddShieldAndRelateBuffParam param = state.getParam(AddShieldAndRelateBuffParam.class);
 
-        /* 添加护盾 */
+
         BuffFactory.addBuff(param.getShieldBuffId(), owner, target, time, skillReport, null);
 
         if (param.getBuffs().isEmpty()) {
@@ -53,7 +53,7 @@ public class AddShieldAndRelateBuff implements SkillEffect {
             buffStates.add(buffState);
         }
 
-        /* 添加新的关联行为 */
+
         ShieldRelateBuffAction newAction = ShieldRelateBuffAction.of(time + 1000, target, buffStates);
         target.addTimedAction(newAction);
     }

@@ -7,12 +7,12 @@ import java.util.TreeMap;
 
 public class FengKuangBoShiZSParam {
 
-    /** 对应炸弹所加的BUFF标识，<炸弹数量, BUFF标识> */
+
     private Map<Integer, String> buffIds;
-    /** 变范围所需炸弹数量 */
+
     @Getter
     private int selectTimes;
-    /** 变范围的目标选择 */
+
     @Getter
     private String selectId;
 

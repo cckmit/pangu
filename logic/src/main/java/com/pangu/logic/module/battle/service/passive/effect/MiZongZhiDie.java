@@ -35,14 +35,14 @@ public class MiZongZhiDie implements DamagePassive {
 
         int nextTime = passiveState.getAddition(int.class, -1);
         if (nextTime > 0 && time <= nextTime) {
-            /* CD减免 */
+            
             passiveState.setAddition(nextTime - param.getPreCdDec());
             return;
         }
 
         SkillFactory.updateNextExecuteSkill(time, owner, param.getSkillId());
 
-        /* CD重新冷却 */
+        
         passiveState.setAddition(time + param.getCd());
     }
 

@@ -22,11 +22,11 @@ public class SchedulingRunner implements ScheduledTask, ScheduledFuture<Object> 
 	
 	private static final Logger log = LoggerFactory.getLogger(SchedulingRunner.class);
 
-	/** 委托的执行任务  */
+	
 	private final ScheduledTask delegate;
-	/** 触发器，用于获取下次执行时间 */
+	
 	private final Trigger trigger;
-	/** 任务上下文，用于记录任务完成时间 */
+	
 	private final SimpleTaskContext taskContext = new SimpleTaskContext();
 	
 	private final FixScheduledThreadPoolExecutor executor;

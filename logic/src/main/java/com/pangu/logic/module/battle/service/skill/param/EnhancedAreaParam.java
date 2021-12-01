@@ -7,8 +7,8 @@ import lombok.Getter;
  */
 @Getter
 public class EnhancedAreaParam extends AreaParam {
-    /** 矩形长*/
+
     private int length;
-    /** 矩形宽*/
+
     private int width;
 }

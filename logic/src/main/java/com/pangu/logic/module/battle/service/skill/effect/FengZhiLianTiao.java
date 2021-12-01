@@ -47,7 +47,7 @@ public class FengZhiLianTiao implements SkillEffect {
         int minDis = -1;
         int maxDis = -1;
         for (Unit enemy : owner.getEnemy().getCurrent()) {
-            /* 已处于链接的目标跳过 */
+
             if (!enemy.getPassiveStateByType(PassiveType.FENG_ZHI_LIAN_TIAO).isEmpty()) {
                 continue;
             }
@@ -77,7 +77,7 @@ public class FengZhiLianTiao implements SkillEffect {
         minDisUnit.addPassive(passiveState, owner);
         maxDisUnit.addPassive(passiveState, owner);
 
-        /* 添加链接BUFF */
+
         BuffFactory.addBuff(param.getLinkBuffId(), owner, minDisUnit, time, skillReport, null);
         BuffFactory.addBuff(param.getLinkBuffId(), owner, maxDisUnit, time, skillReport, null);
         addition.setLinkBuffId(param.getLinkBuffId());

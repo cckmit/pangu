@@ -8,7 +8,7 @@ public class TaskRejectedException extends RuntimeException {
 
 	private static final long serialVersionUID = 6681519082476492615L;
 
-	/** 创建一个没有任何表述信息的任务拒绝异常 */
+
 	public TaskRejectedException() {
 		super();
 	}

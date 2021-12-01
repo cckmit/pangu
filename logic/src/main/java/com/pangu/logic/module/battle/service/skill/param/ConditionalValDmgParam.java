@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ConditionalValDmgParam extends ValuesDamageParam {
-    /** 触发条件表达式*/
+
     private String conditionExp;
 
     /**

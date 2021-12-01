@@ -6,9 +6,9 @@ import lombok.Getter;
 public class MiDieHuaHaiParam {
 
     private String[] execBuffIds;
-    /** 移动倍率 */
+
     private double moveRate = 1.0;
-    /** 添加BUFF所需的距离 */
+
     private int addBuffRange;
 
     private double rate;

@@ -25,7 +25,7 @@ public class SummonUnits implements IValues {
      */
     private List<UnitInfo> units;
 
-    /** 0:正常召唤物     1:源石神像      2:主神试炼*/
+
     @Setter
     private int unitType;
 
