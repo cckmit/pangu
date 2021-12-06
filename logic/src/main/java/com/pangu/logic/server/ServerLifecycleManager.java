@@ -25,6 +25,9 @@ public class ServerLifecycleManager {
             currentServerIds = new HashSet<>(0);
         }
         this.managedServerIds.removeAll(currentServerIds);
+        if (this.managedServerIds.size() > 0) {
+            log.info("待移除管理的服务列表[{}]", managedServerIds);
+        }
         for (String serverId : this.managedServerIds) {
             for (int index = lifecycles.size() - 1; index >= 0; --index) {
                 ServerLifecycle lifecycle = lifecycles.get(index);
@@ -39,6 +42,7 @@ public class ServerLifecycleManager {
             }
         }
         this.managedServerIds = currentServerIds;
+        log.info("当前管理的服务列表[{}]", managedServerIds);
         for (String serverId : this.managedServerIds) {
             for (ServerLifecycle lifecycle : lifecycles) {
                 try {
