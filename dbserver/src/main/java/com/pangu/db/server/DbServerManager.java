@@ -395,8 +395,7 @@ public class DbServerManager implements Lifecycle {
                 .buildQueue();
         queue.start();
         try {
-
-            while (leaderSelector.hasLeadership() && framework.getZookeeperClient().isConnected()) {
+            while (running.get() && leaderSelector.hasLeadership() && framework.getZookeeperClient().isConnected()) {
                 try {
                     //noinspection BusyWait
                     Thread.sleep(500);
