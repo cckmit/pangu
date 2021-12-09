@@ -391,8 +391,7 @@ public class DbServerManager implements Lifecycle {
             public void stateChanged(CuratorFramework client, ConnectionState newState) {
 
             }
-        }, new TaskQueueSerializer(), masterTaskQueuePath)
-                .buildQueue();
+        }, new TaskQueueSerializer(), masterTaskQueuePath).buildQueue();
         queue.start();
         try {
             while (running.get() && leaderSelector.hasLeadership() && framework.getZookeeperClient().isConnected()) {
